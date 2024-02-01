@@ -34,11 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="14dp"
-            android:fontFamily="@font/rubik_bold"
-            android:includeFontPadding="false"
             android:text="Регистрация"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
+            style="@style/text_big_style" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -100,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="2"
-            style="@style/button_style"
+            style="@style/button_secondary_style"
             android:background="@drawable/button_secondary_color_selector"
             android:text="Войти" />
 
@@ -109,7 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            style="@style/button_style"
+            style="@style/button_main_style"
             android:background="@drawable/button_main_color_selector"
             android:text="Зарегистрироваться" />
 

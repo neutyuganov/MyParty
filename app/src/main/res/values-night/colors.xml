@@ -13,7 +13,7 @@
     <color name="items_color">#2F2F2F</color>
     <color name="stroke_color">#3E3E3E</color>
 
-    <color name="pressed_secondary_button_color">#363636</color>
+    <color name="pressed_secondary_button_color">#323232</color>
 
     <color name="pressed_main_button_color">#AE1F53</color>
 </resources>

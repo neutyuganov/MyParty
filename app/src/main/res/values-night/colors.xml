@@ -5,7 +5,7 @@
     <color name="main_color">#CB2F67</color>
 
     <color name="main_text_color">#FFFFFFFF</color>
-    <color name="secondary_text_color">#DDDDDD</color>
+    <color name="secondary_text_color">#C2C2C2</color>
     <color name="hint_color">#9F9F9F</color>
 
     <color name="background">#282828</color>

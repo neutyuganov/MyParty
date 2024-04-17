@@ -20,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -35,56 +34,85 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="14dp"
             android:text="Регистрация"
-            style="@style/text_big_style" />
+            style="@style/text_bold_30_style" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             style="@style/text_main_style"
-            android:text="Имя:" />
+            android:text="Имя/организация" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/edit_text_style"
-            android:background="@drawable/edit_text_selector"
-            android:layout_marginBottom="14dp"
-            android:hint="Введите имя" />
+            android:layout_marginBottom="10dp"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lines="1"
+                style="@style/edit_text_style"
+                android:inputType="textPersonName"
+                android:background="@drawable/edit_text_selector"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             style="@style/text_main_style"
-            android:text="Логин:" />
+            android:text="E-mail" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/edit_text_style"
-            android:background="@drawable/edit_text_selector"
-            android:layout_marginBottom="14dp"
-            android:hint="Введите e-mail" />
+            android:layout_marginBottom="10dp"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lines="1"
+                style="@style/edit_text_style"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/edit_text_selector" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             style="@style/text_main_style"
-            android:text="Пароль:" />
+            android:text="Пароль" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/edit_text_style"
-            android:background="@drawable/edit_text_selector"
-            android:hint="Введите пароль" />
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/hint_color"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lines="1"
+                style="@style/edit_text_style"
+                android:inputType="textPassword"
+                android:background="@drawable/edit_text_selector" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

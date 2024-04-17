@@ -35,7 +35,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="14dp"
             android:text="Вход"
-            style="@style/text_big_style" />
+            style="@style/text_bold_30_style" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,7 +65,6 @@
             style="@style/edit_text_style"
             android:background="@drawable/edit_text_selector"
             android:hint="Введите пароль" />
-
     </LinearLayout>
 
     <LinearLayout

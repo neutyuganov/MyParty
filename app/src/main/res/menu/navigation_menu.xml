@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/menu_item_home"
+        android:checked="true"
+        android:title="Главная"/>
+
+    <item
+        android:id="@+id/nav_subs"
+        android:icon="@drawable/menu_item_subs"
+        android:title="Подписки" />
+
+    <item
+        android:id="@+id/nav_mp"
+        android:title=""/>
+
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/menu_item_favorite"
+        android:title="Избранное"/>
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/menu_item_profile"
+        android:title="Профиль"/>
+
+</menu>

@@ -4,57 +4,69 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.databinding.ActivityRegistrationBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.supabaseJson
 import kotlinx.coroutines.launch
 import java.lang.Exception
-
 
 class RegistrationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistrationBinding
-
-    private lateinit var sbConnection: SupabaseConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sb = sbConnection.sb
+        val sb = SupabaseConnection().sb
 
         emailFocusedListener()
         passwordFocusedListener()
         nameFocusedListener()
 
         binding.goReg.setOnClickListener{
+            nameTakeHelperText()
+            emailTakeHelperText()
+            passwordTakeHelperText()
             if(validName() == null && validEmail() == null && validPassword() == null){
                 lifecycleScope.launch {
                     try{
+                        val users = sb.from("Пользователи").select{
+                            filter {
+                                eq("Почта", binding.textEmail.text.toString())
+                            }
+                        }.decodeList<UserDataClass>().count()
+
+                    if(users == 0){
+                        Toast.makeText(this@RegistrationActivity, "Такого пользователя нет", Toast.LENGTH_SHORT).show()
                         sb.auth.signUpWith(Email) {
                             email = binding.textEmail.text.toString()
                             password = binding.textPassword.text.toString()
                         }
-
-                        val userId = sb.auth.currentUserOrNull()?.id
-                        val userAdd = UserDataClass(id = userId.toString(), Имя = binding.textName.text.toString())
+                        val user = sb.auth.currentUserOrNull()
+                        val userAdd = UserDataClass(id = user?.id.toString(), Имя = binding.textName.text.toString(), Почта = user?.email.toString())
                         sb.postgrest["Пользователи"].insert(userAdd)
 
                         val myIntent = Intent(this@RegistrationActivity, MainActivity::class.java)
                         startActivity(myIntent)
                         finish()
                     }
+                    else {
+                        binding.containerEmail.helperText = "Пользователь с таким email уже есть"
+                        binding.textEmail.requestFocus()
+                    }
+
+                    }
                     catch (e: Exception){
                         Log.e("ERROR", e.message.toString())
                     }
                 }
-
-
             }
         }
     }
@@ -62,9 +74,13 @@ class RegistrationActivity : AppCompatActivity() {
         binding.textName.setOnFocusChangeListener{_, focused->
             if(!focused)
             {
-                binding.containerName.helperText = validName()
+                nameTakeHelperText()
             }
         }
+    }
+
+    private fun nameTakeHelperText(){
+        binding.containerName.helperText = validName()
     }
 
     private fun validName(): String? {
@@ -79,9 +95,13 @@ class RegistrationActivity : AppCompatActivity() {
         binding.textEmail.setOnFocusChangeListener{_, focused->
             if(!focused)
             {
-                binding.containerEmail.helperText = validEmail()
+                emailTakeHelperText()
             }
         }
+    }
+
+    private fun emailTakeHelperText(){
+        binding.containerEmail.helperText = validEmail()
     }
 
     private fun validEmail(): String? {
@@ -100,21 +120,25 @@ class RegistrationActivity : AppCompatActivity() {
         binding.textPassword.setOnFocusChangeListener{_, focused->
             if(!focused)
             {
-                binding.containerPassword.helperText = validPassword()
+                passwordTakeHelperText()
             }
         }
+    }
+
+    private fun passwordTakeHelperText(){
+        binding.containerPassword.helperText = validPassword()
     }
 
     private fun validPassword(): String? {
         val password = binding.textPassword.text.toString()
         if(password.isEmpty()){
-            return "Поле пароля не должно быть пустым"
+            return "Поле не должно быть пустым"
         }
         if(password.length < 6)
         {
             return "Пароль должен содержать минимум 6 символов"
         }
-        if(!password.matches(".*[a-z, а-я].*".toRegex())){
+        /*if(!password.matches(".*[a-z, а-я].*".toRegex())){
             return "Пароль должен содержать буквы с нижним регистром"
         }
         if(!password.matches(".*[A-Z, А-Я].*".toRegex())){
@@ -122,7 +146,7 @@ class RegistrationActivity : AppCompatActivity() {
         }
         if(!password.matches(".*[!@#\$&*].*".toRegex())){
             return "Пароль должен содержать специальные символы !@#\$&*"
-        }
+        }*/
         return null
     }
 }

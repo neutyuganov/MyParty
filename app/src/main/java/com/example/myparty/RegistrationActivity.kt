@@ -37,14 +37,13 @@ class RegistrationActivity : AppCompatActivity() {
             if(validName() == null && validEmail() == null && validPassword() == null){
                 lifecycleScope.launch {
                     try{
-                        val users = sb.from("Пользователи").select{
-                            filter {
-                                eq("Почта", binding.textEmail.text.toString())
-                            }
-                        }.decodeList<UserDataClass>().count()
+                    val users = sb.from("Пользователи").select{
+                        filter {
+                            eq("Почта", binding.textEmail.text.toString())
+                        }
+                    }.decodeList<UserDataClass>().count()
 
                     if(users == 0){
-                        Toast.makeText(this@RegistrationActivity, "Такого пользователя нет", Toast.LENGTH_SHORT).show()
                         sb.auth.signUpWith(Email) {
                             email = binding.textEmail.text.toString()
                             password = binding.textPassword.text.toString()
@@ -68,6 +67,12 @@ class RegistrationActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        binding.toLogIn.setOnClickListener{
+            val myIntent = Intent(this@RegistrationActivity, LoginActivity::class.java)
+            startActivity(myIntent)
+            finish()
         }
     }
     private fun nameFocusedListener() {

@@ -6,11 +6,11 @@ import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.databinding.ActivityLoginBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
-import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -38,15 +38,16 @@ class LoginActivity : AppCompatActivity() {
                             email = binding.textEmail.text.toString()
                             password = binding.textPassword.text.toString()
                         }
+                        val myIntent = Intent(this@LoginActivity, MainActivity::class.java)
+                        startActivity(myIntent)
+                        finish()
                     }
                     catch (e: Exception){
-
-                        Toast.makeText(this@LoginActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
                         Log.e("ERROR", e.message.toString())
+                        if(e.message.toString().startsWith("invalid_grant (Invalid login credentials)") ){
+                            binding.textError.isVisible = true
+                        }
                     }
-                    val myIntent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(myIntent)
-                    finish()
                 }
             }
         }
@@ -69,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun emailTakeHelperText(){
         binding.containerEmail.helperText = validEmail()
+        binding.textError.isVisible = false
     }
 
     private fun validEmail(): String? {
@@ -94,6 +96,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun passwordTakeHelperText(){
         binding.containerPassword.helperText = validPassword()
+        binding.textError.isVisible = false
     }
 
     private fun validPassword(): String? {

@@ -13,8 +13,9 @@
         android:title="Подписки" />
 
     <item
-        android:id="@+id/nav_mp"
-        android:title=""/>
+        android:id="@+id/nav_add_party"
+        android:icon="@drawable/menu_add_party"
+        android:title="Вечеринки"/>
 
     <item
         android:id="@+id/nav_favorite"

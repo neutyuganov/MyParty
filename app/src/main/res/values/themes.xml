@@ -1,10 +1,26 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.andr oid.com/tools">
     <style name="Base.Theme.MyParty" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/main_color</item>
     </style>
 
-    <style name="BottomNavigationView">
-        <item name="fontFamily">@font/rubik_medium</item>
+    <style name="bottom_navigation">
+        <item name="backgroundTint">@null</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView.Active</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.BottomNavigationView.Inactive</item>
+
+    </style>
+
+    <style name="TextAppearance"/>
+    <style name="TextAppearance.BottomNavigationView"/>
+
+    <style name="TextAppearance.BottomNavigationView.Inactive">
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/rubik_regular</item>
+    </style>
+
+    <style name="TextAppearance.BottomNavigationView.Active">
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/rubik_regular</item>
     </style>
 
     <style name="button_main_style" parent="Widget.AppCompat.Button.Borderless">

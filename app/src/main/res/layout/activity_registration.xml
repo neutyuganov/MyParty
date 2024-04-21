@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/text_main_style"
-            android:text="Имя/организация" />
+            android:text="Имя" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/container_name"

@@ -9,22 +9,30 @@
     tools:context=".MainActivity">
 
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_color"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+    />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:background="@color/items_color"
         app:menu="@menu/navigation_menu"
         app:labelVisibilityMode="labeled"
-        android:theme="@style/BottomNavigationView"
+        style="@style/bottom_navigation"
         app:itemIconTint="@color/menu_items_colors"
         app:itemTextColor="@color/menu_items_colors"
-        app:itemPaddingTop="10dp"
-        app:itemPaddingBottom="10dp"
-        app:itemIconSize="27dp"/>
+        app:itemBackground="@null"
+        android:animateLayoutChanges="false"
+        app:itemTextAppearanceActiveBoldEnabled="false" />
 
 </LinearLayout>

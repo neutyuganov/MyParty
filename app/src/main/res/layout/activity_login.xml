@@ -86,7 +86,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-
+        <TextView
+            android:id="@+id/text_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/helper_text_medium_12_style"
+            android:text="Неверный логин или пароль"
+            android:layout_marginTop="14dp"/>
 
     </LinearLayout>
 

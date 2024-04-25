@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sb = SupabaseConnection().sb
+        val sb = SupabaseConnection.Singleton.sb
 
         emailFocusedListener()
         passwordFocusedListener()
@@ -38,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
                             email = binding.textEmail.text.toString()
                             password = binding.textPassword.text.toString()
                         }
+
                         val myIntent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(myIntent)
                         finish()

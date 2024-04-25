@@ -24,7 +24,7 @@ class RegistrationActivity : AppCompatActivity() {
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sb = SupabaseConnection().sb
+        val sb = SupabaseConnection.Singleton.sb
 
         emailFocusedListener()
         passwordFocusedListener()

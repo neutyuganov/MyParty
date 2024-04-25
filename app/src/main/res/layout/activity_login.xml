@@ -92,6 +92,7 @@
             android:layout_height="wrap_content"
             style="@style/helper_text_medium_12_style"
             android:text="Неверный логин или пароль"
+            android:visibility="invisible"
             android:layout_marginTop="14dp"/>
 
     </LinearLayout>

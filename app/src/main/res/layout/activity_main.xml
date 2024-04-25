@@ -29,8 +29,6 @@
         app:menu="@menu/navigation_menu"
         app:labelVisibilityMode="labeled"
         style="@style/bottom_navigation"
-        app:itemIconTint="@color/menu_items_colors"
-        app:itemTextColor="@color/menu_items_colors"
         app:itemBackground="@null"
         android:animateLayoutChanges="false"
         app:itemTextAppearanceActiveBoldEnabled="false" />

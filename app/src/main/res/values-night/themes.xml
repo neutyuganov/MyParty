@@ -8,6 +8,8 @@
         <item name="backgroundTint">@null</item>
         <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView.Active</item>
         <item name="itemTextAppearanceInactive">@style/TextAppearance.BottomNavigationView.Inactive</item>
+        <item name="itemIconTint">@color/menu_items_colors_night</item>
+        <item name="itemTextColor">@color/menu_items_colors_night</item>
     </style>
 
     <style name="TextAppearance"/>

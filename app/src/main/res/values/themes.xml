@@ -7,7 +7,8 @@
         <item name="backgroundTint">@null</item>
         <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView.Active</item>
         <item name="itemTextAppearanceInactive">@style/TextAppearance.BottomNavigationView.Inactive</item>
-
+        <item name="itemIconTint">@color/menu_items_colors</item>
+        <item name="itemTextColor">@color/menu_items_colors</item>
     </style>
 
     <style name="TextAppearance"/>
@@ -68,6 +69,13 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/main_text_color</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="text_medium_20_style">
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/main_text_color</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="text_bold_16_style">

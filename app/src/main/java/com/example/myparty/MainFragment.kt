@@ -6,14 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.databinding.FragmentMainBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch
+
+import java.time.LocalDate;
+
 import org.json.JSONArray
+
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -35,7 +39,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         lifecycleScope.launch {
         try{
                 val parties = mutableListOf<PartyDataClass>()
-                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")).data
+                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")){
+                    filter {
+                        gte("Дата", LocalDate.now())
+                    }
+                } .data
                 val jsonArray = JSONArray(partiesResult)
 
             for (i in 0 until jsonArray.length()) {

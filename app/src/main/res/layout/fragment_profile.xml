@@ -5,16 +5,160 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".ProfileFragment">
+    tools:context=".ProfileFragment"
+    android:padding="20dp">
 
     <TextView
+        android:id="@+id/nickUser"
         style="@style/text_medium_20_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\@имя"
-        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imageUser"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nickUser" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageUser">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/countParty"
+                    style="@style/text_medium_20_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="10" />
+
+                <TextView
+                    style="@style/text_medium_10_secondary_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Вечеринки" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/countFollower"
+                    style="@style/text_medium_20_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="10" />
+
+                <TextView
+                    style="@style/text_medium_10_secondary_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Подписчики" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/countFollowing"
+                    style="@style/text_medium_20_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="10" />
+
+                <TextView
+                    style="@style/text_medium_10_secondary_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Подписки" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonEditProfile"
+            style="@style/button_secondary_style_small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_secondary_color_selector"
+            android:text="Редактировать" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/nameUser"
+        style="@style/text_bold_30_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Эйфория"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageUser" />
+
+    <ImageView
+        android:id="@+id/verifyUser"
+        android:layout_width="18dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/tick"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/nameUser"
+        app:layout_constraintStart_toEndOf="@+id/nameUser"
+        app:layout_constraintTop_toTopOf="@+id/nameUser" />
+
+    <TextView
+        android:id="@+id/descriptionUser"
+        style="@style/text_medium_16_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Лучший выбор для каждой субботы в вашем любимом городе Омск"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameUser" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

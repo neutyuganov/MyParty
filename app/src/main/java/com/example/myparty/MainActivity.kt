@@ -3,7 +3,6 @@ package com.example.myparty
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.myparty.databinding.ActivityLoginBinding
 import com.example.myparty.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +15,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         loadFragment(MainFragment())
+
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    loadFragment(MainFragment())
+                    true
+                }
+                R.id.nav_profile -> {
+                    loadFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun loadFragment(fragment: Fragment) {

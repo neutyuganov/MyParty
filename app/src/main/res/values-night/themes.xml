@@ -12,7 +12,7 @@
         <item name="itemTextColor">@color/menu_items_colors_night</item>
     </style>
 
-    <style name="TextAppearance"/>
+    <!--<style name="TextAppearance"/>
     <style name="TextAppearance.BottomNavigationView"/>
 
     <style name="TextAppearance.BottomNavigationView.Inactive">
@@ -23,9 +23,9 @@
     <style name="TextAppearance.BottomNavigationView.Active">
         <item name="android:textSize">10sp</item>
         <item name="android:fontFamily">@font/rubik_regular</item>
-    </style>
+    </style>-->
 
-    <style name="button_style" parent="Widget.AppCompat.Button.Borderless">
+    <!--<style name="button_style" parent="Widget.AppCompat.Button.Borderless">
         <item name="fontFamily">@font/rubik_medium</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:paddingVertical">14dp</item>
@@ -66,5 +66,5 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/main_color</item>
         <item name="android:textSize">12sp</item>
-    </style>
+    </style>-->
 </resources>

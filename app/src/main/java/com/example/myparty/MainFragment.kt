@@ -69,7 +69,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
 
             catch (e: Exception){
-                    Log.e("ERROR", e.message.toString())
+                    Log.e("Ошибка получения данных вечеринки", e.message.toString())
             }
 
             finally{

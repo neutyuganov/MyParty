@@ -160,17 +160,18 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        app:tabTextAppearance="@style/text_medium_20_hint_style"
+        app:tabSelectedTextAppearance="@style/text_medium_20_hint_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionUser"
         android:layout_marginTop="10dp"
-        app:tabIndicatorHeight="4dp"
-        app:tabMode="scrollable" />
+        app:tabIndicatorHeight="4dp" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

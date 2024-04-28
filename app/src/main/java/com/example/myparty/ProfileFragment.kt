@@ -1,22 +1,18 @@
 package com.example.myparty
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.myparty.databinding.FragmentMainBinding
+import androidx.viewpager.widget.ViewPager
 import com.example.myparty.databinding.FragmentProfileBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 
 class ProfileFragment : Fragment() {
@@ -47,8 +43,17 @@ class ProfileFragment : Fragment() {
             partyCount = getParty()
             loadUserData()
         }
+
+        setupViewPager(binding.viewPager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
+    private fun setupViewPager(viewPager: ViewPager) {
+        val adapter = ViewPagerAdapter(childFragmentManager)
+        adapter.addFragment(ActualPartyFragment(), "Активные")
+        adapter.addFragment(BeforePartyFragment(), "Прошедшие")
+        viewPager.adapter = adapter
+    }
 
     suspend fun getUserData(): UserDataClass = withContext(Dispatchers.IO) {
         sb.from("Пользователи").select {

@@ -89,6 +89,13 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="text_medium_20_hint_style">
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/hint_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="text_bold_16_style">
         <item name="fontFamily">@font/rubik_bold</item>
         <item name="android:includeFontPadding">false</item>

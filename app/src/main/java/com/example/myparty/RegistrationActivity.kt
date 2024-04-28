@@ -1,6 +1,8 @@
 package com.example.myparty
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -19,10 +21,16 @@ class RegistrationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistrationBinding
 
+    private lateinit var sharedpreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
+
+        var tokenUser = sharedpreferences.getString("TOKEN_USER", null)
 
         val sb = SupabaseConnection.Singleton.sb
 
@@ -48,6 +56,9 @@ class RegistrationActivity : AppCompatActivity() {
                             email = binding.textEmail.text.toString()
                             password = binding.textPassword.text.toString()
                         }
+
+                        sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentAccessTokenOrNull()).apply()
+
                         val user = sb.auth.currentUserOrNull()
                         val userAdd = UserDataClass(id = user?.id.toString(), Имя = binding.textName.text.toString(), Почта = user?.email.toString())
                         sb.postgrest["Пользователи"].insert(userAdd)

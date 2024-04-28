@@ -29,25 +29,23 @@ class PartyAdapter(private val partyList: List<PartyDataClass>) : RecyclerView.A
     override fun getItemCount(): Int = partyList.size
 
     class ViewHolder(private val itemBinding: MainRecyclerViewItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(party: PartyDataClass) {
-
-            try{
-                itemBinding.name.text = party.Название
-                itemBinding.userName.text = party.Имя
+        fun bind(party: PartyDataClass) { with(itemBinding) {
+                name.text = party.Название
+                userName.text = party.Имя
                 val ageFormat = party.Возраст
 
-                itemBinding.age.text = "+$ageFormat"
+                age.text = "+$ageFormat"
 
                 val priceFormat = party.Цена
                 if(priceFormat?.rem(1) == 0.0){
                     val priceInt = priceFormat.toInt()
-                    itemBinding.price.text = "от $priceInt ₽"
+                    price.text = "от $priceInt ₽"
                 }
                 else{
-                    itemBinding.price.text = "от $priceFormat ₽"
+                    price.text = "от $priceFormat ₽"
                 }
 
-                itemBinding.verify.isVisible = party.Верификация == true
+                verify.isVisible = party.Верификация == true
 
                 val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
@@ -58,12 +56,9 @@ class PartyAdapter(private val partyList: List<PartyDataClass>) : RecyclerView.A
                 val localTime = LocalTime.parse(party.Время, inputFormatterTime)
                 val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
                 val formattedTime = localTime.format(outputFormatterTime)
-                itemBinding.date.text = "$formattedDate  $formattedTime"
+                date.text = "$formattedDate  $formattedTime"
 
-                itemBinding.place.text = party.Место
-            }
-            catch (e:Exception){
-                Log.e("ERRRRRRRRRRRRRRRRRRR", e.message.toString())
+                place.text = party.Место
             }
         }
     }

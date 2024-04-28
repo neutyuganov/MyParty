@@ -1,6 +1,12 @@
 <resources xmlns:tools="http://schemas.andr oid.com/tools">
     <style name="Base.Theme.MyParty" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/main_color</item>
+        <item name="android:statusBarColor">@color/background_splash_screen</item>
+    </style>
+
+    <style name="SplashScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splashscreen</item>
+        <item name="android:statusBarColor">@color/background_splash_screen</item>
     </style>
 
     <style name="bottom_navigation">

@@ -13,79 +13,83 @@ import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 
 class ProfileFragment : Fragment() {
 
-    private var _binding:FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentProfileBinding
+
+    val sb = SupabaseConnection.Singleton.sb
+
+    val user = sb.auth.currentUserOrNull()
+
+    var userData: UserDataClass? = null
+    var followersCount = 0
+    var followingCount = 0
+    var partyCount = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
-        _binding = FragmentProfileBinding.inflate(inflater, container,false)
+        binding = FragmentProfileBinding.inflate(inflater, container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sb = SupabaseConnection.Singleton.sb
+        lifecycleScope.launch {
+            userData = getUserData()
+            followersCount = getFollowers()
+            followingCount = getFollowing()
+            partyCount = getParty()
+            loadUserData()
+        }
+    }
 
-        val user = sb.auth.currentUserOrNull()
 
-        lifecycleScope.launch{
-            try{
-                val users = sb.from("Пользователи").select{
-                    filter {
-                        eq("id", user?.id.toString())
-                    }
-                }.decodeSingle<UserDataClass>()
-
-                binding.nameUser.text = users.Имя
-                binding.nickUser.text = "@" + users.Ник
-                binding.descriptionUser.text = users.Описание
-                if(users.Верификация == true){
-                    binding.verifyUser.visibility = View.VISIBLE
-                }
-                else{
-                    binding.verifyUser.visibility = View.GONE
-                }
+    suspend fun getUserData(): UserDataClass = withContext(Dispatchers.IO) {
+        sb.from("Пользователи").select {
+            filter {
+                eq("id", user?.id.toString())
             }
-            catch (e: Exception){
-                Log.e("Error", "Error: ${e.message}")
+        }.decodeSingle()
+    }
+
+    suspend fun getFollowers(): Int  = withContext(Dispatchers.IO) {
+        sb.from("Подписчики_пользователей").select{
+            filter {
+                eq("id_пользователя", user?.id.toString())
             }
-        }
+        }.decodeList<FollowersDataClass>().count()
+    }
 
-        lifecycleScope.launch {
-            val followersCount = sb.from("Подписчики_пользователей").select{
-                filter {
-                    eq("id_пользователя", user?.id.toString())
-                }
-            }.decodeList<FollowersDataClass>().count()
+    suspend fun getFollowing(): Int  = withContext(Dispatchers.IO) {
+        sb.from("Подписчики_пользователей").select{
+            filter {
+                eq("id_подписчика", user?.id.toString())
+            }
+        }.decodeList<FollowersDataClass>().count()
+    }
 
-            binding.countFollower.text = followersCount.toString()
-        }
+    suspend fun getParty(): Int  = withContext(Dispatchers.IO) {
+        sb.from("Вечеринки").select{
+            filter {
+                eq("id_пользователя", user?.id.toString())
+            }
+        }.decodeList<PartyDataClass>().count()
+    }
 
-        lifecycleScope.launch {
-            val followingCount = sb.from("Подписчики_пользователей").select{
-                filter {
-                    eq("id_подписчика", user?.id.toString())
-                }
-            }.decodeList<FollowersDataClass>().count()
-
-            binding.countFollowing.text = followingCount.toString()
-        }
-
-        lifecycleScope.launch {
-            val partyCount = sb.from("Вечеринки").select{
-                filter {
-                    eq("id_пользователя", user?.id.toString())
-                }
-            }.decodeList<FollowersDataClass>().count()
-
-            binding.countParty.text = partyCount.toString()
-        }
+    fun loadUserData() {
+        binding.nameUser.text = userData?.Имя
+        binding.nickUser.text = "@" + userData?.Ник
+        binding.descriptionUser.text = userData?.Описание
+        binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
+        binding.countFollower.text = followersCount.toString()
+        binding.countFollowing.text = followingCount.toString()
+        binding.countParty.text = partyCount.toString()
     }
 
 }

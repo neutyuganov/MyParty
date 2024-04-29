@@ -165,6 +165,7 @@
         app:tabTextAppearance="@style/text_medium_24_hint_style"
         app:tabSelectedTextAppearance="@style/text_medium_24_hint_style"
         app:tabMode="scrollable"
+        app:tabRippleColor="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

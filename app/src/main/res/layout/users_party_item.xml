@@ -28,6 +28,7 @@
         <TextView
             android:id="@+id/name"
             style="@style/text_bold_16_style"
+            android:textColor="@color/main_text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"

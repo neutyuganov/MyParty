@@ -35,12 +35,14 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="14dp"
             android:text="Вход"
-            style="@style/text_bold_30_style" />
+            style="@style/text_bold_30_style"
+            android:textColor="@color/main_text_color"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/text_main_style"
+            style="@style/text_medium_16_style"
+            android:textColor="@color/main_text_color"
             android:text="Логин" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +66,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/text_main_style"
+            style="@style/text_medium_16_style"
+            android:textColor="@color/main_text_color"
             android:text="Пароль" />
 
         <com.google.android.material.textfield.TextInputLayout

@@ -10,6 +10,7 @@
     <TextView
         android:id="@+id/nickUser"
         style="@style/text_medium_20_style"
+        android:textColor="@color/main_text_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -52,6 +53,7 @@
                 <TextView
                     android:id="@+id/countParty"
                     style="@style/text_medium_20_style"
+                    android:textColor="@color/main_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -59,6 +61,7 @@
 
                 <TextView
                     style="@style/text_medium_10_secondary_style"
+                    android:textColor="@color/secondary_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -76,6 +79,7 @@
                 <TextView
                     android:id="@+id/countFollower"
                     style="@style/text_medium_20_style"
+                    android:textColor="@color/main_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -83,6 +87,7 @@
 
                 <TextView
                     style="@style/text_medium_10_secondary_style"
+                    android:textColor="@color/secondary_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -100,6 +105,7 @@
                 <TextView
                     android:id="@+id/countFollowing"
                     style="@style/text_medium_20_style"
+                    android:textColor="@color/main_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -107,6 +113,7 @@
 
                 <TextView
                     style="@style/text_medium_10_secondary_style"
+                    android:textColor="@color/secondary_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -129,6 +136,7 @@
     <TextView
         android:id="@+id/nameUser"
         style="@style/text_bold_30_style"
+        android:textColor="@color/main_text_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -155,6 +163,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="20dp"
+        android:textColor="@color/secondary_text_color"
         android:text="Лучший выбор для каждой субботы в вашем любимом городе Омск"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -162,16 +171,16 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        app:tabTextAppearance="@style/text_medium_24_hint_style"
-        app:tabSelectedTextAppearance="@style/text_medium_24_hint_style"
-        app:tabMode="scrollable"
+        app:tabTextAppearance="@style/text_tab_layout_style"
+        app:tabGravity="center"
+        app:tabSelectedTextAppearance="@style/text_tab_layout_style"
+        app:tabMode="fixed"
         app:tabRippleColor="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionUser"
-        android:layout_marginTop="4dp"
         app:tabIndicatorHeight="4dp" />
 
     <androidx.viewpager.widget.ViewPager

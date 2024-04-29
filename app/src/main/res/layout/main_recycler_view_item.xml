@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:background="@drawable/button_secondary_color_selector">
+    android:background="@drawable/button_secondary_color_selector"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/image"
@@ -19,10 +21,10 @@
         android:id="@+id/star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/empty_star"
         android:layout_marginTop="10dp"
-        android:background="@null"
         android:layout_marginEnd="10dp"
+        android:background="@null"
+        android:src="@drawable/empty_star"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image" />
 
@@ -39,22 +41,22 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
         android:layout_marginStart="10dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image">
 
         <TextView
             android:id="@+id/name"
+            style="@style/text_bold_16_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Новый год"
             android:layout_marginBottom="2dp"
-            style="@style/text_bold_16_style" />
+            android:text="Новый год" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -64,30 +66,40 @@
 
             <TextView
                 android:id="@+id/user_name"
+                style="@style/text_medium_16_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Эйфория"
-                style="@style/text_medium_16_style"
-                android:textColor="@color/secondary_text_color"/>
+                android:textColor="@color/secondary_text_color" />
 
             <ImageView
                 android:id="@+id/verify"
                 android:layout_width="11.7dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tick"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="4dp"/>
+                android:layout_marginLeft="4dp"
+                android:src="@drawable/tick" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/price"
+            style="@style/text_medium_16_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="от 160 ₽"
-            style="@style/text_medium_16_style"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/main_color"/>
+            android:textColor="@color/main_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <TextView
             android:id="@+id/place"
@@ -99,15 +111,13 @@
 
         <TextView
             android:id="@+id/date"
+            style="@style/text_medium_12_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1 февраля, 19:00"
-            style="@style/text_medium_12_style"
-            android:textColor="@color/hint_color"/>
+            android:textColor="@color/hint_color" />
 
     </LinearLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

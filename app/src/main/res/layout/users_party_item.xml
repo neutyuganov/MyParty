@@ -7,7 +7,7 @@
     android:background="@drawable/button_secondary_color_selector">
 
     <ImageView
-        android:id="@+id/imageParty"
+        android:id="@+id/image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/icon"
@@ -22,11 +22,11 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="10dp"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@+id/imageParty"
+        app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/nameParty"
+            android:id="@+id/name"
             style="@style/text_bold_16_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:text="Новый год" />
 
         <TextView
-            android:id="@+id/priceParty"
+            android:id="@+id/price"
             style="@style/text_medium_16_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:textColor="@color/main_color" />
 
         <TextView
-            android:id="@+id/placeParty"
+            android:id="@+id/place"
             style="@style/text_medium_12_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
-        android:id="@+id/dateParty"
+        android:id="@+id/date"
         style="@style/text_medium_12_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/ageParty"
+        android:id="@+id/age"
         style="@style/text_medium_12_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,6 +75,7 @@
         app:layout_constraintStart_toStartOf="@+id/linearLayoutCompat" />
 
     <ImageButton
+        android:id="@+id/buttonRe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentMainBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
@@ -30,8 +31,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         binding.progressBar.visibility = View.VISIBLE
 
-        val sb = SupabaseConnection.Singleton.sb
-
         Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
 
         lifecycleScope.launch {
@@ -48,19 +47,19 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     val jsonObject = jsonArray.getJSONObject(i)
                     val id = jsonObject.getInt("id")
                     val name = jsonObject.getString("Название")
-                    val slogan = jsonObject.getString("Слоган")
+//                    val slogan = jsonObject.getString("Слоган")
                     val date = jsonObject.getString("Дата")
                     val time = jsonObject.getString("Время")
-                    val city = jsonObject.getString("Город")
+//                    val city = jsonObject.getString("Город")
                     val place = jsonObject.getString("Место")
-                    val description = jsonObject.getString("Место")
+//                    val description = jsonObject.getString("Описание")
                     val price = jsonObject.getDouble("Цена")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
                     val age = ageObject.getInt("Возраст")
                     val usersObject = jsonObject.getJSONObject("Пользователи")
                     val userName = usersObject.getString("Имя")
                     val userVerify = usersObject.getBoolean("Верификация")
-                    val event = PartyDataClass(id = id, Название = name, Имя = userName, Слоган = slogan, Дата = date, Время = time, Город = city, Место = place, Описание = description, Цена = price, Возраст = age, Верификация = userVerify)
+                    val event = PartyDataClass(id = id, Название = name, Имя = userName, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Верификация = userVerify)
                     parties.add(event)
                 }
 

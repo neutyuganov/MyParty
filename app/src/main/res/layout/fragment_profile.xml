@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".ProfileFragment"
-    android:padding="20dp">
+    tools:context=".ProfileFragment">
 
     <TextView
         android:id="@+id/nickUser"
         style="@style/text_medium_20_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="\@имя"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +24,7 @@
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nickUser" />
 
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:orientation="vertical"
+        android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageUser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageUser">
@@ -132,6 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
         android:text="Эйфория"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageUser" />
@@ -153,6 +156,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
         android:text="Лучший выбор для каждой субботы в вашем любимом городе Омск"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -160,14 +164,15 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        app:tabTextAppearance="@style/text_medium_20_hint_style"
-        app:tabSelectedTextAppearance="@style/text_medium_20_hint_style"
+        app:tabTextAppearance="@style/text_medium_24_hint_style"
+        app:tabSelectedTextAppearance="@style/text_medium_24_hint_style"
+        app:tabMode="scrollable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionUser"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         app:tabIndicatorHeight="4dp" />
 
     <androidx.viewpager.widget.ViewPager

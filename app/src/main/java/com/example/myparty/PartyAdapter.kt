@@ -30,35 +30,39 @@ class PartyAdapter(private val partyList: List<PartyDataClass>) : RecyclerView.A
 
     class ViewHolder(private val itemBinding: MainRecyclerViewItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding) {
-                name.text = party.Название
-                userName.text = party.Имя
-                val ageFormat = party.Возраст
+            name.text = party.Название
+            userName.text = party.Имя
+            val ageFormat = party.Возраст
 
-                age.text = "+$ageFormat"
+            age.text = "+$ageFormat"
 
-                val priceFormat = party.Цена
-                if(priceFormat?.rem(1) == 0.0){
-                    val priceInt = priceFormat.toInt()
-                    price.text = "от $priceInt ₽"
-                }
-                else{
-                    price.text = "от $priceFormat ₽"
-                }
+            val priceFormat = party.Цена
+            if(priceFormat?.rem(1) == 0.0){
+                val priceInt = priceFormat.toInt()
+                price.text = "от $priceInt ₽"
+            }
+            else{
+                price.text = "от $priceFormat ₽"
+            }
 
-                verify.isVisible = party.Верификация == true
+            verify.isVisible = party.Верификация == true
 
-                val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
-                val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-                val formattedDate = localDate.format(outputFormatterDate)
+            if(party.Избранное == true){
+                star.setImageResource(R.drawable.star)
+            }
 
-                val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
-                val localTime = LocalTime.parse(party.Время, inputFormatterTime)
-                val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
-                val formattedTime = localTime.format(outputFormatterTime)
-                date.text = "$formattedDate  $formattedTime"
+            val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
+            val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+            val formattedDate = localDate.format(outputFormatterDate)
 
-                place.text = party.Место
+            val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
+            val localTime = LocalTime.parse(party.Время, inputFormatterTime)
+            val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
+            val formattedTime = localTime.format(outputFormatterTime)
+            date.text = "$formattedDate  $formattedTime"
+
+            place.text = party.Место
             }
         }
     }

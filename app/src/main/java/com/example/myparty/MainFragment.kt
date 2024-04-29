@@ -21,7 +21,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var binding: FragmentMainBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,17 +38,25 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
 
         lifecycleScope.launch {
-            try{
+            try {
                 val parties = mutableListOf<PartyDataClass>()
-                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")){
-                    filter {
-                        gte("Дата", LocalDate.now())
-                    }
-                } .data
-                val jsonArray = JSONArray(partiesResult)
+                val partiesResult = sb.from("Вечеринки")
+                    .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
+                        filter {
+                            gte("Дата", LocalDate.now())
+                        }
+                    }.data
+                val jsonArrayParties = JSONArray(partiesResult)
 
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
+                val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
+                    filter {
+                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                    }
+                }.data
+                val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
+
+                for (i in 0 until jsonArrayParties.length()) {
+                    val jsonObject = jsonArrayParties.getJSONObject(i)
                     val id = jsonObject.getInt("id")
                     val name = jsonObject.getString("Название")
 //                    val slogan = jsonObject.getString("Слоган")
@@ -59,24 +71,40 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     val usersObject = jsonObject.getJSONObject("Пользователи")
                     val userName = usersObject.getString("Имя")
                     val userVerify = usersObject.getBoolean("Верификация")
-                    val event = PartyDataClass(id = id, Название = name, Имя = userName, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Верификация = userVerify)
+                    var favorite = false
+                    for (j in 0 until jsonArrayFavorites.length()) {
+                        val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
+                        if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
+                            favorite = true
+                        }
+                    }
+
+                    val event = PartyDataClass(
+                        id = id,
+                        Название = name,
+                        Имя = userName,
+                        Дата = date,
+                        Время = time,
+                        Место = place,
+                        Цена = price,
+                        Возраст = age,
+                        Верификация = userVerify,
+                        Избранное = favorite
+                    )
                     parties.add(event)
                 }
 
                 val partyAdapter = PartyAdapter(parties)
                 binding.recycler.adapter = partyAdapter
+            } catch (e: Exception) {
+                Log.e("Ошибка получения данных вечеринки", e.message.toString())
+            } finally {
+                binding.progressBar.visibility = View.GONE
             }
 
-            catch (e: Exception){
-                    Log.e("Ошибка получения данных вечеринки", e.message.toString())
-            }
-
-            finally{
-                    binding.progressBar.visibility = View.GONE
-            }
         }
+
+
     }
-
-
 }
 

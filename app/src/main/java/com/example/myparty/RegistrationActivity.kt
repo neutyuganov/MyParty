@@ -30,8 +30,6 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        var tokenUser = sharedpreferences.getString("TOKEN_USER", null)
-
         val sb = SupabaseConnection.Singleton.sb
 
         emailFocusedListener()

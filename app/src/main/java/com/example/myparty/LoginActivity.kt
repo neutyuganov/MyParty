@@ -31,8 +31,6 @@ class LoginActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        var tokenUser = sharedpreferences.getString("TOKEN_USER", null)
-
         emailFocusedListener()
         passwordFocusedListener()
 

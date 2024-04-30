@@ -12,6 +12,9 @@ import com.example.myparty.databinding.FragmentMainBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.LocalDate;
 import org.json.JSONArray
@@ -94,7 +97,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     parties.add(event)
                 }
 
-                val partyAdapter = PartyAdapter(parties)
+                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+                val partyAdapter = PartyAdapter(parties, coroutineScope)
                 binding.recycler.adapter = partyAdapter
             } catch (e: Exception) {
                 Log.e("Ошибка получения данных вечеринки", e.message.toString())

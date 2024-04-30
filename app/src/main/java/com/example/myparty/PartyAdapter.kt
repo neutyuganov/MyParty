@@ -3,10 +3,16 @@ package com.example.myparty
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.MainRecyclerViewItemBinding
+import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -15,10 +21,10 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-class PartyAdapter(private val partyList: List<PartyDataClass>) : RecyclerView.Adapter<PartyAdapter.ViewHolder>() {
+class PartyAdapter(private val partyList: List<PartyDataClass>, private val coroutineScope: CoroutineScope) : RecyclerView.Adapter<PartyAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding = MainRecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(itemBinding)
+        return ViewHolder(itemBinding, coroutineScope)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -28,7 +34,7 @@ class PartyAdapter(private val partyList: List<PartyDataClass>) : RecyclerView.A
 
     override fun getItemCount(): Int = partyList.size
 
-    class ViewHolder(private val itemBinding: MainRecyclerViewItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(private val itemBinding: MainRecyclerViewItemBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding) {
             name.text = party.Название
             userName.text = party.Имя
@@ -45,11 +51,42 @@ class PartyAdapter(private val partyList: List<PartyDataClass>) : RecyclerView.A
                 price.text = "от $priceFormat ₽"
             }
 
-            verify.isVisible = party.Верификация == true
-
             if(party.Избранное == true){
                 star.setImageResource(R.drawable.star)
             }
+
+            try {
+                star.setOnClickListener {
+                    if (party.Избранное!!) {
+                        party.Избранное = false
+                        itemBinding.star.setImageResource(R.drawable.empty_star)
+                        coroutineScope.launch {
+                            sb.from("Избранные_вечеринки").delete {
+                                filter {
+                                    eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
+                                    eq("id_вечеринки", party.id!!)
+                                }
+                            }
+                        }
+                    } else {
+                        party.Избранное = true
+                        itemBinding.star.setImageResource(R.drawable.star)
+                        coroutineScope.launch {
+                            sb.from("Избранные_вечеринки").insert(
+                                PartyFavoriteDataClass(
+                                    id_пользователя = sb.auth.currentUserOrNull()?.id!!,
+                                    id_вечеринки = party.id!!
+                                )
+                            )
+                        }
+                    }
+                }
+            }catch (e: Exception){
+                Log.e("Ошибка добавления в избранное", e.message.toString())
+            }
+
+
+            verify.isVisible = party.Верификация == true
 
             val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val localDate = LocalDate.parse(party.Дата, inputFormatterDate)

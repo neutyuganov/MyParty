@@ -1,6 +1,7 @@
 package com.example.myparty
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +46,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
             val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
             val formattedDate = localDate.format(outputFormatterDate)
 
-            if(localDate.isBefore(LocalDate.now())) buttonRe.isVisible = false
+            if(localDate.isBefore(LocalDate.now())) buttonRe.visibility = View.GONE
 
             val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
             val localTime = LocalTime.parse(party.Время, inputFormatterTime)

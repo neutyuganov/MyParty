@@ -19,4 +19,14 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:listitem="@layout/users_party_item"/>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/text_medium_16_style"
+        android:textColor="@color/secondary_text_color"
+        android:text="Нет актуальных вечеринок"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
+
 </FrameLayout>

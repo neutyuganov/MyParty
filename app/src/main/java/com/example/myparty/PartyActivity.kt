@@ -2,10 +2,38 @@ package com.example.myparty
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import com.example.myparty.SupabaseConnection.Singleton.sb
+import com.example.myparty.databinding.ActivityMainBinding
+import com.example.myparty.databinding.ActivityPartyBinding
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.launch
 
 class PartyActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityPartyBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_party)
+        binding = ActivityPartyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val partyId = intent.getIntExtra("PARTY_ID", 0)
+        var party: PartyDataClass? = null
+
+        try{
+            lifecycleScope.launch {
+                party = sb.from("Вечеринки").select{
+                    filter{
+                        eq("id", partyId)
+                    }
+                }.decodeSingle()
+            }
+        }
+        catch(e: Exception){
+            Log.e("Ошибка при получении данных вечеринки", e.message.toString())
+        }
     }
 }

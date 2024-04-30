@@ -1,5 +1,6 @@
 package com.example.myparty
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,6 +31,12 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val party: PartyDataClass = partyList[position]
         holder.bind(party)
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(it.context, PartyActivity::class.java)
+            intent.putExtra("PARTY_ID", party.id)
+            it.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = partyList.size

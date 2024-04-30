@@ -34,15 +34,17 @@ class ActualPartyFragment : Fragment() {
 
         Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
 
+        val parties = mutableListOf<PartyDataClass>()
+
         lifecycleScope.launch {
             try{
-                val parties = mutableListOf<PartyDataClass>()
                 val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст)")){
                     filter {
                         gte("Дата", LocalDate.now())
                         eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
                     }
                 } .data
+
                 val jsonArray = JSONArray(partiesResult)
 
                 for (i in 0 until jsonArray.length()) {
@@ -69,6 +71,10 @@ class ActualPartyFragment : Fragment() {
 
             finally{
                 binding.progressBar.visibility = View.GONE
+                if(parties.isEmpty()){
+                    binding.textView.visibility = View.VISIBLE
+                    binding.recycler.visibility = View.GONE
+                }
             }
         }
 

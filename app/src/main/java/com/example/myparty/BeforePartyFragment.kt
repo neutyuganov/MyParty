@@ -33,9 +33,10 @@ class BeforePartyFragment : Fragment() {
 
         Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
 
+        val parties = mutableListOf<PartyDataClass>()
+
         lifecycleScope.launch {
             try{
-                val parties = mutableListOf<PartyDataClass>()
                 val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст)")){
                     filter {
                         lt("Дата", LocalDate.now())
@@ -68,6 +69,10 @@ class BeforePartyFragment : Fragment() {
 
             finally{
                 binding.progressBar.visibility = View.GONE
+                if(parties.isEmpty()){
+                    binding.textView.visibility = View.VISIBLE
+                    binding.recycler.visibility = View.GONE
+                }
             }
         }
 

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".AddParty3Fragment">
+
+    <TextView
+        android:id="@+id/textView2"
+        style="@style/text_bold_30_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Когда начнем?"
+        android:textColor="@color/main_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <TextView
+            style="@style/text_medium_16_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Дата"
+            android:textColor="@color/main_text_color" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/calendar"
+            app:endIconTint="@color/hint_color"
+            app:endIconCheckable="true"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_date"
+                style="@style/edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_text_selector"
+                android:inputType="date"
+                android:lines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            style="@style/text_medium_16_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Время"
+            android:textColor="@color/main_text_color" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/watch"
+            app:endIconTint="@color/hint_color"
+            app:endIconCheckable="true"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_time"
+                style="@style/edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_text_selector"
+                android:inputType="time"
+                android:lines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

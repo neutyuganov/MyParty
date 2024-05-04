@@ -137,7 +137,16 @@
         <item name="fontFamily">@font/rubik_medium</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/hint_color</item>
     </style>
+
+    <style name="helper_text_medium_12_style_over">
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/main_color</item>
+    </style>
+
     <style name="Base.Theme.MyParty.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

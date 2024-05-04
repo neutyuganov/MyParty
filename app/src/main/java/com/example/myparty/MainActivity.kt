@@ -1,5 +1,6 @@
 package com.example.myparty
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -28,6 +29,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_profile -> {
                     loadFragment(ProfileFragment())
                     true
+                }
+                R.id.nav_add_party -> {
+                    val myIntent = Intent(this, AddPartyActivity::class.java)
+                    startActivity(myIntent)
+                    false
                 }
                 else -> false
             }

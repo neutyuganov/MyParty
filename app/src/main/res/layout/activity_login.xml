@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_email"
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/hint_color"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_password"
@@ -93,7 +93,7 @@
             android:id="@+id/text_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/helper_text_medium_12_style"
+            style="@style/helper_text_medium_12_style_over"
             android:text="Неверный логин или пароль"
             android:visibility="invisible"
             android:layout_marginTop="14dp"/>

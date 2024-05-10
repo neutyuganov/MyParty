@@ -1,5 +1,8 @@
 package com.example.myparty
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
+import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentProfileBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
@@ -19,9 +23,9 @@ class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
 
-    val sb = SupabaseConnection.Singleton.sb
-
     val user = sb.auth.currentUserOrNull()
+
+    private lateinit var sharedpreferences: SharedPreferences
 
     var userData: UserDataClass? = null
     var followersCount = 0
@@ -36,16 +40,32 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            userData = getUserData()
-            followersCount = getFollowers()
-            followingCount = getFollowing()
-            partyCount = getParty()
-            loadUserData()
-        }
+//        lifecycleScope.launch {
+//            userData = getUserData()
+//            followersCount = getFollowers()
+//            followingCount = getFollowing()
+//            partyCount = getParty()
+//            loadUserData()
+//        }
 
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+        binding.btnGoEditProfile.setOnClickListener {
+            val myIntent = Intent(context, EditProfileActivity::class.java)
+            startActivity(myIntent)
+        }
+
+        sharedpreferences = requireActivity().getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
+
+        binding.btnLogOut.setOnClickListener {
+            sharedpreferences.edit().putString("TOKEN_USER", null).apply()
+            lifecycleScope.launch {
+                sb.auth.signOut()
+                val myIntent = Intent(context, LoginActivity::class.java)
+                startActivity(myIntent)
+            }
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

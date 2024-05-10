@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_name"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_email"
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/hint_color"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_password"

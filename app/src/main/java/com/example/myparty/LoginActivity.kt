@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.databinding.ActivityLoginBinding
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import kotlinx.coroutines.launch
@@ -31,13 +33,14 @@ class LoginActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        emailFocusedListener()
-        passwordFocusedListener()
+        focusedListener(binding.containerEmail, binding.textEmail)
+        focusedListener(binding.containerPassword, binding.textPassword)
 
         binding.goLogIn.setOnClickListener{
-            emailTakeHelperText()
-            passwordTakeHelperText()
-            if(validEmail() == null && validPassword() == null){
+            takeHelperText(binding.containerEmail, binding.textEmail)
+            takeHelperText(binding.containerPassword, binding.textPassword)
+            binding.textError.isVisible = false
+            if(validText(binding.textEmail.text.toString(), 1) == null && validText(binding.textPassword.text.toString(), 0) == null){
                 lifecycleScope.launch {
                     try{
                         sb.auth.signInWith(Email){
@@ -68,50 +71,33 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun emailFocusedListener() {
-        binding.textEmail.setOnFocusChangeListener{_, focused->
+    private fun focusedListener(container: TextInputLayout, editText: TextInputEditText) {
+        editText.setOnFocusChangeListener{_, focused->
             if(!focused)
             {
-                emailTakeHelperText()
+                takeHelperText(container, editText)
             }
         }
     }
 
-    private fun emailTakeHelperText(){
-        binding.containerEmail.helperText = validEmail()
-        binding.textError.isVisible = false
+    private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
+        val type = when (editText) {
+            binding.textEmail -> 1
+            else -> 0
+        }
+
+        container.helperText = validText(editText.text.toString(), type)
     }
 
-    private fun validEmail(): String? {
-        val email = binding.textEmail.text.toString()
-        if(email.isEmpty()){
+    private fun validText(text: String, type: Int): String? {
+        if(text.isEmpty()){
             return "Поле не должно быть пустым"
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-        {
-            return "Неверный формат почты"
-        }
-        return null
-    }
-
-    private fun passwordFocusedListener() {
-        binding.textPassword.setOnFocusChangeListener{_, focused->
-            if(!focused)
+        if(type == 1){
+            if(!Patterns.EMAIL_ADDRESS.matcher(text).matches())
             {
-                passwordTakeHelperText()
+                return "Неверный формат почты"
             }
-        }
-    }
-
-    private fun passwordTakeHelperText(){
-        binding.containerPassword.helperText = validPassword()
-        binding.textError.isVisible = false
-    }
-
-    private fun validPassword(): String? {
-        val password = binding.textPassword.text.toString()
-        if(password.isEmpty()){
-            return "Поле не должно быть пустым"
         }
         return null
     }

@@ -14,10 +14,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="\@имя"
+        android:text="\@"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:src="@drawable/logout"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/nickUser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nickUser" />
 
     <ImageView
         android:id="@+id/imageUser"
@@ -57,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="10" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/text_medium_10_secondary_style"
@@ -83,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="10" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/text_medium_10_secondary_style"
@@ -109,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="10" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/text_medium_10_secondary_style"
@@ -124,7 +135,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/buttonEditProfile"
+            android:id="@+id/btnGoEditProfile"
             style="@style/button_secondary_style_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        android:text="Эйфория"
+        android:text=" "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageUser" />
 
@@ -150,6 +161,7 @@
         android:layout_width="18dp"
         android:layout_height="wrap_content"
         android:src="@drawable/tick"
+        android:visibility="invisible"
         android:layout_marginTop="5dp"
         android:layout_marginStart="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/nameUser"
@@ -164,7 +176,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="20dp"
         android:textColor="@color/secondary_text_color"
-        android:text="Лучший выбор для каждой субботы в вашем любимом городе Омск"
+        android:text=" "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameUser" />

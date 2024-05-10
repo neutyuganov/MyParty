@@ -33,18 +33,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnGoNext"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoBack" />
 
-    <Button
-        android:id="@+id/btnGoNext"
-        style="@style/button_main_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_main_color_selector"
-        android:text="Продолжить"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGoBack" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

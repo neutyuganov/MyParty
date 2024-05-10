@@ -1,10 +1,10 @@
 package com.example.myparty
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.myparty.databinding.ActivityAddPartyBinding
-import com.example.myparty.databinding.ActivityMainBinding
 
 class AddPartyActivity : AppCompatActivity() {
 
@@ -21,24 +21,9 @@ class AddPartyActivity : AppCompatActivity() {
             loadFragment(AddParty1Fragment())
         }
 
-        binding.btnGoNext.setOnClickListener {
-            when(currentfragment) {
-                is AddParty1Fragment -> loadFragment(AddParty2Fragment())
-                is AddParty2Fragment -> loadFragment(AddParty3Fragment())
-                is AddParty3Fragment -> loadFragment(AddParty4Fragment())
-                is AddParty4Fragment -> {
-                    loadFragment(AddParty5Fragment())
-                    binding.btnGoNext.text = "Завершить"
-                }
-            }
-        }
-
         binding.btnGoBack.setOnClickListener {
             when(currentfragment) {
-                is AddParty5Fragment -> {
-                    loadFragment(AddParty4Fragment())
-                    binding.btnGoNext.text = "Продолжить"
-                }
+                is AddParty5Fragment -> loadFragment(AddParty4Fragment())
                 is AddParty4Fragment -> loadFragment(AddParty3Fragment())
                 is AddParty3Fragment -> loadFragment(AddParty2Fragment())
                 is AddParty2Fragment -> loadFragment(AddParty1Fragment())
@@ -68,7 +53,8 @@ class AddPartyActivity : AppCompatActivity() {
 
     }
 
-    private fun loadFragment(fragment: Fragment) {
+    fun loadFragment(fragment: Fragment) {
+
         val transaction = supportFragmentManager.beginTransaction()
         currentfragment = fragment
         transaction.replace(R.id.frame, fragment)

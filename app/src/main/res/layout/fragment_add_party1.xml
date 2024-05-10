@@ -56,4 +56,15 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnGoNext"
+        style="@style/button_main_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_main_color_selector"
+        android:text="Продолжить"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

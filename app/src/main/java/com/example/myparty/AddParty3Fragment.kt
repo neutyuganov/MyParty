@@ -1,23 +1,17 @@
 package com.example.myparty
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import androidx.fragment.app.Fragment
 import com.example.myparty.databinding.FragmentAddParty3Binding
-import com.google.android.material.textfield.TextInputEditText
-import java.text.DateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Locale
 
 
-class AddParty3Fragment : Fragment() {
+class AddParty3Fragment() : Fragment() {
     private lateinit var binding: FragmentAddParty3Binding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

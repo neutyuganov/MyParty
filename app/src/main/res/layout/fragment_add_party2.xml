@@ -9,9 +9,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="-10dp"
         android:scrollbars="none"
-        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnGoNext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -50,7 +51,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     app:boxBackgroundMode="outline"
-                    app:counterEnabled="true"
                     app:counterMaxLength="100"
                     app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
                     app:counterTextAppearance="@style/helper_text_medium_12_style"
@@ -80,6 +80,7 @@
                     app:boxBackgroundMode="outline"
                     app:counterEnabled="true"
                     app:counterMaxLength="1000"
+                    android:layout_marginBottom="20dp"
                     app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
                     app:counterTextAppearance="@style/helper_text_medium_12_style"
                     app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
@@ -93,7 +94,7 @@
                         android:gravity="top"
                         android:inputType="textMultiLine"
                         android:minLines="3"
-                        android:text="sdfjskfsdfjskfjksfksfksfksfjssdfjskfjkssdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakl" />
+                        android:text="sdfjsfsafskafjskfsakljksfksfksfksfjsdfjsfsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfkskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjsfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklssdfjskfjkssdfjskfjksfkskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjsfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakl" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,6 +104,16 @@
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/btnGoNext"
+        style="@style/button_main_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_main_color_selector"
+        android:text="Продолжить"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

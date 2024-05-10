@@ -1,15 +1,16 @@
 package com.example.myparty
-
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.myparty.databinding.FragmentAddParty1Binding
-import com.example.myparty.databinding.FragmentProfileBinding
 
-class AddParty1Fragment : Fragment() {
+
+class AddParty1Fragment() : Fragment() {
 
     private lateinit var binding: FragmentAddParty1Binding
 
@@ -20,7 +21,6 @@ class AddParty1Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
     }
 }

@@ -40,7 +40,7 @@
         <item name="android:fontFamily">@font/rubik_regular</item>
     </style>
 
-    <style name="button_main_style" parent="Widget.AppCompat.Button.Borderless">
+    <style name="button_main_style" >
         <item name="fontFamily">@font/rubik_medium</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:paddingVertical">14dp</item>

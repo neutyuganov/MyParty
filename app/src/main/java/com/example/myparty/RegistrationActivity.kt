@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.databinding.ActivityRegistrationBinding
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
@@ -32,15 +34,17 @@ class RegistrationActivity : AppCompatActivity() {
 
         val sb = SupabaseConnection.Singleton.sb
 
-        emailFocusedListener()
-        passwordFocusedListener()
-        nameFocusedListener()
+        Log.e("USERCURRENT1", SupabaseConnection.Singleton.sb.auth.currentUserOrNull().toString())
+
+        focusedListener(binding.containerName, binding.textName)
+        focusedListener(binding.containerEmail, binding.textEmail)
+        focusedListener(binding.containerPassword, binding.textPassword)
 
         binding.goReg.setOnClickListener{
-            nameTakeHelperText()
-            emailTakeHelperText()
-            passwordTakeHelperText()
-            if(validName() == null && validEmail() == null && validPassword() == null){
+            takeHelperText(binding.containerName, binding.textName)
+            takeHelperText(binding.containerEmail, binding.textEmail)
+            takeHelperText(binding.containerPassword, binding.textPassword)
+            if(validText(binding.textName.text.toString(), 1) == null && validText(binding.textEmail.text.toString(), 2) == null && validText(binding.textPassword.text.toString(), 3) == null){
                 lifecycleScope.launch {
                     try{
                     val users = sb.from("Пользователи").select{
@@ -84,83 +88,50 @@ class RegistrationActivity : AppCompatActivity() {
             finish()
         }
     }
-    private fun nameFocusedListener() {
-        binding.textName.setOnFocusChangeListener{_, focused->
+    private fun focusedListener(container: TextInputLayout, editText: TextInputEditText) {
+        editText.setOnFocusChangeListener{_, focused->
             if(!focused)
             {
-                nameTakeHelperText()
+                takeHelperText(container, editText)
             }
         }
     }
 
-    private fun nameTakeHelperText(){
-        binding.containerName.helperText = validName()
+    private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
+        val type = when (editText) {
+            binding.textEmail -> 2
+            binding.textPassword -> 3
+            else -> 0
+        }
+
+        container.helperText = validText(editText.text.toString(), type)
     }
 
-    private fun validName(): String? {
-        val name = binding.textName.text.toString()
-        if(name.isEmpty()){
+    private fun validText(text: String, type: Int): String? {
+        if(text.isEmpty()){
             return "Поле не должно быть пустым"
         }
-        return null
-    }
-
-    private fun emailFocusedListener() {
-        binding.textEmail.setOnFocusChangeListener{_, focused->
-            if(!focused)
+        if(type == 2){
+            if(!Patterns.EMAIL_ADDRESS.matcher(text).matches())
             {
-                emailTakeHelperText()
+                return "Неверный формат почты"
             }
         }
-    }
-
-    private fun emailTakeHelperText(){
-        binding.containerEmail.helperText = validEmail()
-    }
-
-    private fun validEmail(): String? {
-        val email = binding.textEmail.text.toString()
-        if(email.isEmpty()){
-            return "Поле не должно быть пустым"
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-        {
-            return "Неверный формат почты"
-        }
-        return null
-    }
-
-    private fun passwordFocusedListener() {
-        binding.textPassword.setOnFocusChangeListener{_, focused->
-            if(!focused)
+        if(type == 3){
+            if(text.length < 6)
             {
-                passwordTakeHelperText()
+                return "Пароль должен содержать минимум 6 символов"
             }
+            /*if(!text.matches(".*[a-z, а-я].*".toRegex())){
+                return "Пароль должен содержать буквы с нижним регистром"
+            }
+            if(!text.matches(".*[A-Z, А-Я].*".toRegex())){
+                return "Пароль должен содержать буквы с верхним регистром"
+            }
+            if(!text.matches(".*[!@#\$&*].*".toRegex())){
+                return "Пароль должен содержать специальные символы !@#\$&*"
+            }*/
         }
-    }
-
-    private fun passwordTakeHelperText(){
-        binding.containerPassword.helperText = validPassword()
-    }
-
-    private fun validPassword(): String? {
-        val password = binding.textPassword.text.toString()
-        if(password.isEmpty()){
-            return "Поле не должно быть пустым"
-        }
-        if(password.length < 6)
-        {
-            return "Пароль должен содержать минимум 6 символов"
-        }
-        /*if(!password.matches(".*[a-z, а-я].*".toRegex())){
-            return "Пароль должен содержать буквы с нижним регистром"
-        }
-        if(!password.matches(".*[A-Z, А-Я].*".toRegex())){
-            return "Пароль должен содержать буквы с верхним регистром"
-        }
-        if(!password.matches(".*[!@#\$&*].*".toRegex())){
-            return "Пароль должен содержать специальные символы !@#\$&*"
-        }*/
         return null
     }
 }

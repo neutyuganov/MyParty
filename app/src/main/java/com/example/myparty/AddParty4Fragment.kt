@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.myparty.databinding.FragmentAddParty4Binding
 
-class AddParty4Fragment : Fragment() {
+class AddParty4Fragment() : Fragment() {
     private lateinit var binding: FragmentAddParty4Binding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

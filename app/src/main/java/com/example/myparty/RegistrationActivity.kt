@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityRegistrationBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -32,9 +35,22 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        val sb = SupabaseConnection.Singleton.sb
+        binding.textName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-        Log.e("USERCURRENT1", SupabaseConnection.Singleton.sb.auth.currentUserOrNull().toString())
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if(binding.textName.text.toString().length > 20){
+                    binding.containerName.isCounterEnabled = true
+                }
+            }
+
+        })
 
         focusedListener(binding.containerName, binding.textName)
         focusedListener(binding.containerEmail, binding.textEmail)
@@ -44,7 +60,7 @@ class RegistrationActivity : AppCompatActivity() {
             takeHelperText(binding.containerName, binding.textName)
             takeHelperText(binding.containerEmail, binding.textEmail)
             takeHelperText(binding.containerPassword, binding.textPassword)
-            if(validText(binding.textName.text.toString(), 1) == null && validText(binding.textEmail.text.toString(), 2) == null && validText(binding.textPassword.text.toString(), 3) == null){
+            if(validText(binding.containerName,binding.textName.text.toString(), 1) == null && validText(binding.containerEmail, binding.textEmail.text.toString(), 2) == null && validText(binding.containerPassword, binding.textPassword.text.toString(), 3) == null){
                 lifecycleScope.launch {
                     try{
                     val users = sb.from("Пользователи").select{
@@ -59,13 +75,13 @@ class RegistrationActivity : AppCompatActivity() {
                             password = binding.textPassword.text.toString()
                         }
 
-                        sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentAccessTokenOrNull()).apply()
+                        sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
 
                         val user = sb.auth.currentUserOrNull()
                         val userAdd = UserDataClass(id = user?.id.toString(), Имя = binding.textName.text.toString(), Почта = user?.email.toString())
                         sb.postgrest["Пользователи"].insert(userAdd)
 
-                        val myIntent = Intent(this@RegistrationActivity, MainActivity::class.java)
+                        val myIntent = Intent(this@RegistrationActivity, CreateProfileActivity::class.java)
                         startActivity(myIntent)
                         finish()
                     }
@@ -104,12 +120,15 @@ class RegistrationActivity : AppCompatActivity() {
             else -> 0
         }
 
-        container.helperText = validText(editText.text.toString(), type)
+        container.helperText = validText(container, editText.text.toString(), type)
     }
 
-    private fun validText(text: String, type: Int): String? {
+    private fun validText(container: TextInputLayout, text: String, type: Int): String? {
         if(text.isEmpty()){
             return "Поле не должно быть пустым"
+        }
+        if(type == 0 && text.length > container.counterMaxLength){
+            return "Слишком длинное имя"
         }
         if(type == 2){
             if(!Patterns.EMAIL_ADDRESS.matcher(text).matches())

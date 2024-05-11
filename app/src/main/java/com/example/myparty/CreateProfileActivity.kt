@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.SupabaseConnection.Singleton.sb
+import com.example.myparty.databinding.ActivityCreateProfileBinding
 import com.example.myparty.databinding.ActivityEditProfileBinding
 import com.example.myparty.databinding.ActivityMainBinding
 import com.example.myparty.databinding.FragmentAddParty2Binding
@@ -19,31 +21,25 @@ import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
 
 
-class EditProfileActivity : AppCompatActivity() {
+class CreateProfileActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityEditProfileBinding
-
-    private lateinit var user: UserDataClass
+    private lateinit var binding: ActivityCreateProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEditProfileBinding.inflate(layoutInflater)
+        binding = ActivityCreateProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnGoBack.setOnClickListener {
-            finish()
-        }
+        val user = sb.auth.currentUserOrNull()
 
         lifecycleScope.launch {
-            user = sb.from("Пользователи").select{
+            val users = sb.from("Пользователи").select{
                 filter {
-                    eq("id", sb.auth.currentUserOrNull()?.id.toString())
+                    eq("id", user?.id.toString())
                 }
-            }.decodeSingle()
+            }.decodeSingle<UserDataClass>()
 
-            binding.textNick.setText(user.Ник)
-            binding.textName.setText(user.Имя)
-            binding.textDescription.setText(user.Описание)
+            binding.textName.setText(users.Имя)
         }
 
         binding.textNick.addTextChangedListener(object : TextWatcher {
@@ -101,37 +97,36 @@ class EditProfileActivity : AppCompatActivity() {
 
         focusedListener(binding.containerNick, binding.textNick)
         focusedListener(binding.containerName, binding.textName)
-        focusedListener(binding.containerDescription, binding.textDescription)
 
-        binding.btnSave.setOnClickListener {
+        binding.btnCreateProfile.setOnClickListener {
             takeHelperText(binding.containerNick, binding.textNick)
             takeHelperText(binding.containerName, binding.textName)
             takeHelperText(binding.containerDescription, binding.textDescription)
 
-            if(binding.containerNick.helperText == null && binding.containerName.helperText == null && binding.containerDescription.helperText == null){
-                /* val intent = intent
-                 intent.putExtra("nick", binding.textNick.text.toString())
-                 intent.putExtra("name", binding.textName.text.toString())
-                 intent.putExtra("description", binding.textDescription.text.toString())
-                 setResult(RESULT_OK, intent)
-                 finish()*/
+            if(binding.containerNick.helperText == null && binding.containerName.helperText == null){
+               /* val intent = intent
+                intent.putExtra("nick", binding.textNick.text.toString())
+                intent.putExtra("name", binding.textName.text.toString())
+                intent.putExtra("description", binding.textDescription.text.toString())
+                setResult(RESULT_OK, intent)
+                finish()*/
                 try{
                     lifecycleScope.launch {
                         if (sb.postgrest["Пользователи"].select {
                                 filter {
                                     eq("Ник", binding.textNick.text.toString())
                                 }
-                            }.decodeList<UserDataClass>().isNotEmpty() && binding.textNick.text.toString() != user.Ник){
+                            }.decodeList<UserDataClass>().isNotEmpty()){
                             binding.containerNick.helperText = "Такой пользователь уже существует"
                         }
                         else{
                             val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString())
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
-                                    eq("id", user.id.toString())
+                                    eq("id", user?.id.toString())
                                 }
                             }
-                            val mainIntent = Intent(this@EditProfileActivity, MainActivity::class.java)
+                            val mainIntent = Intent(this@CreateProfileActivity, MainActivity::class.java)
                             startActivity(mainIntent)
                             finish()
                         }

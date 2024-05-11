@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -48,11 +49,27 @@ class LoginActivity : AppCompatActivity() {
                             password = binding.textPassword.text.toString()
                         }
 
-                        sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentAccessTokenOrNull()).apply()
+                        sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
 
-                        val myIntent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(myIntent)
-                        finish()
+                        val user = SupabaseConnection.Singleton.sb.auth.currentUserOrNull()?.id
+
+                        val users = SupabaseConnection.Singleton.sb.from("Пользователи").select{
+                            filter {
+                                eq("id",user.toString())
+                            }
+                        }.decodeSingle<UserDataClass>()
+
+                        if (users.Ник == null) {
+                            val mainIntent = Intent(this@LoginActivity, CreateProfileActivity::class.java)
+                            startActivity(mainIntent)
+                            finish()
+                        }
+                        else {
+                            val mainIntent = Intent(this@LoginActivity, MainActivity::class.java)
+                            startActivity(mainIntent)
+                            finish()
+                        }
+
                     }
                     catch (e: Exception){
                         Log.e("ERROR", e.message.toString())

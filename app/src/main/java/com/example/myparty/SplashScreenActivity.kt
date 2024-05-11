@@ -7,9 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
+import androidx.lifecycle.lifecycleScope
+import com.example.myparty.SupabaseConnection.Singleton.sb
 import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -25,12 +31,38 @@ class SplashScreenActivity : AppCompatActivity() {
         tokenUser = sharedpreferences.getString("TOKEN_USER", null)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Проверяем, авторизован ли пользователь
+
             if (isUserAuthenticated()) {
-                // Переходим на главный экран
-                val mainIntent = Intent(this, MainActivity::class.java)
-                startActivity(mainIntent)
-                finish()
+                try{
+                    lifecycleScope.launch {
+
+                        Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
+                        // Проверяем, авторизован ли пользователь
+                        withTimeout(5000L) {
+                            // Проверяем, авторизован ли пользователь
+                            val users = sb.from("Пользователи").select{
+                                filter {
+                                    eq("id",tokenUser.toString())
+                                }
+                            }.decodeSingle<UserDataClass>()
+
+                            if (users.Ник == null) {
+                                val mainIntent = Intent(this@SplashScreenActivity, CreateProfileActivity::class.java)
+                                startActivity(mainIntent)
+                                finish()
+                            }
+                            else {
+                                val mainIntent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                                startActivity(mainIntent)
+                                finish()
+                            }
+                        }
+                    }
+                }
+                catch (e: Exception) {
+                    Log.e("Error SplashScreen", e.toString())
+                }
+
             } else {
                 // Переходим на экран входа
                 val loginIntent = Intent(this, LoginActivity::class.java)

@@ -1,11 +1,10 @@
-package com.example.myparty
+package com.example.myparty.Adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myparty.databinding.MainRecyclerViewItemBinding
+import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.databinding.UsersPartyItemBinding
 import java.time.LocalDate
 import java.time.LocalTime
@@ -13,14 +12,14 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerView.Adapter<PartyUserAdapter.ViewHolder>(){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PartyUserAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding = UsersPartyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemBinding)
     }
 
     override fun getItemCount(): Int = partyList.size
 
-    override fun onBindViewHolder(holder: PartyUserAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val party: PartyDataClass = partyList[position]
         holder.bind(party)
     }

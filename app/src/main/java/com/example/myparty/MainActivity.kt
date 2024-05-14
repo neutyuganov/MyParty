@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.myparty.AddParty.AddPartyActivity
+import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

@@ -1,9 +1,9 @@
-package com.example.myparty
+package com.example.myparty.AddParty
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.example.myparty.R
 import com.example.myparty.databinding.ActivityAddPartyBinding
 
 class AddPartyActivity : AppCompatActivity() {

@@ -1,23 +1,23 @@
-package com.example.myparty
+package com.example.myparty.Adapters
 
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myparty.PartyActivity
+import com.example.myparty.DataClasses.PartyDataClass
+import com.example.myparty.DataClasses.PartyFavoriteDataClass
+import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.MainRecyclerViewItemBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 

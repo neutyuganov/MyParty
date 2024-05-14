@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.DataClasses
 
 import kotlinx.serialization.Serializable
 

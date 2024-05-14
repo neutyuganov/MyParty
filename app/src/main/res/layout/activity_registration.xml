@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrationActivity"
+    tools:context=".StartActivities.RegistrationActivity"
     android:background="@color/background"
     android:paddingVertical="40dp"
     android:paddingHorizontal="20dp">

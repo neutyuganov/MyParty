@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.StartActivities
 
 import android.content.Context
 import android.content.Intent
@@ -8,10 +8,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.SupabaseConnection.Singleton.sb
+import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.databinding.ActivityRegistrationBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout

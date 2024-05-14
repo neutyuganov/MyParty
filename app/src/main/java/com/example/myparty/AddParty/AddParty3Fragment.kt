@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.AddParty
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

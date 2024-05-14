@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.example.myparty.Adapters.PartyAdapter
+import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentMainBinding
 import io.github.jan.supabase.gotrue.auth

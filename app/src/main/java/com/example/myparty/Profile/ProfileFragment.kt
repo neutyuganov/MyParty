@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.Profile
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
+import com.example.myparty.DataClasses.FollowersDataClass
+import com.example.myparty.DataClasses.PartyDataClass
+import com.example.myparty.StartActivities.LoginActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
+import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.databinding.FragmentProfileBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
@@ -24,9 +28,9 @@ class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
 
-    val user = sb.auth.currentUserOrNull()
+    private lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var sharedpreferences: SharedPreferences
+    private var user: String? = null
 
     var userData: UserDataClass? = null
     var followersCount = 0
@@ -41,6 +45,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sharedPreferences = requireActivity().getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
+
+        user = sharedPreferences.getString("TOKEN_USER", null)
+
         lifecycleScope.launch {
             try{
                 userData = getUserData()
@@ -52,7 +60,6 @@ class ProfileFragment : Fragment() {
             catch(e:Throwable){
                 Log.e("ProfileFragment", e.message.toString())
             }
-
         }
 
         setupViewPager(binding.viewPager)
@@ -63,10 +70,8 @@ class ProfileFragment : Fragment() {
             startActivity(myIntent)
         }
 
-        sharedpreferences = requireActivity().getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
-
         binding.btnLogOut.setOnClickListener {
-            sharedpreferences.edit().putString("TOKEN_USER", null).apply()
+            sharedPreferences.edit().putString("TOKEN_USER", null).apply()
             lifecycleScope.launch {
                 sb.auth.signOut()
                 val myIntent = Intent(context, LoginActivity::class.java)
@@ -85,7 +90,7 @@ class ProfileFragment : Fragment() {
     suspend fun getUserData(): UserDataClass = withContext(Dispatchers.IO) {
         sb.from("Пользователи").select {
             filter {
-                eq("id", user?.id.toString())
+                eq("id", user!!)
             }
         }.decodeSingle()
     }
@@ -93,7 +98,7 @@ class ProfileFragment : Fragment() {
     suspend fun getFollowers(): Int  = withContext(Dispatchers.IO) {
         sb.from("Подписчики_пользователей").select{
             filter {
-                eq("id_пользователя", user?.id.toString())
+                eq("id_пользователя", user!!)
             }
         }.decodeList<FollowersDataClass>().count()
     }
@@ -101,7 +106,7 @@ class ProfileFragment : Fragment() {
     suspend fun getFollowing(): Int  = withContext(Dispatchers.IO) {
         sb.from("Подписчики_пользователей").select{
             filter {
-                eq("id_подписчика", user?.id.toString())
+                eq("id_подписчика", user!!)
             }
         }.decodeList<FollowersDataClass>().count()
     }
@@ -109,7 +114,7 @@ class ProfileFragment : Fragment() {
     suspend fun getParty(): Int  = withContext(Dispatchers.IO) {
         sb.from("Вечеринки").select{
             filter {
-                eq("id_пользователя", user?.id.toString())
+                eq("id_пользователя", user!!)
             }
         }.decodeList<PartyDataClass>().count()
     }
@@ -117,7 +122,7 @@ class ProfileFragment : Fragment() {
     fun loadUserData() {
         binding.nameUser.text = userData?.Имя
         binding.nickUser.text = "@" + userData?.Ник
-        binding.descriptionUser.text = userData?.Описание
+        if(userData?.Описание.toString().isNotEmpty()) binding.descriptionUser.text = userData?.Описание else View.GONE
         binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()

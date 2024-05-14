@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.StartActivities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.Patterns
 import androidx.lifecycle.lifecycleScope
+import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
+import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.databinding.ActivityCreateProfileBinding
-import com.example.myparty.databinding.ActivityEditProfileBinding
-import com.example.myparty.databinding.ActivityMainBinding
-import com.example.myparty.databinding.FragmentAddParty2Binding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth

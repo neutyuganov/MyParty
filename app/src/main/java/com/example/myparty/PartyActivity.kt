@@ -3,10 +3,9 @@ package com.example.myparty
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.SupabaseConnection.Singleton.sb
-import com.example.myparty.databinding.ActivityMainBinding
 import com.example.myparty.databinding.ActivityPartyBinding
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch

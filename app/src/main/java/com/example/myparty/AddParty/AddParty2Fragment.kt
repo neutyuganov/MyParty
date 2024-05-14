@@ -1,14 +1,12 @@
-package com.example.myparty
+package com.example.myparty.AddParty
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import com.example.myparty.databinding.FragmentAddParty2Binding
 
 class AddParty2Fragment() : Fragment() {

@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.AddParty
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

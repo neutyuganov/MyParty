@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,13 +41,19 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        lifecycleScope.launch {
-//            userData = getUserData()
-//            followersCount = getFollowers()
-//            followingCount = getFollowing()
-//            partyCount = getParty()
-//            loadUserData()
-//        }
+        lifecycleScope.launch {
+            try{
+                userData = getUserData()
+                followersCount = getFollowers()
+                followingCount = getFollowing()
+                partyCount = getParty()
+                loadUserData()
+            }
+            catch(e:Throwable){
+                Log.e("ProfileFragment", e.message.toString())
+            }
+
+        }
 
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)

@@ -122,7 +122,7 @@ class ProfileFragment : Fragment() {
     fun loadUserData() {
         binding.nameUser.text = userData?.Имя
         binding.nickUser.text = "@" + userData?.Ник
-        if(userData?.Описание.toString().isNotEmpty()) binding.descriptionUser.text = userData?.Описание else View.GONE
+        if(userData?.Описание.isNullOrEmpty()) binding.descriptionUser.visibility = View.GONE else binding.descriptionUser.text = userData?.Описание
         binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()

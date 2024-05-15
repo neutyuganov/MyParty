@@ -81,9 +81,26 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
+
         val adapter = ViewPagerAdapter(childFragmentManager)
+
         adapter.addFragment(ActualPartyFragment(), "Активные")
         adapter.addFragment(BeforePartyFragment(), "Прошедшие")
+
+        lifecycleScope.launch {
+            try{
+                if(sb.from("Вечеринки").select {
+                        filter {
+                            eq("id_пользователя", user!!)
+                            eq("id_статуса_проверки", "2")
+                        }
+                    }.decodeList<PartyDataClass>().isNotEmpty()) adapter.addFragment(BanPartyFragment(), "Заблокированные")
+            }
+            catch(e:Throwable){
+                Log.e("ProfileFragment", e.message.toString())
+            }
+            viewPager.adapter = adapter
+        }
         viewPager.adapter = adapter
     }
 
@@ -115,6 +132,7 @@ class ProfileFragment : Fragment() {
         sb.from("Вечеринки").select{
             filter {
                 eq("id_пользователя", user!!)
+                eq("id_статуса_проверки", "3")
             }
         }.decodeList<PartyDataClass>().count()
     }

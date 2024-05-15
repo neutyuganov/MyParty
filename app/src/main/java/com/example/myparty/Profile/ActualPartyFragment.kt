@@ -39,10 +39,11 @@ class ActualPartyFragment : Fragment() {
 
         lifecycleScope.launch {
             try{
-                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст)")){
+                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
                     filter {
                         gte("Дата", LocalDate.now())
                         eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                        neq("id_статуса_проверки", "2")
                     }
                 } .data
 
@@ -58,7 +59,9 @@ class ActualPartyFragment : Fragment() {
                     val price = jsonObject.getDouble("Цена")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
                     val age = ageObject.getInt("Возраст")
-                    val event = PartyDataClass(id = id, Название = name, Дата = date, Время = time, Место = place, Цена = price, Возраст = age)
+                    val statusObject = jsonObject.getJSONObject("Статусы_проверки")
+                    val status = statusObject.getString("Название")
+                    val event = PartyDataClass(id = id, Название = name, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status)
                     parties.add(event)
                 }
 
@@ -66,7 +69,7 @@ class ActualPartyFragment : Fragment() {
                 binding.recycler.adapter = partyAdapter
             }
 
-            catch (e: Exception){
+            catch (e: Throwable){
                 Log.e("Ошибка получения данных вечеринки", e.message.toString())
             }
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -100,7 +101,8 @@ class SplashScreenActivity : AppCompatActivity() {
 
                         }
                         catch(e: Throwable) {
-                            Log.e("ERROR_splash", e.toString())
+                            Toast.makeText(this@SplashScreenActivity, "Проверьте подключение к интернету", Toast.LENGTH_SHORT).show()
+                            finish()
                         }
                     }
                 }

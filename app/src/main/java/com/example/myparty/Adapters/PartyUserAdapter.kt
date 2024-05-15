@@ -40,12 +40,25 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
                 price.text = "от $priceFormat ₽"
             }
 
+            if(party.Статус_проверки == "На проверке"){
+                status.visibility = View.VISIBLE
+            }
+
             val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
             val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
             val formattedDate = localDate.format(outputFormatterDate)
 
-            if(localDate.isBefore(LocalDate.now())) buttonRe.visibility = View.GONE
+            if(localDate.isBefore(LocalDate.now())){
+                buttonRe.visibility = View.GONE
+                name.alpha = 0.82f
+                age.alpha = 0.82f
+                price.alpha = 0.82f
+                date.alpha = 0.82f
+                place.alpha = 0.82f
+                image.alpha = 0.82f
+                background.alpha = 0.82f
+            }
 
             val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
             val localTime = LocalTime.parse(party.Время, inputFormatterTime)
@@ -54,6 +67,17 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
             date.text = "$formattedDate  $formattedTime"
 
             place.text = party.Место
+
+            if(party.Статус_проверки == "Заблокировано"){
+                buttonRe.visibility = View.GONE
+                name.alpha = 0.7f
+                age.alpha = 0.70f
+                price.alpha = 0.70f
+                date.alpha = 0.70f
+                place.alpha = 0.70f
+                image.alpha = 0.70f
+                background.alpha = 0.70f
+            }
         }
         }
     }

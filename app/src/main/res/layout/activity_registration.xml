@@ -42,35 +42,6 @@
             android:layout_height="wrap_content"
             android:textColor="@color/main_text_color"
             style="@style/text_medium_16_style"
-            android:text="Имя" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/container_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:boxBackgroundMode="outline"
-            app:counterMaxLength="30"
-            app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
-            app:counterTextAppearance="@style/helper_text_medium_12_style"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_name"
-                style="@style/edit_text_style"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/edit_text_selector"
-                android:inputType="text"
-                android:lines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/main_text_color"
-            style="@style/text_medium_16_style"
             android:text="E-mail" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -103,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
+            android:layout_marginBottom="10dp"
             app:passwordToggleTint="@color/hint_color"
             app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
@@ -114,6 +86,30 @@
                 style="@style/edit_text_style"
                 android:inputType="textPassword"
                 android:background="@drawable/edit_text_selector" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/main_text_color"
+            style="@style/text_medium_16_style"
+            android:text="Повтор пароля" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_password_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_password_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:lines="1"
+            style="@style/edit_text_style"
+            android:inputType="textPassword"
+            android:background="@drawable/edit_text_selector" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

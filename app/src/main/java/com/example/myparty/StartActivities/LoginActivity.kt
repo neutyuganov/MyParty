@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.example.myparty.AddParty.AddPartyActivity
 import com.example.myparty.AdminActivity
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection

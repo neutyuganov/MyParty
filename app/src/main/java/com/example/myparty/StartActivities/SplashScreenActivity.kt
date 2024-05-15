@@ -1,7 +1,6 @@
 package com.example.myparty.StartActivities
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -10,14 +9,11 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.AdminActivity
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.MainActivity
-import com.example.myparty.R
 import com.example.myparty.SupabaseConnection
-import com.example.myparty.SupabaseConnection.Singleton.sb
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch

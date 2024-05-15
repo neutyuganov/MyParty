@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
 import androidx.appcompat.app.AppCompatActivity
@@ -35,32 +33,15 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        binding.textName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                if(binding.textName.text.toString().length > 20){
-                    binding.containerName.isCounterEnabled = true
-                }
-            }
-
-        })
-
-        focusedListener(binding.containerName, binding.textName)
+        focusedListener(binding.containerPasswordRepeat, binding.textPasswordRepeat)
         focusedListener(binding.containerEmail, binding.textEmail)
         focusedListener(binding.containerPassword, binding.textPassword)
 
         binding.goReg.setOnClickListener{
-            takeHelperText(binding.containerName, binding.textName)
+            takeHelperText(binding.containerPasswordRepeat, binding.textPasswordRepeat)
             takeHelperText(binding.containerEmail, binding.textEmail)
             takeHelperText(binding.containerPassword, binding.textPassword)
-            if(validText(binding.containerName,binding.textName.text.toString(), 1) == null && validText(binding.containerEmail, binding.textEmail.text.toString(), 2) == null && validText(binding.containerPassword, binding.textPassword.text.toString(), 3) == null){
+            if(validText(binding.textPasswordRepeat, 0) == null && validText(binding.textEmail, 2) == null && validText(binding.textPassword, 3) == null){
                 lifecycleScope.launch {
                     try{
                     val users = sb.from("Пользователи").select{
@@ -78,8 +59,11 @@ class RegistrationActivity : AppCompatActivity() {
                         sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
 
                         val user = sb.auth.currentUserOrNull()
-                        val userAdd = UserDataClass(id = user?.id.toString(), Имя = binding.textName.text.toString(), Почта = user?.email.toString())
+
+                        val userAdd = UserDataClass(id = user?.id.toString(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString())
                         sb.postgrest["Пользователи"].insert(userAdd)
+
+                        Log.e("create profile", userAdd.toString())
 
                         val myIntent = Intent(this@RegistrationActivity, CreateProfileActivity::class.java)
                         startActivity(myIntent)
@@ -120,15 +104,19 @@ class RegistrationActivity : AppCompatActivity() {
             else -> 0
         }
 
-        container.helperText = validText(container, editText.text.toString(), type)
+        container.helperText = validText(editText, type)
     }
 
-    private fun validText(container: TextInputLayout, text: String, type: Int): String? {
+    private fun validText(editText: TextInputEditText, type: Int): String? {
+        val text = editText.text.toString()
+
         if(text.isEmpty()){
             return "Поле не должно быть пустым"
         }
-        if(type == 0 && text.length > container.counterMaxLength){
-            return "Слишком длинное имя"
+        if(type == 0){
+            if(text != binding.textPassword.text?.toString()){
+                return "Пароли не совпадают"
+            }
         }
         if(type == 2){
             if(!Patterns.EMAIL_ADDRESS.matcher(text).matches())

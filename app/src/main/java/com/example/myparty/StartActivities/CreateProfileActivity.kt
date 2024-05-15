@@ -1,6 +1,8 @@
 package com.example.myparty.StartActivities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -13,8 +15,6 @@ import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.databinding.ActivityCreateProfileBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import io.github.jan.supabase.gotrue.auth
-import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
 
@@ -23,22 +23,16 @@ class CreateProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateProfileBinding
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user = sb.auth.currentUserOrNull()
+        sharedPreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        lifecycleScope.launch {
-            val users = sb.from("Пользователи").select{
-                filter {
-                    eq("id", user?.id.toString())
-                }
-            }.decodeSingle<UserDataClass>()
-
-            binding.textName.setText(users.Имя)
-        }
+        val user = sharedPreferences.getString("TOKEN_USER", null)
 
         binding.textNick.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -102,14 +96,9 @@ class CreateProfileActivity : AppCompatActivity() {
             takeHelperText(binding.containerDescription, binding.textDescription)
 
             if(binding.containerNick.helperText == null && binding.containerName.helperText == null){
-               /* val intent = intent
-                intent.putExtra("nick", binding.textNick.text.toString())
-                intent.putExtra("name", binding.textName.text.toString())
-                intent.putExtra("description", binding.textDescription.text.toString())
-                setResult(RESULT_OK, intent)
-                finish()*/
-                try{
-                    lifecycleScope.launch {
+
+                lifecycleScope.launch {
+                    try{
                         if (sb.postgrest["Пользователи"].select {
                                 filter {
                                     eq("Ник", binding.textNick.text.toString())
@@ -118,10 +107,14 @@ class CreateProfileActivity : AppCompatActivity() {
                             binding.containerNick.helperText = "Такой пользователь уже существует"
                         }
                         else{
-                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString())
+                            val userAdd = UserDataClass(
+                                Ник = binding.textNick.text.toString(),
+                                Имя = binding.textName.text.toString(),
+                                Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString()
+                            )
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
-                                    eq("id", user?.id.toString())
+                                    eq("id", user!!)
                                 }
                             }
                             val mainIntent = Intent(this@CreateProfileActivity, MainActivity::class.java)
@@ -129,11 +122,10 @@ class CreateProfileActivity : AppCompatActivity() {
                             finish()
                         }
                     }
+                    catch(e: Throwable){
+                        Log.e("Error create profile", e.toString())
+                    }
                 }
-                catch(e: Exception){
-                    Log.e("Error create profile", e.toString())
-                }
-
             }
         }
     }

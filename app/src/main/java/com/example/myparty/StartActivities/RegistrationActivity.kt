@@ -33,42 +33,53 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
+        // Проверка введенных данных
         focusedListener(binding.containerPasswordRepeat, binding.textPasswordRepeat)
         focusedListener(binding.containerEmail, binding.textEmail)
         focusedListener(binding.containerPassword, binding.textPassword)
 
         binding.goReg.setOnClickListener{
+            // Проверка введенных данных
             takeHelperText(binding.containerPasswordRepeat, binding.textPasswordRepeat)
             takeHelperText(binding.containerEmail, binding.textEmail)
             takeHelperText(binding.containerPassword, binding.textPassword)
+
+            // Проверка введенных данных
             if(validText(binding.textPasswordRepeat, 0) == null && validText(binding.textEmail, 2) == null && validText(binding.textPassword, 3) == null){
+                // Создание корутина для взаимодействия с базой даных
                 lifecycleScope.launch {
                     try{
+                        // Проверка на существование пользователя с введенным email
                     val users = sb.from("Пользователи").select{
                         filter {
                             eq("Почта", binding.textEmail.text.toString())
                         }
                     }.decodeList<UserDataClass>().count()
 
+                        // Если пользователя с таким email не существует, то создается новый пользователь
                     if(users == 0){
                         sb.auth.signUpWith(Email) {
                             email = binding.textEmail.text.toString()
                             password = binding.textPassword.text.toString()
                         }
 
+                        // Сохранение id пользователя в SharedPreference
                         sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
 
                         val user = sb.auth.currentUserOrNull()
 
+                        // Добавление данных пользователя в таблицу Пользователи
                         val userAdd = UserDataClass(id = user?.id.toString(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString())
                         sb.postgrest["Пользователи"].insert(userAdd)
 
                         Log.e("create profile", userAdd.toString())
 
+                        // Переход на экран создания профиля пользователя
                         val myIntent = Intent(this@RegistrationActivity, CreateProfileActivity::class.java)
                         startActivity(myIntent)
                         finish()
                     }
+                    // Если пользователь с таким email уже существует, то выводит подсказку
                     else {
                         binding.containerEmail.helperText = "Пользователь с таким email уже есть"
                         binding.textEmail.requestFocus()
@@ -82,12 +93,15 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
 
+        // Переход на экран логина
         binding.toLogIn.setOnClickListener{
             val myIntent = Intent(this@RegistrationActivity, LoginActivity::class.java)
             startActivity(myIntent)
             finish()
         }
     }
+
+    // Функция для проверки правильности введенных данных
     private fun focusedListener(container: TextInputLayout, editText: TextInputEditText) {
         editText.setOnFocusChangeListener{_, focused->
             if(!focused)
@@ -97,6 +111,7 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
+    // Функция для вывода подсказки
     private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
         val type = when (editText) {
             binding.textEmail -> 2
@@ -107,6 +122,7 @@ class RegistrationActivity : AppCompatActivity() {
         container.helperText = validText(editText, type)
     }
 
+    // Функция для возвращения текста подсказки
     private fun validText(editText: TextInputEditText, type: Int): String? {
         val text = editText.text.toString()
 
@@ -129,7 +145,7 @@ class RegistrationActivity : AppCompatActivity() {
             {
                 return "Пароль должен содержать минимум 6 символов"
             }
-            /*if(!text.matches(".*[a-z, а-я].*".toRegex())){
+            if(!text.matches(".*[a-z, а-я].*".toRegex())){
                 return "Пароль должен содержать буквы с нижним регистром"
             }
             if(!text.matches(".*[A-Z, А-Я].*".toRegex())){
@@ -137,7 +153,7 @@ class RegistrationActivity : AppCompatActivity() {
             }
             if(!text.matches(".*[!@#\$&*].*".toRegex())){
                 return "Пароль должен содержать специальные символы !@#\$&*"
-            }*/
+            }
         }
         return null
     }

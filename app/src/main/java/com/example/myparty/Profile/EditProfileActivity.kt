@@ -131,8 +131,6 @@ class EditProfileActivity : AppCompatActivity() {
                                     eq("id", user.id.toString())
                                 }
                             }
-                            val mainIntent = Intent(this@EditProfileActivity, MainActivity::class.java)
-                            startActivity(mainIntent)
                             finish()
                         }
                     }

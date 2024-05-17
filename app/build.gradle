@@ -44,14 +44,10 @@ dependencies {
     implementation 'io.github.jan-tennert.supabase:postgrest-kt'
     implementation "io.github.jan-tennert.supabase:storage-kt"
 
-    implementation "com.mikepenz:fastadapter:5.7.0"
-    implementation "com.mikepenz:fastadapter-extensions-expandable:5.7.0"
-    implementation "com.mikepenz:fastadapter-extensions-binding:5.7.0"
-    implementation "com.mikepenz:fastadapter-extensions-diff:5.7.0"
+    implementation 'com.google.android.material:material:1.13.0-alpha02'
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'

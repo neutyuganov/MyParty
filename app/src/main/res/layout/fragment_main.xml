@@ -29,22 +29,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:queryHint="Найди свою вечеринку"
-        app:queryBackground="@null"
-        app:searchIcon="@drawable/search"
-        app:closeIcon="@drawable/cross"
-        android:background="@drawable/edit_text_selector"
-        app:iconifiedByDefault="false"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"/>
-
     <!--<com.google.android.material.textfield.TextInputLayout
         android:id="@+id/container_search"
         android:layout_width="match_parent"
@@ -75,29 +59,30 @@
         style="@style/image_button_main_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:background="@null"
         android:drawableStart="@drawable/location_main_text_color"
         android:drawablePadding="7dp"
         android:text="Россия"
+        android:layout_marginTop="5dp"
         android:textColor="@color/main_text_color"
-        app:layout_constraintStart_toStartOf="@+id/searchView"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
     <Button
         android:id="@+id/button_filter"
+        style="@style/image_button_main_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
         android:drawableStart="@drawable/filter"
-        style="@style/image_button_main_style"
         android:drawablePadding="7dp"
         android:text="Фильтры"
-        android:textColor="@color/main_text_color"
         android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/searchView"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/main_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 
     <androidx.recyclerview.widget.RecyclerView

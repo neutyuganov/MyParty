@@ -15,8 +15,16 @@
         android:theme="@style/Base.Theme.MyParty"
         tools:targetApi="31">
         <activity
+            android:name=".FilterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Activity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name=".AdminActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Activity"/>
         <activity
             android:name=".StartActivities.CreateProfileActivity"
             android:exported="false"
@@ -51,8 +59,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".StartActivities.RegistrationActivity"
             android:exported="false"

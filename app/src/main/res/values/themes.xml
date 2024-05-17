@@ -40,6 +40,16 @@
         <item name="android:fontFamily">@font/rubik_regular</item>
     </style>
 
+    <style name="ToggleButtonWithIconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
     <style name="image_button_main_style" >
         <item name="fontFamily">@font/rubik_medium</item>
         <item name="android:includeFontPadding">false</item>
@@ -125,6 +135,12 @@
         <item name="fontFamily">@font/rubik_bold</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="text_bold_20_style">
+        <item name="fontFamily">@font/rubik_bold</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="text_medium_20_style">

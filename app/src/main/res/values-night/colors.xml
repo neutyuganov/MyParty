@@ -18,6 +18,7 @@
     <color name="pressed_secondary_button_color">#323232</color>
 
     <color name="pressed_main_button_color">#AE1F53</color>
+    <color name="enabled_false_main_button_color">#9F1D4A</color>
 
     <color name="transparent">#00FFFFFF</color>
 

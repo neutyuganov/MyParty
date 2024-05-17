@@ -1,5 +1,6 @@
 package com.example.myparty
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,7 +23,7 @@ import java.time.LocalDate;
 import org.json.JSONArray
 
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
@@ -110,7 +111,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         }
 
-
+        binding.buttonFilter.setOnClickListener {
+            val mainIntent = Intent(context, FilterActivity::class.java)
+            startActivity(mainIntent)
+        }
     }
 }
 

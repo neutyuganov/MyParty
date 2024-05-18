@@ -84,8 +84,8 @@ class ProfileFragment : Fragment() {
 
         val adapter = ViewPagerAdapter(childFragmentManager)
 
-        adapter.addFragment(ActualPartyFragment(), "Активные")
-        adapter.addFragment(BeforePartyFragment(), "Прошедшие")
+        adapter.addFragment(ActualPartyFragment(user!!), "Активные")
+        adapter.addFragment(BeforePartyFragment(user!!), "Прошедшие")
 
         lifecycleScope.launch {
             try{

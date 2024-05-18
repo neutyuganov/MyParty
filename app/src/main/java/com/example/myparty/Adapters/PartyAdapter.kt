@@ -64,9 +64,11 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             }
 
             userName.setOnClickListener {
-                val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
-                intent.putExtra("USER_ID", party.id_пользователя)
-                it.context.startActivity(intent)
+                if(party.id_пользователя != sb.auth.currentUserOrNull()?.id!!) {
+                    val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
+                    intent.putExtra("USER_ID", party.id_пользователя)
+                    it.context.startActivity(intent)
+                }
             }
 
             try {

@@ -19,7 +19,9 @@ import org.json.JSONArray
 import java.time.LocalDate
 
 
-class ActualPartyFragment : Fragment() {
+class ActualPartyFragment(userId : String) : Fragment() {
+
+    var userId = userId
 
     private lateinit var binding: FragmentActualPartyBinding
 
@@ -33,7 +35,7 @@ class ActualPartyFragment : Fragment() {
 
         binding.progressBar.visibility = View.VISIBLE
 
-        Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
+        Log.e("USERCURRENT", userId)
 
         val parties = mutableListOf<PartyDataClass>()
 
@@ -42,7 +44,7 @@ class ActualPartyFragment : Fragment() {
                 val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
                     filter {
                         gte("Дата", LocalDate.now())
-                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                        eq("id_пользователя", userId)
                         neq("id_статуса_проверки", "2")
                     }
                 } .data

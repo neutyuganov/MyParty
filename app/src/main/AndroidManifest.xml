@@ -15,16 +15,19 @@
         android:theme="@style/Base.Theme.MyParty"
         tools:targetApi="31">
         <activity
+            android:name=".ProfileOrganizatorActivity"
+            android:exported="false" />
+        <activity
             android:name=".FilterActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Activity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AdminActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Activity"/>
+            android:theme="@style/Activity" />
         <activity
             android:name=".StartActivities.CreateProfileActivity"
             android:exported="false"

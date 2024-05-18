@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.PartyActivity
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.PartyFavoriteDataClass
+import com.example.myparty.ProfileOrganizatorActivity
 import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.MainRecyclerViewItemBinding
@@ -60,6 +61,12 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
 
             if(party.Избранное == true){
                 star.setImageResource(R.drawable.star)
+            }
+
+            userName.setOnClickListener {
+                val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
+                intent.putExtra("USER_ID", party.id_пользователя)
+                it.context.startActivity(intent)
             }
 
             try {

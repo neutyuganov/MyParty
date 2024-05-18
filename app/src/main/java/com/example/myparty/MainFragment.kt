@@ -72,6 +72,7 @@ class MainFragment : Fragment() {
                     val place = jsonObject.getString("Место")
 //                    val description = jsonObject.getString("Описание")
                     val price = jsonObject.getDouble("Цена")
+                    val userId = jsonObject.getString("id_пользователя")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
                     val age = ageObject.getInt("Возраст")
                     val usersObject = jsonObject.getJSONObject("Пользователи")
@@ -88,6 +89,7 @@ class MainFragment : Fragment() {
                     val event = PartyDataClass(
                         id = id,
                         Название = name,
+                        id_пользователя = userId,
                         Имя = userName,
                         Дата = date,
                         Время = time,

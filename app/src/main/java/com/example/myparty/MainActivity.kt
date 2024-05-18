@@ -22,12 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         if(savedInstanceState == null){
             loadFragment(mainFragment)
-
-//            currentFragment = mainFragment
-//            supportFragmentManager.beginTransaction().apply {
-//                add(R.id.frame, mainFragment, "MainFragment")
-//                add(R.id.frame, profileFragment, "ProfileFragment").hide(profileFragment)
-//            }.commit()
         }
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -68,7 +62,6 @@ class MainActivity : AppCompatActivity() {
     // Метод для загрузки фрагмента и сохранения его состояния
     private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-//        transaction.hide(currentFragment).show(fragment).commit()
         currentFragment = fragment
         transaction.replace(R.id.frame, fragment)
         transaction.commit()

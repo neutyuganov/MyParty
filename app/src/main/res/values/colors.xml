@@ -13,6 +13,7 @@
     <color name="background_splash_screen">#CB2F67</color>
 
     <color name="items_color">#FFFFFF</color>
+    <color name="items_color_alpha">#61FFFFFF</color>
     <color name="stroke_color">#D8D8D8</color>
 
     <color name="pressed_secondary_button_color">#E4E4E4</color>

@@ -105,7 +105,7 @@ class MainFragment : Fragment() {
                 val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
                 val partyAdapter = PartyAdapter(parties, coroutineScope)
                 binding.recycler.adapter = partyAdapter
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e("Ошибка получения данных вечеринки", e.message.toString())
             } finally {
                 binding.progressBar.visibility = View.GONE

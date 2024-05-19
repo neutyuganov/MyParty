@@ -49,21 +49,25 @@ class ProfileFragment : Fragment() {
 
         user = sharedPreferences.getString("TOKEN_USER", null)
 
+        binding.content.visibility = View.GONE
+
         lifecycleScope.launch {
             try{
                 userData = getUserData()
                 followersCount = getFollowers()
                 followingCount = getFollowing()
                 partyCount = getParty()
+                setupViewPager(binding.viewPager)
+                binding.tabLayout.setupWithViewPager(binding.viewPager)
                 loadUserData()
+
+                binding.content.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
             }
             catch(e:Throwable){
                 Log.e("ProfileFragment", e.message.toString())
             }
         }
-
-        setupViewPager(binding.viewPager)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         binding.btnGoEditProfile.setOnClickListener {
             val myIntent = Intent(context, EditProfileActivity::class.java)
@@ -101,7 +105,6 @@ class ProfileFragment : Fragment() {
             }
             viewPager.adapter = adapter
         }
-        viewPager.adapter = adapter
     }
 
     suspend fun getUserData(): UserDataClass = withContext(Dispatchers.IO) {

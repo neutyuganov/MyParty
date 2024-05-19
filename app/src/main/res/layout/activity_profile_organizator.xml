@@ -7,196 +7,225 @@
     android:background="@color/background"
     tools:context=".Profile.ProfileFragment">
 
-  <TextView
-      android:id="@+id/nickUser"
-      style="@style/text_medium_20_style"
-      android:textColor="@color/main_text_color"
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/content">
+
+    <TextView
+        android:id="@+id/nickUser"
+        style="@style/text_medium_20_style"
+        android:textColor="@color/main_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="\@"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageUser"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/camera"
+        android:padding="30dp"
+        android:background="@drawable/round_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nickUser" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageUser">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/countParty"
+              style="@style/text_medium_20_style"
+              android:textColor="@color/main_text_color"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="0" />
+
+          <TextView
+              style="@style/text_medium_10_secondary_style"
+              android:textColor="@color/secondary_text_color"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="Вечеринки" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/countFollower"
+              style="@style/text_medium_20_style"
+              android:textColor="@color/main_text_color"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="0" />
+
+          <TextView
+              style="@style/text_medium_10_secondary_style"
+              android:textColor="@color/secondary_text_color"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="Подписчики" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/countFollowing"
+              style="@style/text_medium_20_style"
+              android:textColor="@color/main_text_color"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="0" />
+
+          <TextView
+              style="@style/text_medium_10_secondary_style"
+              android:textColor="@color/secondary_text_color"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="Подписки" />
+
+        </LinearLayout>
+
+      </LinearLayout>
+
+      <Button
+          android:id="@+id/btnSubscribe"
+          style="@style/button_secondary_style_small"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:background="@drawable/button_secondary_color_selector"
+          android:text="Отписаться" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/nameUser"
+        style="@style/text_bold_30_style"
+        android:textColor="@color/main_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="20dp"
+        android:text=" "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageUser" />
+
+    <ImageView
+        android:id="@+id/verifyUser"
+        android:layout_width="18dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/tick"
+        android:visibility="invisible"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/nameUser"
+        app:layout_constraintStart_toEndOf="@+id/nameUser"
+        app:layout_constraintTop_toTopOf="@+id/nameUser" />
+
+    <TextView
+        android:id="@+id/descriptionUser"
+        style="@style/text_medium_16_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="20dp"
+        android:textColor="@color/secondary_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameUser" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        app:tabTextAppearance="@style/text_tab_layout_style"
+        app:tabMode="scrollable"
+        app:tabIndicatorAnimationMode="fade"
+        app:tabIndicatorFullWidth="false"
+        app:tabPaddingEnd="10dp"
+        app:tabPaddingStart="10dp"
+        app:tabContentStart="20dp"
+
+        app:tabSelectedTextAppearance="@style/text_tab_layout_style"
+        app:tabRippleColor="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionUser"
+        app:tabIndicatorHeight="4dp" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <ProgressBar
+      android:id="@+id/progressBar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="20dp"
-      android:text="\@"
+      android:layout_gravity="center"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
-  <ImageView
-      android:id="@+id/imageUser"
-      android:layout_width="110dp"
-      android:layout_height="110dp"
-      android:layout_marginTop="15dp"
-      android:layout_marginStart="20dp"
-      android:src="@drawable/camera"
-      android:padding="30dp"
-      android:background="@drawable/round_button"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/nickUser" />
-
-  <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="10dp"
-      android:orientation="vertical"
-      android:layout_marginEnd="20dp"
-      app:layout_constraintBottom_toBottomOf="@+id/imageUser"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/imageUser">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="3">
-
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/countParty"
-            style="@style/text_medium_20_style"
-            android:textColor="@color/main_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="0" />
-
-        <TextView
-            style="@style/text_medium_10_secondary_style"
-            android:textColor="@color/secondary_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Вечеринки" />
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/countFollower"
-            style="@style/text_medium_20_style"
-            android:textColor="@color/main_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="0" />
-
-        <TextView
-            style="@style/text_medium_10_secondary_style"
-            android:textColor="@color/secondary_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Подписчики" />
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/countFollowing"
-            style="@style/text_medium_20_style"
-            android:textColor="@color/main_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="0" />
-
-        <TextView
-            style="@style/text_medium_10_secondary_style"
-            android:textColor="@color/secondary_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Подписки" />
-
-      </LinearLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnSubscribe"
-        style="@style/button_secondary_style_small"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_secondary_color_selector"
-        android:text="Отписаться" />
-  </LinearLayout>
-
-  <TextView
-      android:id="@+id/nameUser"
-      style="@style/text_bold_30_style"
-      android:textColor="@color/main_text_color"
+  <ImageButton
+      android:id="@+id/btnGoBack"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="14dp"
+      android:background="@null"
+      android:layout_marginTop="20dp"
       android:layout_marginStart="20dp"
-      android:text=" "
+      android:src="@drawable/back_arrow"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/imageUser" />
+      app:layout_constraintTop_toTopOf="parent" />
 
-  <ImageView
-      android:id="@+id/verifyUser"
-      android:layout_width="18dp"
-      android:layout_height="wrap_content"
-      android:src="@drawable/tick"
-      android:visibility="invisible"
-      android:layout_marginTop="5dp"
-      android:layout_marginStart="6dp"
-      app:layout_constraintBottom_toBottomOf="@+id/nameUser"
-      app:layout_constraintStart_toEndOf="@+id/nameUser"
-      app:layout_constraintTop_toTopOf="@+id/nameUser" />
-
-  <TextView
-      android:id="@+id/descriptionUser"
-      style="@style/text_medium_16_style"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="5dp"
-      android:layout_marginHorizontal="20dp"
-      android:textColor="@color/secondary_text_color"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/nameUser" />
-
-  <com.google.android.material.tabs.TabLayout
-      android:id="@+id/tabLayout"
-      app:tabTextAppearance="@style/text_tab_layout_style"
-      app:tabMode="scrollable"
-      app:tabIndicatorAnimationMode="fade"
-      app:tabIndicatorFullWidth="false"
-      app:tabPaddingEnd="10dp"
-      app:tabPaddingStart="10dp"
-      app:tabContentStart="20dp"
-
-      app:tabSelectedTextAppearance="@style/text_tab_layout_style"
-      app:tabRippleColor="@android:color/transparent"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/descriptionUser"
-      app:tabIndicatorHeight="4dp" />
-
-  <androidx.viewpager.widget.ViewPager
-      android:id="@+id/viewPager"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -49,6 +49,8 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
         userId = intent.getStringExtra("USER_ID")
 
+        binding.content.visibility = View.GONE
+
         lifecycleScope.launch {
             try{
                 userData = getUserData()
@@ -56,15 +58,21 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
                 followingCount = getFollowing()
                 partyCount = getParty()
                 subsribe = getSub()
+                setupViewPager(binding.viewPager)
+                binding.tabLayout.setupWithViewPager(binding.viewPager)
                 loadUserData()
+
+                binding.content.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
             }
             catch(e:Throwable){
                 Log.e("ProfileFragment", e.message.toString())
             }
         }
 
-        setupViewPager(binding.viewPager)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.btnGoBack.setOnClickListener {
+            finish()
+        }
 
         binding.btnSubscribe.setOnClickListener {
             try {

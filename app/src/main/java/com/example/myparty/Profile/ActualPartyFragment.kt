@@ -54,6 +54,7 @@ class ActualPartyFragment(userId : String) : Fragment() {
                 for (i in 0 until jsonArray.length()) {
                     val jsonObject = jsonArray.getJSONObject(i)
                     val id = jsonObject.getInt("id")
+                    val userId = jsonObject.getString("id_пользователя")
                     val name = jsonObject.getString("Название")
                     val date = jsonObject.getString("Дата")
                     val time = jsonObject.getString("Время")
@@ -63,14 +64,13 @@ class ActualPartyFragment(userId : String) : Fragment() {
                     val age = ageObject.getInt("Возраст")
                     val statusObject = jsonObject.getJSONObject("Статусы_проверки")
                     val status = statusObject.getString("Название")
-                    val event = PartyDataClass(id = id, Название = name, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status)
+                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status)
                     parties.add(event)
                 }
 
                 val partyAdapter = PartyUserAdapter(parties)
                 binding.recycler.adapter = partyAdapter
             }
-
             catch (e: Throwable){
                 Log.e("Ошибка получения данных вечеринки", e.message.toString())
             }

@@ -59,6 +59,10 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
                 price.text = "от $priceFormat ₽"
             }
 
+            if(party.id_пользователя == sb.auth.currentUserOrNull()?.id!!) {
+                star.isVisible = false
+            }
+
             if(party.Избранное == true){
                 star.setImageResource(R.drawable.star)
             }

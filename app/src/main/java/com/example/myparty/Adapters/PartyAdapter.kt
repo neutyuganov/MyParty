@@ -4,11 +4,13 @@ import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.PartyActivity
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.PartyFavoriteDataClass
+import com.example.myparty.DataClasses.UsersSubsDataClass
 import com.example.myparty.ProfileOrganizatorActivity
 import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
@@ -16,7 +18,9 @@ import com.example.myparty.databinding.MainRecyclerViewItemBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -63,8 +67,15 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
                 star.isVisible = false
             }
 
-            if(party.Избранное == true){
+            var favorite = party.Избранное!!
+
+            Log.d("party", party.Избранное.toString())
+
+            if(!favorite){
                 star.setImageResource(R.drawable.star)
+            }
+            else{
+                star.setImageResource(R.drawable.empty_star)
             }
 
             userName.setOnClickListener {
@@ -77,27 +88,51 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
 
             try {
                 star.setOnClickListener {
-                    if (party.Избранное!!) {
-                        party.Избранное = false
-                        itemBinding.star.setImageResource(R.drawable.empty_star)
-                        coroutineScope.launch {
-                            sb.from("Избранные_вечеринки").delete {
-                                filter {
-                                    eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
-                                    eq("id_вечеринки", party.id!!)
+                    coroutineScope.launch {
+                        try {
+                            if (favorite) {
+                                Log.d("party_insert", favorite.toString())
+                                if(favorite != getFavorites(sb.auth.currentUserOrNull()?.id!!, party.id!!)){
+                                    Toast.makeText(itemBinding.root.context, "Вечеринка уже в избранном", Toast.LENGTH_SHORT).show()
+                                }
+                                else{
+                                    sb.from("Избранные_вечеринки").insert(
+                                        PartyFavoriteDataClass(
+                                            id_пользователя = sb.auth.currentUserOrNull()?.id!!,
+                                            id_вечеринки = party.id
+                                        )
+                                    )
+                                }
+                                favorite = !favorite
+                                if(!favorite){
+                                    star.setImageResource(R.drawable.star)
+                                }
+                                else{
+                                    star.setImageResource(R.drawable.empty_star)
+                                }
+                            } else {
+                                Log.d("party_delite", favorite.toString())
+                                if(favorite != getFavorites(sb.auth.currentUserOrNull()?.id!!, party.id!!)){
+                                    Toast.makeText(itemBinding.root.context, "Вечеринка уже удалена из избранного", Toast.LENGTH_SHORT).show()
+                                }
+                                else{
+                                    sb.from("Избранные_вечеринки").delete {
+                                        filter {
+                                            eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
+                                            eq("id_вечеринки", party.id)
+                                        }
+                                    }
+                                }
+                                favorite = !favorite
+                                if(!favorite){
+                                    star.setImageResource(R.drawable.star)
+                                }
+                                else{
+                                    star.setImageResource(R.drawable.empty_star)
                                 }
                             }
-                        }
-                    } else {
-                        party.Избранное = true
-                        itemBinding.star.setImageResource(R.drawable.star)
-                        coroutineScope.launch {
-                            sb.from("Избранные_вечеринки").insert(
-                                PartyFavoriteDataClass(
-                                    id_пользователя = sb.auth.currentUserOrNull()?.id!!,
-                                    id_вечеринки = party.id!!
-                                )
-                            )
+                        }catch (e: Exception){
+                            Log.e("Ошибка добавления в избранное", e.message.toString())
                         }
                     }
                 }
@@ -122,5 +157,15 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             place.text = party.Место
             }
         }
+        suspend fun getFavorites(userId: String, partyId: Int): Boolean  = withContext(
+            Dispatchers.IO) {
+            sb.from("Избранные_вечеринки").select{
+                filter {
+                    eq("id_пользователя", userId)
+                    eq("id_вечеринки", partyId)
+                }
+            }.decodeList<PartyDataClass>().isEmpty()
+        }
     }
+
 }

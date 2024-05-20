@@ -77,11 +77,11 @@ class MainFragment : Fragment() {
                     val usersObject = jsonObject.getJSONObject("Пользователи")
                     val userName = usersObject.getString("Имя")
                     val userVerify = usersObject.getBoolean("Верификация")
-                    var favorite = false
+                    var favorite = true
                     for (j in 0 until jsonArrayFavorites.length()) {
                         val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
                         if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
-                            favorite = true
+                            favorite = false
                         }
                     }
 

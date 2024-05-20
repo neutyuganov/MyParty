@@ -128,7 +128,7 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
                     eq("id_пользователя", userId)
                     eq("id_подписчика", followerId)
                 }
-            }.decodeList<PartyDataClass>().isEmpty()
+            }.decodeList<FollowersDataClass>().isEmpty()
         }
 
         fun checkFollow(status: Boolean) {

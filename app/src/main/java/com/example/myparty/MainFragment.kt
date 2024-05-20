@@ -39,9 +39,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Показать тндикацию загрузки
         binding.progressBar.visibility = View.VISIBLE
-
-        Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
 
         lifecycleScope.launch {
             try {
@@ -110,7 +109,6 @@ class MainFragment : Fragment() {
             } finally {
                 binding.progressBar.visibility = View.GONE
             }
-
         }
 
         binding.buttonFilter.setOnClickListener {

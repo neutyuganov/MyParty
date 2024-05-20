@@ -56,7 +56,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textNick.text.toString().length > 15){
+                if(binding.textNick.text.toString().length > 10){
                     binding.containerNick.isCounterEnabled = true
                 }
             }
@@ -73,7 +73,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textName.text.toString().length > 20){
+                if(binding.textName.text.toString().length > 10){
                     binding.containerName.isCounterEnabled = true
                 }
             }

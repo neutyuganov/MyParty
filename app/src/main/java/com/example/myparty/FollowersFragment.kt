@@ -16,7 +16,7 @@ import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.StartActivities.LoginActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
-import com.example.myparty.databinding.FragmentProfileBinding
+import com.example.myparty.databinding.FragmentFollowersBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +24,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ProfileFragment : Fragment() {
+class FollowersFragment : Fragment() {
 
-    private lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: FragmentFollowersBinding
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -38,7 +38,7 @@ class ProfileFragment : Fragment() {
     var partyCount = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
-        binding = FragmentProfileBinding.inflate(inflater, container,false)
+        binding = FragmentFollowersBinding.inflate(inflater, container,false)
         return binding.root
     }
 
@@ -49,51 +49,35 @@ class ProfileFragment : Fragment() {
 
         user = sharedPreferences.getString("TOKEN_USER", null)
 
-        binding.content.visibility = View.INVISIBLE
-
-        Log.e("ProfileFragment вывод Пользователя", user.toString())
+//        binding.content.visibility = View.INVISIBLE
 
         lifecycleScope.launch {
             try{
-                userData = getUserData()
                 followersCount = getFollowers()
                 followingCount = getFollowing()
-                partyCount = getParty()
 
                 loadUserData()
 
-                binding.content.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
+//                binding.content.visibility = View.VISIBLE
+//                binding.progressBar.visibility = View.GONE
             }
             catch(e:Throwable){
-                Log.e("ProfileFragment вывод данных", e.message.toString())
+                Log.e("Ошибка получения данных FollowersFragment", e.message.toString())
             }
         }
 
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
-        binding.btnGoEditProfile.setOnClickListener {
-            val myIntent = Intent(context, EditProfileActivity::class.java)
-            startActivity(myIntent)
-        }
 
-        binding.btnLogOut.setOnClickListener {
-            sharedPreferences.edit().putString("TOKEN_USER", null).apply()
-            lifecycleScope.launch {
-                sb.auth.signOut()
-                val myIntent = Intent(context, LoginActivity::class.java)
-                startActivity(myIntent)
-            }
-        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
 
         val adapter = ViewPagerAdapter(childFragmentManager)
 
-        adapter.addFragment(ActualPartyFragment(user!!), "Активные")
-        adapter.addFragment(BeforePartyFragment(user!!), "Прошедшие")
+        adapter.addFragment(ActualPartyFragment(user!!), "Подписчики")
+        adapter.addFragment(BeforePartyFragment(user!!), "Подписки")
 
         lifecycleScope.launch {
             try{
@@ -146,13 +130,7 @@ class ProfileFragment : Fragment() {
     }
 
     fun loadUserData() {
-        binding.nameUser.text = userData?.Имя
-        binding.nickUser.text = "@" + userData?.Ник
-        if(userData?.Описание.isNullOrEmpty()) binding.descriptionUser.visibility = View.GONE else binding.descriptionUser.text = userData?.Описание
-        binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
-        binding.countFollower.text = followersCount.toString()
-        binding.countFollowing.text = followingCount.toString()
-        binding.countParty.text = partyCount.toString()
+
     }
 
 }

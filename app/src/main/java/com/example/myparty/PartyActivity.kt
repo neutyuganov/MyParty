@@ -168,8 +168,7 @@ class PartyActivity : AppCompatActivity() {
                eq("id", partyId)
             }
         }.data
-
-        val jsonArrayParties = JSONArray(partiesResult)
+        val jsonObjectParty = JSONArray(partiesResult).getJSONObject(0)
 
         val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
             filter {
@@ -178,21 +177,19 @@ class PartyActivity : AppCompatActivity() {
         }.data
         val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
 
-
-        val jsonObject = jsonArrayParties.getJSONObject(0)
-        val id = jsonObject.getInt("id")
-        val name = jsonObject.getString("Название")
-        val slogan = jsonObject.getString("Слоган")
-        val date = jsonObject.getString("Дата")
-        val time = jsonObject.getString("Время")
-        val city = jsonObject.getString("Город")
-        val place = jsonObject.getString("Место")
-        val description = jsonObject.getString("Описание")
-        val price = jsonObject.getDouble("Цена")
-        val userId = jsonObject.getString("id_пользователя")
-        val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
+        val id = jsonObjectParty.getInt("id")
+        val name = jsonObjectParty.getString("Название")
+        val slogan = jsonObjectParty.getString("Слоган")
+        val date = jsonObjectParty.getString("Дата")
+        val time = jsonObjectParty.getString("Время")
+        val city = jsonObjectParty.getString("Город")
+        val place = jsonObjectParty.getString("Место")
+        val description = jsonObjectParty.getString("Описание")
+        val price = jsonObjectParty.getDouble("Цена")
+        val userId = jsonObjectParty.getString("id_пользователя")
+        val ageObject = jsonObjectParty.getJSONObject("Возрастное_ограничение")
         val age = ageObject.getInt("Возраст")
-        val usersObject = jsonObject.getJSONObject("Пользователи")
+        val usersObject = jsonObjectParty.getJSONObject("Пользователи")
         val userName = usersObject.getString("Имя")
         val userVerify = usersObject.getBoolean("Верификация")
         var favorite = false

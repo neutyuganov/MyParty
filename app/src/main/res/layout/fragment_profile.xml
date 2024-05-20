@@ -7,52 +7,77 @@
     android:background="@color/background"
     tools:context=".Profile.ProfileFragment">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/icon_square"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        style="@style/text_bold_30_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Профиль"
+        android:layout_marginStart="14dp"
+        android:textColor="@color/main_text_color"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <ImageButton
+        android:id="@+id/btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@null"
+        android:src="@drawable/logout"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/content">
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
 
         <TextView
             android:id="@+id/nickUser"
             style="@style/text_medium_20_style"
-            android:textColor="@color/main_text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="\@"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/main_text_color"
+            app:layout_constraintEnd_toEndOf="@+id/linearLayout4"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout4"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/btnLogOut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/logout"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/nickUser"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nickUser" />
 
         <ImageView
             android:id="@+id/imageUser"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
-            android:src="@drawable/camera"
-            android:padding="30dp"
             android:background="@drawable/round_button"
+            android:padding="30dp"
+            android:src="@drawable/camera"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nickUser" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearLayout4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:orientation="vertical"
             android:layout_marginEnd="20dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/imageUser"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageUser">
@@ -72,19 +97,19 @@
                     <TextView
                         android:id="@+id/countParty"
                         style="@style/text_medium_20_style"
-                        android:textColor="@color/main_text_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="0" />
+                        android:text="0"
+                        android:textColor="@color/main_text_color" />
 
                     <TextView
                         style="@style/text_medium_10_secondary_style"
-                        android:textColor="@color/secondary_text_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Вечеринки" />
+                        android:text="Вечеринки"
+                        android:textColor="@color/secondary_text_color" />
 
                 </LinearLayout>
 
@@ -98,19 +123,19 @@
                     <TextView
                         android:id="@+id/countFollower"
                         style="@style/text_medium_20_style"
-                        android:textColor="@color/main_text_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="0" />
+                        android:text="0"
+                        android:textColor="@color/main_text_color" />
 
                     <TextView
                         style="@style/text_medium_10_secondary_style"
-                        android:textColor="@color/secondary_text_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Подписчики" />
+                        android:text="Подписчики"
+                        android:textColor="@color/secondary_text_color" />
 
                 </LinearLayout>
 
@@ -124,19 +149,19 @@
                     <TextView
                         android:id="@+id/countFollowing"
                         style="@style/text_medium_20_style"
-                        android:textColor="@color/main_text_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="0" />
+                        android:text="0"
+                        android:textColor="@color/main_text_color" />
 
                     <TextView
                         style="@style/text_medium_10_secondary_style"
-                        android:textColor="@color/secondary_text_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Подписки" />
+                        android:text="Подписки"
+                        android:textColor="@color/secondary_text_color" />
 
                 </LinearLayout>
 
@@ -155,12 +180,12 @@
         <TextView
             android:id="@+id/nameUser"
             style="@style/text_bold_30_style"
-            android:textColor="@color/main_text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="14dp"
             android:text=" "
+            android:textColor="@color/main_text_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageUser" />
 
@@ -168,10 +193,10 @@
             android:id="@+id/verifyUser"
             android:layout_width="18dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/tick"
             android:visibility="invisible"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="6dp"
             app:layout_constraintBottom_toBottomOf="@+id/nameUser"
             app:layout_constraintStart_toEndOf="@+id/nameUser"
             app:layout_constraintTop_toTopOf="@+id/nameUser" />
@@ -181,8 +206,8 @@
             style="@style/text_medium_16_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/secondary_text_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -190,22 +215,22 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            app:tabTextAppearance="@style/text_tab_layout_style"
-            app:tabMode="scrollable"
-            app:tabIndicatorAnimationMode="fade"
-            app:tabIndicatorFullWidth="false"
-            app:tabPaddingEnd="10dp"
-            app:tabPaddingStart="10dp"
-            app:tabContentStart="20dp"
-
-            app:tabSelectedTextAppearance="@style/text_tab_layout_style"
-            app:tabRippleColor="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionUser"
-            app:tabIndicatorHeight="4dp" />
+            app:tabContentStart="20dp"
+            app:tabIndicatorAnimationMode="fade"
+
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="4dp"
+            app:tabMode="scrollable"
+            app:tabPaddingEnd="10dp"
+            app:tabPaddingStart="10dp"
+            app:tabRippleColor="@android:color/transparent"
+            app:tabSelectedTextAppearance="@style/text_tab_layout_style"
+            app:tabTextAppearance="@style/text_tab_layout_style" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
@@ -214,7 +239,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -226,5 +251,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/content" />
 </androidx.constraintlayout.widget.ConstraintLayout>

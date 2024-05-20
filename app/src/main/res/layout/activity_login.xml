@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             style="@style/text_medium_16_style"
             android:textColor="@color/main_text_color"
-            android:text="Логин" />
+            android:text="E-mail" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/container_email"

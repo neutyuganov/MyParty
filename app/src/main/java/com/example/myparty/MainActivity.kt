@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.myparty.AddParty.AddPartyActivity
+import com.example.myparty.Profile.FollowersFragment
 import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.databinding.ActivityMainBinding
 
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var mainFragment: Fragment = MainFragment()
     private var profileFragment: Fragment = ProfileFragment()
+    private var followersFragment: Fragment = FollowersFragment()
     private lateinit var currentFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_profile -> {
                     loadFragment(profileFragment)
+                    true
+                }
+                R.id.nav_subs -> {
+                    loadFragment(followersFragment)
                     true
                 }
                 R.id.nav_add_party -> {

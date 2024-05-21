@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.example.myparty.Adapters.PartyAdapter
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.Adapters.PartyUserAdapter
 import com.example.myparty.SupabaseConnection.Singleton.sb
@@ -14,6 +15,9 @@ import com.example.myparty.databinding.FragmentActualPartyBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.time.LocalDate
@@ -68,7 +72,8 @@ class ActualPartyFragment(userId : String) : Fragment() {
                     parties.add(event)
                 }
 
-                val partyAdapter = PartyUserAdapter(parties)
+                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+                val partyAdapter = PartyAdapter(parties, coroutineScope)
                 binding.recycler.adapter = partyAdapter
             }
             catch (e: Throwable){

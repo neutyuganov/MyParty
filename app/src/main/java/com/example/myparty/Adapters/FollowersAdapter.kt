@@ -51,6 +51,7 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
             {
                 // Получение данных об авторизованном пользователе
                 val currentUserId = sb.auth.currentUserOrNull()?.id!!
+                val userId = user.id!!
 
                 // Получение данных о пользователе
                 name.text = user.Имя
@@ -60,35 +61,36 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
                 }
 
                 var subscribe = false
-                coroutineScope.launch {
-                    subscribe = getFollowStatus(user.id!!, currentUserId)
-                    checkFollow(subscribe)
-                    btnSubscribe.visibility = View.VISIBLE
+                try {
+                    coroutineScope.launch {
+                        itemBinding.textCountFollowers.text = getFollowers(userId).toString() + " подписчиков"
+                        subscribe = getFollowStatus(userId, currentUserId)
+                        checkFollowStatus(subscribe)
+                    }
                 }
-
-                var countFollowers = 0
-                coroutineScope.launch {
-                    countFollowers = getFollowers(user.id!!)
-                    textCountFollowers.text = countFollowers.toString() + " подписчиков"
-                    textCountFollowers.visibility = View.VISIBLE
+                catch (e: Throwable) {
+                    Log.e("Ошибка загрузки данных о подписке", e.toString())
                 }
 
                 // Обработка нажатия на кнопку подписаться/отписаться
                 btnSubscribe.setOnClickListener {
                     coroutineScope.launch {
                         try {
+                            btnSubscribe.isEnabled = false
+                            btnSubscribe.text = "Загрузка..."
                             // Получение статуса подписки пользователя
-                            val isSubscribed = getFollowStatus(user.id!!, currentUserId)
+                            val isSubscribed = getFollowStatus(userId, currentUserId)
 
+                            // Проверка наличия подписки
                             if (subscribe) {
+                                // Проверка достоверности статуса подписки пользователя
                                 if (subscribe == isSubscribed) {
                                     sb.from("Подписчики_пользователей").insert(
                                         UsersSubsDataClass(
-                                            id_пользователя = user.id,
+                                            id_пользователя = userId,
                                             id_подписчика = currentUserId
                                         )
                                     )
-
                                 } else {
                                     Toast.makeText(itemBinding.root.context, "Вы уже подписаны", Toast.LENGTH_SHORT).show()
                                 }
@@ -96,7 +98,7 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
                                 if (subscribe == isSubscribed) {
                                     sb.from("Подписчики_пользователей").delete {
                                         filter {
-                                            eq("id_пользователя", user.id)
+                                            eq("id_пользователя", userId)
                                             eq("id_подписчика", currentUserId)
                                         }
                                     }
@@ -105,9 +107,10 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
                                 }
                             }
                             subscribe = !subscribe
-                            checkFollow(subscribe)
 
-                            textCountFollowers.text = getFollowers(user.id!!).toString() + " подписчиков"
+                            // Изменение индикации кнопки
+                            textCountFollowers.text = getFollowers(userId).toString() + " подписчиков"
+                            checkFollowStatus(subscribe)
                         } catch (e: Exception) {
                             Log.e("Ошибка добавления в избранное", e.message.toString())
                         }
@@ -133,17 +136,21 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
             }.decodeList<FollowersDataClass>().isEmpty()
         }
 
-        fun checkFollow(status: Boolean) {
-            if (!status) {
-                itemBinding.btnSubscribe.text = "Отписаться"
-                itemBinding.btnSubscribe.setBackgroundResource(R.drawable.button_secondary_color_selector)
-                itemBinding.btnSubscribe.setTextColor(itemView.context.getColor(R.color.secondary_text_color))
-            }
-            else {
-                itemBinding.btnSubscribe.text = "Подписаться"
-                itemBinding.btnSubscribe.setBackgroundResource(R.drawable.button_main_color_selector)
-                itemBinding.btnSubscribe.setTextColor(itemView.context.getColor(R.color.white))
+        fun checkFollowStatus(status: Boolean) {
+            with(itemBinding) {
+                btnSubscribe.isEnabled = true
+
+                if (!status) {
+                    btnSubscribe.text = "Отписаться"
+                    btnSubscribe.setBackgroundResource(R.drawable.button_secondary_color_selector)
+                    itemBinding.btnSubscribe.setTextColor(itemView.context.getColor(R.color.secondary_text_color))
+                } else {
+                    btnSubscribe.text = "Подписаться"
+                    btnSubscribe.setBackgroundResource(R.drawable.button_main_color_selector)
+                    btnSubscribe.setTextColor(itemView.context.getColor(R.color.white))
+                }
             }
         }
+
     }
 }

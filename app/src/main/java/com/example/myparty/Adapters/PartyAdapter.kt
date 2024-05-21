@@ -3,6 +3,7 @@ package com.example.myparty.Adapters
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -37,6 +38,8 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
         val party: PartyDataClass = partyList[position]
         holder.bind(party)
 
+
+        // Переход на карточку вечернки при нажатии на item
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, PartyActivity::class.java)
             intent.putExtra("PARTY_ID", party.id)
@@ -48,12 +51,54 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
 
     class ViewHolder(private val itemBinding: MainRecyclerViewItemBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding) {
-            name.text = party.Название
-            userName.text = party.Имя
-            val ageFormat = party.Возраст
+            // Получение данных об авторизованном пользователе
+            val currentUserId = sb.auth.currentUserOrNull()?.id!!
+            val partyId = party.id!!
 
+            // Форматирование даты
+            val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val partyDate = LocalDate.parse(party.Дата, inputFormatterDate)
+            val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+            val formattedDate = partyDate.format(outputFormatterDate)
+
+            // Форматирование времени
+            val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
+            val partyTime = LocalTime.parse(party.Время, inputFormatterTime)
+            val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
+            val formattedTime = partyTime.format(outputFormatterTime)
+            date.text = "$formattedDate  $formattedTime"
+
+            // Проверка наличия текста в поле Имя
+            if(party.Имя == "") {
+                // Если поле Имя пустое, то значит item выводится на экран профиля, где Имя не указывается
+                userInfoContainer.visibility = View.GONE
+            }
+
+            // Сверка авторизованного пользователя и текущего пользователя в списке
+            if(party.id_пользователя == currentUserId) {
+                // Если авторизованный пользователь и текущий пользователь в списке совпадают, то убрать кнопку добавления в избранное
+                star.visibility = View.GONE
+            }
+
+            // Проверка времени на вечеринку
+            if(partyDate.isBefore(LocalDate.now())){
+                // Если дата вечеринки меньше текущей даты, то затемняем item
+                content.alpha = 0.8f
+            }
+
+            // Вывод информации о вечеринке
+            name.text = party.Название
+
+            userName.text = party.Имя
+
+            verify.isVisible = party.Верификация == true
+
+            place.text = party.Место
+
+            val ageFormat = party.Возраст
             age.text = "+$ageFormat"
 
+            // Преобразование цены
             val priceFormat = party.Цена
             if(priceFormat?.rem(1) == 0.0){
                 val priceInt = priceFormat.toInt()
@@ -63,19 +108,53 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
                 price.text = "от $priceFormat ₽"
             }
 
-            if(party.id_пользователя == sb.auth.currentUserOrNull()?.id!!) {
-                star.isVisible = false
-            }
-
+            // Проверка наличия избранного
             var favorite = party.Избранное!!
+            updateFavorite(favorite)
 
-            Log.d("party", party.Избранное.toString())
+            star.setOnClickListener {
+                coroutineScope.launch {
+                    try {
+                        // После нажатия на кнопку добавления в избранное делаем ее неактивной, на время проведения операции
+                        star.isEnabled = false
 
-            if(!favorite){
-                star.setImageResource(R.drawable.star)
-            }
-            else{
-                star.setImageResource(R.drawable.empty_star)
+                        // Получение данных о статусе наличия в избранном у пользователя
+                        val isFavorite = getFavoriteStatus(currentUserId, partyId)
+                        // Проверка наличия в избранном
+                        if (!favorite) {
+                            // Проверка достоверности статуса наличия в избранном у пользователя
+                            if(favorite == isFavorite){
+                                sb.from("Избранные_вечеринки").insert(
+                                    PartyFavoriteDataClass(
+                                        id_пользователя = sb.auth.currentUserOrNull()?.id!!,
+                                        id_вечеринки = party.id
+                                    )
+                                )
+                            }
+                            else{
+                                Toast.makeText(itemBinding.root.context, "Вечеринка уже в избранном", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            // Проверка достоверности статуса наличия в избранном у пользователя
+                            if(favorite == isFavorite){
+                                sb.from("Избранные_вечеринки").delete {
+                                    filter {
+                                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
+                                        eq("id_вечеринки", party.id)
+                                    }
+                                }
+                            }
+                            else{
+                                Toast.makeText(itemBinding.root.context, "Вечеринка уже не в избранном", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        favorite = !favorite
+                        updateFavorite(favorite)
+
+                    }catch (e: Exception){
+                        Log.e("Ошибка добавления в избранное", e.message.toString())
+                    }
+                }
             }
 
             userName.setOnClickListener {
@@ -86,85 +165,26 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
                 }
             }
 
-            try {
-                star.setOnClickListener {
-                    coroutineScope.launch {
-                        try {
-                            if (favorite) {
-                                Log.d("party_insert", favorite.toString())
-                                if(favorite != getFavorites(sb.auth.currentUserOrNull()?.id!!, party.id!!)){
-                                    Toast.makeText(itemBinding.root.context, "Вечеринка уже в избранном", Toast.LENGTH_SHORT).show()
-                                }
-                                else{
-                                    sb.from("Избранные_вечеринки").insert(
-                                        PartyFavoriteDataClass(
-                                            id_пользователя = sb.auth.currentUserOrNull()?.id!!,
-                                            id_вечеринки = party.id
-                                        )
-                                    )
-                                }
-                                favorite = !favorite
-                                if(!favorite){
-                                    star.setImageResource(R.drawable.star)
-                                }
-                                else{
-                                    star.setImageResource(R.drawable.empty_star)
-                                }
-                            } else {
-                                Log.d("party_delite", favorite.toString())
-                                if(favorite != getFavorites(sb.auth.currentUserOrNull()?.id!!, party.id!!)){
-                                    Toast.makeText(itemBinding.root.context, "Вечеринка уже удалена из избранного", Toast.LENGTH_SHORT).show()
-                                }
-                                else{
-                                    sb.from("Избранные_вечеринки").delete {
-                                        filter {
-                                            eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
-                                            eq("id_вечеринки", party.id)
-                                        }
-                                    }
-                                }
-                                favorite = !favorite
-                                if(!favorite){
-                                    star.setImageResource(R.drawable.star)
-                                }
-                                else{
-                                    star.setImageResource(R.drawable.empty_star)
-                                }
-                            }
-                        }catch (e: Exception){
-                            Log.e("Ошибка добавления в избранное", e.message.toString())
-                        }
-                    }
-                }
-            }catch (e: Exception){
-                Log.e("Ошибка добавления в избранное", e.message.toString())
-            }
-
-
-            verify.isVisible = party.Верификация == true
-
-            val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
-            val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-            val formattedDate = localDate.format(outputFormatterDate)
-
-            val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
-            val localTime = LocalTime.parse(party.Время, inputFormatterTime)
-            val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
-            val formattedTime = localTime.format(outputFormatterTime)
-            date.text = "$formattedDate  $formattedTime"
-
-            place.text = party.Место
             }
         }
-        suspend fun getFavorites(userId: String, partyId: Int): Boolean  = withContext(
+        suspend fun getFavoriteStatus(userId: String, partyId: Int): Boolean  = withContext(
             Dispatchers.IO) {
             sb.from("Избранные_вечеринки").select{
                 filter {
                     eq("id_пользователя", userId)
                     eq("id_вечеринки", partyId)
                 }
-            }.decodeList<PartyDataClass>().isEmpty()
+            }.decodeList<PartyDataClass>().isNotEmpty()
+        }
+
+        fun updateFavorite(favorite: Boolean){
+            if(favorite){
+                itemBinding.star.setImageResource(R.drawable.star)
+            }
+            else{
+                itemBinding.star.setImageResource(R.drawable.empty_star)
+            }
+            itemBinding.star.isEnabled = true
         }
     }
 

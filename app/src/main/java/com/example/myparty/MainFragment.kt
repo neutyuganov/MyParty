@@ -81,7 +81,7 @@ class MainFragment : Fragment() {
                     for (j in 0 until jsonArrayFavorites.length()) {
                         val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
                         if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
-                            favorite = false
+                            favorite = true
                         }
                     }
 

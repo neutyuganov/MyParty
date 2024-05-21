@@ -7,11 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.Adapters.FollowersAdapter
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.R
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentFollowersPageBinding
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.applySkeleton
+import com.faltenreich.skeletonlayout.createSkeleton
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +30,8 @@ class FollowersPageFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowersPageBinding
 
+    private lateinit var skeleton: Skeleton
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,9 +44,14 @@ class FollowersPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val currentUserId = SupabaseConnection.Singleton.sb.auth.currentUserOrNull()?.id.toString()
+        val currentUserId = sb.auth.currentUserOrNull()?.id.toString()
 
-        binding.progressBar.visibility = View.VISIBLE
+//        binding.progressBar.visibility = View.VISIBLE
+
+        skeleton = binding.recycler.applySkeleton(R.layout.followers_item, 3)
+
+        skeleton.maskCornerRadius = 30f
+        skeleton.showSkeleton()
 
         Log.e("USERCURRENT", currentUserId)
 
@@ -70,16 +82,20 @@ class FollowersPageFragment : Fragment() {
 
                 val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
+                skeleton.showOriginal()
                 binding.recycler.adapter = FollowersAdapter(followers, coroutineScope)
+
             }
             catch (e: Throwable){
                 Log.e("Ошибка получения данных", e.message.toString())
             }
             finally{
-                binding.progressBar.visibility = View.GONE
+
+
+//                binding.progressBar.visibility = View.GONE
                 if(followers.isEmpty()){
                     binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
+//                    binding.recycler.visibility = View.GONE
                 }
             }
         }

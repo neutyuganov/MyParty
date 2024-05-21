@@ -21,6 +21,7 @@ import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -35,6 +36,7 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
         val user: UserDataClass = userList[position]
         holder.bind(user)
 
+        // Переход на страницу организатора при нажатии на item
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
             intent.putExtra("USER_ID", user.id)
@@ -47,66 +49,66 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
     class ViewHolder(private val itemBinding: FollowersItemBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(user: UserDataClass) { with(itemBinding)
             {
+                // Получение данных об авторизованном пользователе
+                val currentUserId = sb.auth.currentUserOrNull()?.id!!
+
+                // Получение данных о пользователе
                 name.text = user.Имя
 
                 if(user.Верификация == false){
                     verify.visibility = View.INVISIBLE
                 }
 
-                var subscribe: Boolean = false
+                var subscribe = false
+                coroutineScope.launch {
+                    subscribe = getFollowStatus(user.id!!, currentUserId)
+                    checkFollow(subscribe)
+                    btnSubscribe.visibility = View.VISIBLE
+                }
 
-                var countFollowers: Int = 0
-
+                var countFollowers = 0
                 coroutineScope.launch {
                     countFollowers = getFollowers(user.id!!)
                     textCountFollowers.text = countFollowers.toString() + " подписчиков"
                     textCountFollowers.visibility = View.VISIBLE
                 }
 
-                coroutineScope.launch {
-                    subscribe = getFollowStatus(user.id!!, sb.auth.currentUserOrNull()?.id!!)
-                    checkFollow(subscribe)
-                    btnSubscribe.visibility = View.VISIBLE
-                }
-
+                // Обработка нажатия на кнопку подписаться/отписаться
                 btnSubscribe.setOnClickListener {
                     coroutineScope.launch {
                         try {
-                            Log.e("Подписчик", subscribe.toString())
+                            // Получение статуса подписки пользователя
+                            val isSubscribed = getFollowStatus(user.id!!, currentUserId)
+
                             if (subscribe) {
-                                if(subscribe != getFollowStatus(user.id!!, sb.auth.currentUserOrNull()?.id!!)){
-                                    Toast.makeText(itemBinding.root.context, "Вы уже подписаны", Toast.LENGTH_SHORT).show()
-                                }
-                                else{
+                                if (subscribe == isSubscribed) {
                                     sb.from("Подписчики_пользователей").insert(
                                         UsersSubsDataClass(
                                             id_пользователя = user.id,
-                                            id_подписчика = sb.auth.currentUserOrNull()?.id!!
+                                            id_подписчика = currentUserId
                                         )
                                     )
-                                }
-                                subscribe =!subscribe
-                                checkFollow(subscribe)
 
-                                textCountFollowers.text = getFollowers(user.id!!).toString() + " подписчиков"
-                            } else {
-                                if(subscribe != getFollowStatus(user.id!!, sb.auth.currentUserOrNull()?.id!!)){
-                                    Toast.makeText(itemBinding.root.context, "Вы уже отписались", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(itemBinding.root.context, "Вы уже подписаны", Toast.LENGTH_SHORT).show()
                                 }
-                                else{
+                            } else {
+                                if (subscribe == isSubscribed) {
                                     sb.from("Подписчики_пользователей").delete {
                                         filter {
                                             eq("id_пользователя", user.id)
-                                            eq("id_подписчика", sb.auth.currentUserOrNull()!!.id)
+                                            eq("id_подписчика", currentUserId)
                                         }
                                     }
+                                } else {
+                                    Toast.makeText(itemBinding.root.context, "Вы уже отписались", Toast.LENGTH_SHORT).show()
                                 }
-                                subscribe =!subscribe
-                                checkFollow(subscribe)
-
-                                textCountFollowers.text = getFollowers(user.id!!).toString() + " подписчиков"
                             }
-                        }catch (e: Exception){
+                            subscribe = !subscribe
+                            checkFollow(subscribe)
+
+                            textCountFollowers.text = getFollowers(user.id!!).toString() + " подписчиков"
+                        } catch (e: Exception) {
                             Log.e("Ошибка добавления в избранное", e.message.toString())
                         }
                     }
@@ -135,12 +137,12 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
             if (!status) {
                 itemBinding.btnSubscribe.text = "Отписаться"
                 itemBinding.btnSubscribe.setBackgroundResource(R.drawable.button_secondary_color_selector)
-//                        btnSubscribe.setTextColor(R.color.secondary_text_color)
+                itemBinding.btnSubscribe.setTextColor(itemView.context.getColor(R.color.secondary_text_color))
             }
             else {
                 itemBinding.btnSubscribe.text = "Подписаться"
                 itemBinding.btnSubscribe.setBackgroundResource(R.drawable.button_main_color_selector)
-//                    btnSubscribe.setTextColor(R.color.white)
+                itemBinding.btnSubscribe.setTextColor(itemView.context.getColor(R.color.white))
             }
         }
     }

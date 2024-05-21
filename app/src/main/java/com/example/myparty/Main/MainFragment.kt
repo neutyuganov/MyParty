@@ -56,6 +56,7 @@ class MainFragment : Fragment() {
                     .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
                         filter {
                             gte("Дата", LocalDate.now())
+                            eq("id_статуса_проверки", 3)
                         }
                     }.data
                 val jsonArrayParties = JSONArray(partiesResult)

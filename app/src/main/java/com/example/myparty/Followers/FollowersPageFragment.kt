@@ -8,14 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Adapters.FollowersAdapter
-import com.example.myparty.DataClasses.FollowersDataClass
-import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.UserDataClass
-import com.example.myparty.R
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentFollowersPageBinding
-import com.example.myparty.databinding.FragmentMainBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope

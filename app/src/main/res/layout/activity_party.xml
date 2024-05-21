@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_main_color_selector"
                     android:text="Проход от 100 р"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

@@ -10,8 +10,12 @@ import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Adapters.PartyAdapter
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.Adapters.PartyUserAdapter
+import com.example.myparty.R
+import com.example.myparty.SkeletonClass
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentBeforePartyBinding
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.applySkeleton
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -26,6 +30,7 @@ import java.time.LocalDate
 class BeforePartyFragment : Fragment() {
     private lateinit var binding: FragmentBeforePartyBinding
 
+    private lateinit var skeleton: Skeleton
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentBeforePartyBinding.inflate(inflater, container, false)
         return binding.root
@@ -36,7 +41,9 @@ class BeforePartyFragment : Fragment() {
 
         val currentUserId = sb.auth.currentUserOrNull()?.id!!
 
-        binding.progressBar.visibility = View.VISIBLE
+        skeleton = binding.recycler.applySkeleton(R.layout.item_current_user_party_skeleton, 3)
+
+        SkeletonClass().skeletonShow(skeleton, resources)
 
         val parties = mutableListOf<PartyDataClass>()
 
@@ -74,7 +81,6 @@ class BeforePartyFragment : Fragment() {
             }
 
             finally{
-                binding.progressBar.visibility = View.GONE
                 if(parties.isEmpty()){
                     binding.textView.visibility = View.VISIBLE
                     binding.recycler.visibility = View.GONE

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.Profile.EditPartyActivity
 import com.example.myparty.PartyActivity
-import com.example.myparty.databinding.UsersPartyItemBinding
+import com.example.myparty.databinding.ItemCurrentUserPartyBinding
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -16,7 +16,7 @@ import java.util.Locale
 
 class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerView.Adapter<PartyUserAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemBinding = UsersPartyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemBinding = ItemCurrentUserPartyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemBinding)
     }
 
@@ -34,7 +34,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
         }
     }
 
-    class ViewHolder(private val itemBinding: UsersPartyItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(private val itemBinding: ItemCurrentUserPartyBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding)
             {
                 // Форматирование даты

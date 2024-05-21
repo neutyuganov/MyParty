@@ -14,7 +14,7 @@ tools:context=".ProfileOrganizator.ProfileOrganizatorActualPartyFragment">
     android:layout_marginHorizontal="5dp"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     app:spanCount="2"
-    tools:listitem="@layout/main_recycler_view_item"/>
+    tools:listitem="@layout/item_party"/>
 
 <TextView
     android:id="@+id/textView"

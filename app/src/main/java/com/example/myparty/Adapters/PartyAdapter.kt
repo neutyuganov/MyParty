@@ -14,7 +14,7 @@ import com.example.myparty.DataClasses.PartyFavoriteDataClass
 import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
 import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
-import com.example.myparty.databinding.MainRecyclerViewItemBinding
+import com.example.myparty.databinding.ItemPartyBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ import java.util.Locale
 
 class PartyAdapter(private val partyList: List<PartyDataClass>, private val coroutineScope: CoroutineScope) : RecyclerView.Adapter<PartyAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemBinding = MainRecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemBinding = ItemPartyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemBinding, coroutineScope)
     }
 
@@ -48,7 +48,7 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
 
     override fun getItemCount(): Int = partyList.size
 
-    class ViewHolder(private val itemBinding: MainRecyclerViewItemBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(private val itemBinding: ItemPartyBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding) {
             // Получение данных об авторизованном пользователе
             val currentUserId = sb.auth.currentUserOrNull()?.id!!

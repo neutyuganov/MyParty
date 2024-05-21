@@ -52,8 +52,6 @@ class ProfileFragment : Fragment() {
 
         binding.content.visibility = View.INVISIBLE
 
-        Log.e("ProfileFragment вывод Пользователя", user.toString())
-
         lifecycleScope.launch {
             try{
                 userData = getUserData()
@@ -63,18 +61,16 @@ class ProfileFragment : Fragment() {
 
                 loadUserData()
 
-                setupViewPager(binding.viewPager)
-                binding.tabLayout.setupWithViewPager(binding.viewPager)
-
                 binding.content.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
+
+                setupViewPager(binding.viewPager)
+                binding.tabLayout.setupWithViewPager(binding.viewPager)
             }
             catch(e:Throwable){
                 Log.e("ProfileFragment вывод данных", e.message.toString())
             }
         }
-
-
 
         binding.btnGoEditProfile.setOnClickListener {
             val myIntent = Intent(context, EditProfileActivity::class.java)

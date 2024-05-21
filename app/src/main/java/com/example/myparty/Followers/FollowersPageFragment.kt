@@ -7,16 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.Adapters.FollowersAdapter
+import com.example.myparty.DataClasses.FollowersDataClass
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.R
-import com.example.myparty.SupabaseConnection
+import com.example.myparty.SkeletonClass
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentFollowersPageBinding
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
-import com.faltenreich.skeletonlayout.createSkeleton
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
@@ -46,12 +45,9 @@ class FollowersPageFragment : Fragment() {
 
         val currentUserId = sb.auth.currentUserOrNull()?.id.toString()
 
-//        binding.progressBar.visibility = View.VISIBLE
+        skeleton = binding.recycler.applySkeleton(R.layout.item_followers_skeleton, 3)
 
-        skeleton = binding.recycler.applySkeleton(R.layout.followers_item, 3)
-
-        skeleton.maskCornerRadius = 30f
-        skeleton.showSkeleton()
+        SkeletonClass().skeletonShow(skeleton, resources)
 
         Log.e("USERCURRENT", currentUserId)
 
@@ -73,7 +69,9 @@ class FollowersPageFragment : Fragment() {
                     val userData = getUserData(userId)
                     val userName = userData.Имя
                     val userVerify = userData.Верификация ?: false
-                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify)
+                    val countFollowers = getFollowers(userId)
+                    val isFollow = getFollowStatus(userId, currentUserId)
+                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Количество_подписчиков = countFollowers, Статус_подписки = isFollow)
 
                     followers.add(follower)
                 }
@@ -90,12 +88,9 @@ class FollowersPageFragment : Fragment() {
                 Log.e("Ошибка получения данных", e.message.toString())
             }
             finally{
-
-
-//                binding.progressBar.visibility = View.GONE
                 if(followers.isEmpty()){
                     binding.textView.visibility = View.VISIBLE
-//                    binding.recycler.visibility = View.GONE
+                    binding.recycler.visibility = View.GONE
                 }
             }
         }
@@ -107,5 +102,23 @@ class FollowersPageFragment : Fragment() {
                 eq("id", userId)
             }
         }.decodeSingle()
+    }
+
+    suspend fun getFollowers(userId: String): Int  = withContext(Dispatchers.IO) {
+        sb.from("Подписчики_пользователей").select{
+            filter {
+                eq("id_пользователя", userId)
+            }
+        }.decodeList<FollowersDataClass>().count()
+    }
+
+    suspend fun getFollowStatus(userId: String, followerId: String): Boolean  = withContext(
+        Dispatchers.IO) {
+        sb.from("Подписчики_пользователей").select{
+            filter {
+                eq("id_пользователя", userId)
+                eq("id_подписчика", followerId)
+            }
+        }.decodeList<FollowersDataClass>().isEmpty()
     }
 }

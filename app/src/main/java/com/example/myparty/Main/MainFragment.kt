@@ -10,8 +10,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Adapters.PartyAdapter
 import com.example.myparty.DataClasses.PartyDataClass
+import com.example.myparty.R
+import com.example.myparty.SkeletonClass
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentMainBinding
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.applySkeleton
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -27,6 +31,8 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
+    private lateinit var skeleton: Skeleton
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,8 +45,9 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Показать тндикацию загрузки
-        binding.progressBar.visibility = View.VISIBLE
+        skeleton = binding.recycler.applySkeleton(R.layout.item_party_skeleton, 6)
+
+        SkeletonClass().skeletonShow(skeleton, resources)
 
         lifecycleScope.launch {
             try {
@@ -104,7 +111,7 @@ class MainFragment : Fragment() {
             } catch (e: Throwable) {
                 Log.e("Ошибка получения данных вечеринки", e.message.toString())
             } finally {
-                binding.progressBar.visibility = View.GONE
+
             }
         }
 

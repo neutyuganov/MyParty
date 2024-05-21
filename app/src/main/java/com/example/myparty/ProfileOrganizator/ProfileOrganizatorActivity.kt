@@ -41,8 +41,6 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
     var partyCount = 0
     var subsribe = false
 
-    private lateinit var skeleton: Skeleton
-
     var fragmentActual = ProfileOrganizatorActualPartyFragment()
     var fragmentBefore = ProfileOrganizatorBeforePartyFragment()
 
@@ -53,9 +51,7 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
         userId = intent.getStringExtra("USER_ID")
 
-//        binding.content.visibility = View.GONE
-        skeleton = binding.content.createSkeleton()
-        skeleton.showSkeleton()
+        binding.content.visibility = View.INVISIBLE
 
         lifecycleScope.launch {
             try{
@@ -70,7 +66,6 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
                 binding.tabLayout.setupWithViewPager(binding.viewPager)
 
                 binding.content.visibility = View.VISIBLE
-
                 binding.progressBar.visibility = View.GONE
             }
             catch(e:Throwable){
@@ -205,7 +200,5 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
             binding.btnSubscribe.background = resources.getDrawable(R.drawable.button_main_color_selector)
             binding.btnSubscribe.setTextColor(resources.getColor(R.color.white))
         }
-
-        skeleton.showOriginal()
     }
 }

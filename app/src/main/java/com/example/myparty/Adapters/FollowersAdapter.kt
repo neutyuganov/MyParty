@@ -14,7 +14,7 @@ import com.example.myparty.DataClasses.UsersSubsDataClass
 import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
 import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
-import com.example.myparty.databinding.FollowersItemBinding
+import com.example.myparty.databinding.ItemFollowersBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 
 class FollowersAdapter (private val userList: List<UserDataClass>, private val coroutineScope: CoroutineScope) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemBinding = FollowersItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemBinding = ItemFollowersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemBinding, coroutineScope)
     }
 
@@ -43,7 +43,7 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
 
     override fun getItemCount(): Int = userList.size
 
-    class ViewHolder(private val itemBinding: FollowersItemBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(private val itemBinding: ItemFollowersBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(user: UserDataClass) { with(itemBinding)
             {
                 // Получение данных об авторизованном пользователе
@@ -57,17 +57,10 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
                     verify.visibility = View.INVISIBLE
                 }
 
-                var subscribe = false
-                try {
-                    coroutineScope.launch {
-                        itemBinding.textCountFollowers.text = getFollowers(userId).toString() + " подписчиков"
-                        subscribe = getFollowStatus(userId, currentUserId)
-                        checkFollowStatus(subscribe)
-                    }
-                }
-                catch (e: Throwable) {
-                    Log.e("Ошибка загрузки данных о подписке", e.toString())
-                }
+                itemBinding.textCountFollowers.text = user.Количество_подписчиков.toString() + " подписчиков"
+
+                var subscribe = user.Статус_подписки!!
+                checkFollowStatus(subscribe)
 
                 // Обработка нажатия на кнопку подписаться/отписаться
                 btnSubscribe.setOnClickListener {

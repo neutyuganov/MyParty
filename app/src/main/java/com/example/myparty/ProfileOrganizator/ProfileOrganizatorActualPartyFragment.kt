@@ -9,10 +9,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Adapters.PartyAdapter
 import com.example.myparty.DataClasses.PartyDataClass
+import com.example.myparty.R
+import com.example.myparty.SkeletonClass
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FragmentProfileOrganizatorActualPartyBinding
 import com.example.myparty.databinding.FragmentProfileOrganizatorBeforePartyBinding
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.applySkeleton
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -30,6 +34,8 @@ class ProfileOrganizatorActualPartyFragment : Fragment() {
 
     lateinit var userId: String
 
+    private lateinit var skeleton: Skeleton
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfileOrganizatorActualPartyBinding.inflate(inflater, container, false)
 
@@ -40,6 +46,10 @@ class ProfileOrganizatorActualPartyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        skeleton = binding.recycler.applySkeleton(R.layout.item_party_skeleton, 3)
+
+        SkeletonClass().skeletonShow(skeleton, resources)
 
         val parties = mutableListOf<PartyDataClass>()
 

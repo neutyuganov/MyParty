@@ -29,31 +29,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
-    <!--<com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/container_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:startIconDrawable="@drawable/search"
-        app:endIconDrawable="@drawable/cross"
-        app:endIconCheckable="true"
-        app:endIconMode="custom"
-        app:helperTextTextAppearance="@style/helper_text_medium_12_style_over"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:lines="1"
-            style="@style/edit_text_style"
-            android:inputType="text"
-            android:background="@drawable/edit_text_selector" />
-
-    </com.google.android.material.textfield.TextInputLayout>-->
-
     <Button
         android:id="@+id/button_place"
         style="@style/image_button_main_style"
@@ -95,16 +70,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_place"
         app:spanCount="2"
-        tools:listitem="@layout/main_recycler_view_item" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/recycler"
-        app:layout_constraintStart_toStartOf="@+id/recycler"
-        app:layout_constraintTop_toTopOf="@+id/recycler" />
+        tools:listitem="@layout/item_party" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

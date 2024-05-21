@@ -9,19 +9,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.FollowersDataClass
-import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.DataClasses.UsersSubsDataClass
-import com.example.myparty.ProfileOrganizatorActivity
+import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
 import com.example.myparty.R
-import com.example.myparty.SupabaseConnection
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.FollowersItemBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

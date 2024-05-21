@@ -1,23 +1,20 @@
-package com.example.myparty
+package com.example.myparty.ProfileOrganizator
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.opengl.ETC1.decodeImage
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.example.myparty.DataClasses.FollowersDataClass
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.DataClasses.UsersSubsDataClass
-import com.example.myparty.Profile.ActualPartyFragment
-import com.example.myparty.Profile.BeforePartyFragment
-import com.example.myparty.Profile.ViewPagerAdapter
+import com.example.myparty.Adapters.ViewPagerAdapter
+import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityProfileOrganizatorBinding
 import com.faltenreich.skeletonlayout.Skeleton
@@ -28,9 +25,9 @@ import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+
 
 class ProfileOrganizatorActivity : AppCompatActivity() {
 
@@ -46,6 +43,9 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
     private lateinit var skeleton: Skeleton
 
+    var fragmentActual = ProfileOrganizatorActualPartyFragment()
+    var fragmentBefore = ProfileOrganizatorBeforePartyFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileOrganizatorBinding.inflate(layoutInflater)
@@ -55,7 +55,6 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
 //        binding.content.visibility = View.GONE
         skeleton = binding.content.createSkeleton()
-
         skeleton.showSkeleton()
 
         lifecycleScope.launch {
@@ -66,12 +65,12 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
                 partyCount = getParty()
                 subsribe = getSub()
                 loadUserData()
+
                 setupViewPager(binding.viewPager)
                 binding.tabLayout.setupWithViewPager(binding.viewPager)
 
-
                 binding.content.visibility = View.VISIBLE
-                skeleton.showOriginal()
+
                 binding.progressBar.visibility = View.GONE
             }
             catch(e:Throwable){
@@ -126,8 +125,15 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
 
-        adapter.addFragment(ActualPartyFragment(userId!!), "Активные")
-        adapter.addFragment(BeforePartyFragment(userId!!), "Прошедшие")
+        val args = Bundle()
+
+        args.putString("userId", userId!!) // Записываем аргумент в Bundle
+
+        fragmentActual.arguments = args
+        fragmentBefore.arguments = args
+
+        adapter.addFragment(fragmentActual, "Активные")
+        adapter.addFragment(fragmentBefore, "Прошедшие")
         viewPager.adapter = adapter
     }
 
@@ -199,5 +205,7 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
             binding.btnSubscribe.background = resources.getDrawable(R.drawable.button_main_color_selector)
             binding.btnSubscribe.setTextColor(resources.getColor(R.color.white))
         }
+
+        skeleton.showOriginal()
     }
 }

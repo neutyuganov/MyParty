@@ -4,15 +4,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.PartyDataClass
-import com.example.myparty.EditPartyActivity
+import com.example.myparty.Profile.EditPartyActivity
 import com.example.myparty.PartyActivity
-import com.example.myparty.ProfileOrganizatorActivity
-import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.UsersPartyItemBinding
-import io.github.jan.supabase.gotrue.auth
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

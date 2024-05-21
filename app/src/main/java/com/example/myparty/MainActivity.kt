@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.myparty.AddParty.AddPartyActivity
 import com.example.myparty.Followers.FollowersFragment
+import com.example.myparty.Main.MainFragment
 import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.databinding.ActivityMainBinding
 

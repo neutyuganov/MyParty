@@ -38,8 +38,6 @@ class FollowingPageFragment : Fragment() {
 
         val currentUserId = sb.auth.currentUserOrNull()?.id.toString()
 
-        binding.progressBar.visibility = View.VISIBLE
-
         Log.e("USERCURRENT", currentUserId)
 
         val following = mutableListOf<UserDataClass>()
@@ -75,7 +73,6 @@ class FollowingPageFragment : Fragment() {
                 Log.e("Ошибка получения данных", e.message.toString())
             }
             finally{
-                binding.progressBar.visibility = View.GONE
                 if(following.isEmpty()){
                     binding.textView.visibility = View.VISIBLE
                     binding.recycler.visibility = View.GONE

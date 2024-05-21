@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.Main
 
 import android.content.Intent
 import android.os.Bundle
@@ -64,12 +64,9 @@ class MainFragment : Fragment() {
                     val jsonObject = jsonArrayParties.getJSONObject(i)
                     val id = jsonObject.getInt("id")
                     val name = jsonObject.getString("Название")
-//                    val slogan = jsonObject.getString("Слоган")
                     val date = jsonObject.getString("Дата")
                     val time = jsonObject.getString("Время")
-//                    val city = jsonObject.getString("Город")
                     val place = jsonObject.getString("Место")
-//                    val description = jsonObject.getString("Описание")
                     val price = jsonObject.getDouble("Цена")
                     val userId = jsonObject.getString("id_пользователя")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")

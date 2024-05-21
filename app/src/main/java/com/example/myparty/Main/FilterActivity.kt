@@ -1,4 +1,4 @@
-package com.example.myparty
+package com.example.myparty.Main
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -6,14 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityFilterBinding
-import com.example.myparty.databinding.ActivityLoginBinding
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns

@@ -32,9 +32,9 @@ class BanPartyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.progressBar.visibility = View.VISIBLE
+        val currentUserId = sb.auth.currentUserOrNull()?.id!!
 
-        Log.e("USERCURRENT", sb.auth.currentUserOrNull().toString())
+        binding.progressBar.visibility = View.VISIBLE
 
         val parties = mutableListOf<PartyDataClass>()
 
@@ -42,7 +42,7 @@ class BanPartyFragment : Fragment() {
             try{
                 val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
                     filter {
-                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                        eq("id_пользователя", currentUserId)
                         eq("id_статуса_проверки", "2")
                     }
                 } .data

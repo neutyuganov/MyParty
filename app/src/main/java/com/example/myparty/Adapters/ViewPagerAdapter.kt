@@ -1,4 +1,4 @@
-package com.example.myparty.Profile
+package com.example.myparty.Adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

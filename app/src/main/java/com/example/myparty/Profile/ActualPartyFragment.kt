@@ -23,10 +23,7 @@ import org.json.JSONArray
 import java.time.LocalDate
 
 
-class ActualPartyFragment(userId : String) : Fragment() {
-
-    var userId = userId
-
+class ActualPartyFragment : Fragment() {
     private lateinit var binding: FragmentActualPartyBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -37,9 +34,9 @@ class ActualPartyFragment(userId : String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.progressBar.visibility = View.VISIBLE
+        val currentUserId = sb.auth.currentUserOrNull()?.id!!
 
-        Log.e("USERCURRENT", userId)
+        binding.progressBar.visibility = View.VISIBLE
 
         val parties = mutableListOf<PartyDataClass>()
 
@@ -48,7 +45,7 @@ class ActualPartyFragment(userId : String) : Fragment() {
                 val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
                     filter {
                         gte("Дата", LocalDate.now())
-                        eq("id_пользователя", userId)
+                        eq("id_пользователя", currentUserId)
                         neq("id_статуса_проверки", "2")
                     }
                 } .data
@@ -72,8 +69,7 @@ class ActualPartyFragment(userId : String) : Fragment() {
                     parties.add(event)
                 }
 
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = PartyAdapter(parties, coroutineScope)
+                val partyAdapter = PartyUserAdapter(parties)
                 binding.recycler.adapter = partyAdapter
             }
             catch (e: Throwable){

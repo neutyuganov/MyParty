@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
+import com.example.myparty.Adapters.ViewPagerAdapter
 import com.example.myparty.DataClasses.FollowersDataClass
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.StartActivities.LoginActivity
@@ -62,6 +63,9 @@ class ProfileFragment : Fragment() {
 
                 loadUserData()
 
+                setupViewPager(binding.viewPager)
+                binding.tabLayout.setupWithViewPager(binding.viewPager)
+
                 binding.content.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
             }
@@ -70,8 +74,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        setupViewPager(binding.viewPager)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+
 
         binding.btnGoEditProfile.setOnClickListener {
             val myIntent = Intent(context, EditProfileActivity::class.java)
@@ -92,8 +95,8 @@ class ProfileFragment : Fragment() {
 
         val adapter = ViewPagerAdapter(childFragmentManager)
 
-        adapter.addFragment(ActualPartyFragment(user!!), "Активные")
-        adapter.addFragment(BeforePartyFragment(user!!), "Прошедшие")
+        adapter.addFragment(ActualPartyFragment(), "Активные")
+        adapter.addFragment(BeforePartyFragment(), "Прошедшие")
 
         lifecycleScope.launch {
             try{
@@ -108,7 +111,6 @@ class ProfileFragment : Fragment() {
             catch(e:Throwable){
                 Log.e("ProfileFragment заполнение ViewPager", e.message.toString())
             }
-
         }
     }
 

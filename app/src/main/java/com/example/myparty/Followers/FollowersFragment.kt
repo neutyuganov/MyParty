@@ -3,27 +3,13 @@ package com.example.myparty.Followers
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
-import com.example.myparty.DataClasses.FollowersDataClass
-import com.example.myparty.DataClasses.PartyDataClass
-import com.example.myparty.SupabaseConnection.Singleton.sb
-import com.example.myparty.DataClasses.UserDataClass
-import com.example.myparty.MainFragment
-import com.example.myparty.Profile.ActualPartyFragment
-import com.example.myparty.Profile.BanPartyFragment
-import com.example.myparty.Profile.BeforePartyFragment
-import com.example.myparty.Profile.ViewPagerAdapter
+import com.example.myparty.Adapters.ViewPagerAdapter
 import com.example.myparty.databinding.FragmentFollowersBinding
-import io.github.jan.supabase.postgrest.from
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class FollowersFragment : Fragment() {

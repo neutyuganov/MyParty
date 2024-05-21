@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.PartyFavoriteDataClass
+import com.example.myparty.Profile.EditPartyActivity
+import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityPartyBinding
 import io.github.jan.supabase.gotrue.auth
@@ -16,7 +18,6 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -112,6 +113,9 @@ class PartyActivity : AppCompatActivity() {
                         binding.btnRe.visibility = View.VISIBLE
                         binding.btnBuy.visibility = View.GONE
                         binding.favorite.visibility = View.GONE
+                        if(localDate < LocalDate.now()) {
+                            binding.btnRe.visibility = View.GONE
+                        }
                     }
                     else {
                         if(localDate < LocalDate.now()) {

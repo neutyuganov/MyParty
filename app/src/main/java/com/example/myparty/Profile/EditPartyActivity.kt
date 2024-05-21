@@ -1,7 +1,8 @@
-package com.example.myparty
+package com.example.myparty.Profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.myparty.R
 
 class EditPartyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

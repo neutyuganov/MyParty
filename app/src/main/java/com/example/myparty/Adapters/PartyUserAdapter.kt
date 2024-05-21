@@ -30,6 +30,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
         val party: PartyDataClass = partyList[position]
         holder.bind(party)
 
+        // Обработка нажатия на item
         holder.itemView.setOnClickListener {
             val intent = Intent(it.context, PartyActivity::class.java)
             intent.putExtra("PARTY_ID", party.id)
@@ -40,11 +41,45 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
     class ViewHolder(private val itemBinding: UsersPartyItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding)
             {
-                name.text = party.Название
-                val ageFormat = party.Возраст
+                // Форматирование даты
+                val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val partyDate = LocalDate.parse(party.Дата, inputFormatterDate)
+                val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+                val formattedDate = partyDate.format(outputFormatterDate)
 
+                // Форматирование времени
+                val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
+                val partyTime = LocalTime.parse(party.Время, inputFormatterTime)
+                val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
+                val formattedTime = partyTime.format(outputFormatterTime)
+                date.text = "$formattedDate  $formattedTime"
+
+                // Проверка статуса проверки вечеринки
+                if(party.Статус_проверки == "Заблокировано" ){
+                    // Если вечеринка заблокирована, то затемняем item
+                    content.alpha = 0.82f
+                }
+                else if(party.Статус_проверки == "На проверке"){
+                    // Если вечеринка на проверке, то выводим статус На проверке
+                    status.visibility = View.VISIBLE
+                }
+
+                // Проверка времени на вечеринку
+                if(partyDate.isBefore(LocalDate.now())){
+                    // Если дата вечеринки меньше текущей даты, то затемняем item и скрываем кнопку изменения вечеринки
+                    content.alpha = 0.82f
+                    buttonRe.visibility = View.GONE
+                }
+
+                // Вывод информации о вечеринке
+                name.text = party.Название
+
+                val ageFormat = party.Возраст
                 age.text = "+$ageFormat"
 
+                place.text = party.Место
+
+                // Преобразование цены
                 val priceFormat = party.Цена
                 if(priceFormat?.rem(1) == 0.0){
                     val priceInt = priceFormat.toInt()
@@ -54,37 +89,12 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
                     price.text = "от $priceFormat ₽"
                 }
 
-                if(party.Статус_проверки == "На проверке"){
-                    status.visibility = View.VISIBLE
-                }
-
+                // Обработка нажатия на кнопку изменения вечеринки
                 buttonRe.setOnClickListener {
                     val intent = Intent(it.context, EditPartyActivity::class.java)
                     intent.putExtra("PARTY_ID", party.id)
                     it.context.startActivity(intent)
                 }
-
-                val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
-                val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-                val formattedDate = localDate.format(outputFormatterDate)
-
-                if(party.id_пользователя != sb.auth.currentUserOrNull()?.id){
-                    buttonRe.visibility = View.GONE
-                }
-                if(localDate.isBefore(LocalDate.now()) || party.Статус_проверки == "Заблокировано" ){
-                    content.alpha = 0.82f
-                    buttonRe.visibility = View.GONE
-                }
-
-
-                val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
-                val localTime = LocalTime.parse(party.Время, inputFormatterTime)
-                val outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm")
-                val formattedTime = localTime.format(outputFormatterTime)
-                date.text = "$formattedDate  $formattedTime"
-
-                place.text = party.Место
             }
         }
     }

@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private var mainFragment: Fragment = MainFragment()
     private var profileFragment: Fragment = ProfileFragment()
     private var followersFragment: Fragment = FollowersFragment()
+    private var favoriteFragment: Fragment = FavoriteFragment()
     private lateinit var currentFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +36,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_profile -> {
                     loadFragment(profileFragment)
+                    true
+                }
+                R.id.nav_favorite -> {
+                    loadFragment(favoriteFragment)
                     true
                 }
                 R.id.nav_subs -> {

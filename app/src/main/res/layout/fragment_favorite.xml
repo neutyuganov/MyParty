@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="20dp"
     android:background="@color/background"
-    tools:context=".Main.MainFragment">
+    tools:context=".FavoriteFragment">
 
     <ImageView
         android:id="@+id/imageView"
@@ -23,52 +23,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
-        android:text="Главная"
+        android:text="Избранное"
         android:textColor="@color/main_text_color"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
-
-    <Button
-        android:id="@+id/button_place"
-        style="@style/image_button_main_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:drawableStart="@drawable/location_main_text_color"
-        android:drawablePadding="7dp"
-        android:text="Россия"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/main_text_color"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-
-    <Button
-        android:id="@+id/button_filter"
-        style="@style/image_button_main_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:background="@null"
-        android:drawableStart="@drawable/filter"
-        android:drawablePadding="7dp"
-        android:text="Фильтры"
-        android:textColor="@color/main_text_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button_place" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="5dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_place"
+
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
         app:spanCount="2"
         tools:listitem="@layout/item_party" />
 
@@ -78,10 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Вечеринок пока нет,\nвозвращайтесь позже"
+        android:text="Добавьте вечеринки в избранное,\nчтобы увидеть их здесь"
+        android:gravity="center"
         android:textColor="@color/secondary_text_color"
         android:visibility="invisible"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

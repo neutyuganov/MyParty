@@ -1,6 +1,5 @@
-package com.example.myparty.Main
+package com.example.myparty
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,10 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Adapters.PartyAdapter
 import com.example.myparty.DataClasses.PartyDataClass
-import com.example.myparty.R
-import com.example.myparty.SkeletonClass
-import com.example.myparty.SupabaseConnection.Singleton.sb
-import com.example.myparty.databinding.FragmentMainBinding
+import com.example.myparty.databinding.FragmentFavoriteBinding
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
 import io.github.jan.supabase.gotrue.auth
@@ -23,13 +19,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.time.LocalDate;
 import org.json.JSONArray
+import java.time.LocalDate
 
+class FavoriteFragment : Fragment() {
 
-class MainFragment : Fragment() {
-
-    private lateinit var binding: FragmentMainBinding
+    private lateinit var binding: FragmentFavoriteBinding
 
     private lateinit var skeleton: Skeleton
 
@@ -38,7 +33,7 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -53,18 +48,17 @@ class MainFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                val partiesResult = sb.from("Вечеринки")
+                val partiesResult = SupabaseConnection.Singleton.sb.from("Вечеринки")
                     .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
                         filter {
-                            gte("Дата", LocalDate.now())
                             eq("id_статуса_проверки", 3)
                         }
                     }.data
                 val jsonArrayParties = JSONArray(partiesResult)
 
-                val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
+                val partiesFavoritesResult = SupabaseConnection.Singleton.sb.from("Избранные_вечеринки").select() {
                     filter {
-                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                        eq("id_пользователя", SupabaseConnection.Singleton.sb.auth.currentUserOrNull()?.id.toString())
                     }
                 }.data
                 val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
@@ -83,33 +77,32 @@ class MainFragment : Fragment() {
                     val usersObject = jsonObject.getJSONObject("Пользователи")
                     val userName = usersObject.getString("Имя")
                     val userVerify = usersObject.getBoolean("Верификация")
-                    var favorite = false
                     for (j in 0 until jsonArrayFavorites.length()) {
                         val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
                         if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
-                            favorite = true
+                            val favorite = true
+                            val event = PartyDataClass(
+                                id = id,
+                                Название = name,
+                                id_пользователя = userId,
+                                Имя = userName,
+                                Дата = date,
+                                Время = time,
+                                Место = place,
+                                Цена = price,
+                                Возраст = age,
+                                Верификация = userVerify,
+                                Избранное = favorite
+                            )
+                            parties.add(event)
                         }
                     }
-
-                    val event = PartyDataClass(
-                        id = id,
-                        Название = name,
-                        id_пользователя = userId,
-                        Имя = userName,
-                        Дата = date,
-                        Время = time,
-                        Место = place,
-                        Цена = price,
-                        Возраст = age,
-                        Верификация = userVerify,
-                        Избранное = favorite
-                    )
-                    parties.add(event)
                 }
 
                 val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
                 val partyAdapter = PartyAdapter(parties, coroutineScope)
                 binding.recycler.adapter = partyAdapter
+
             } catch (e: Throwable) {
                 Log.e("Ошибка получения данных вечеринки", e.message.toString())
             } finally {
@@ -119,11 +112,7 @@ class MainFragment : Fragment() {
                 }
             }
         }
-
-        binding.buttonFilter.setOnClickListener {
-            val mainIntent = Intent(context, FilterActivity::class.java)
-            startActivity(mainIntent)
-        }
     }
-}
 
+
+}

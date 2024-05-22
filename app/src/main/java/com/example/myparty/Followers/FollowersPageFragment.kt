@@ -63,14 +63,45 @@ class FollowersPageFragment : Fragment() {
 
                 val jsonArray = JSONArray(followersResult)
 
+                val userFollowingResult = sb.from("Подписчики_пользователей").select{
+                    filter {
+                        eq("id_подписчика", currentUserId)
+                    }
+                }.data
+
+                val jsonArrayUserFollowing = JSONArray(userFollowingResult)
+
+                val jsonArrayUserData = JSONArray(sb.from("Пользователи").select{}.data)
+
                 for (i in 0 until jsonArray.length()) {
                     val jsonObject = jsonArray.getJSONObject(i)
+
                     val userId = jsonObject.getString("id_подписчика")
-                    val userData = getUserData(userId)
-                    val userName = userData.Имя
-                    val userVerify = userData.Верификация ?: false
+
+                    var userName = ""
+                    var userVerify = false
+                    for (j in 0 until jsonArrayUserData.length()) {
+                        val jsonObjectFavorites = jsonArrayUserData.getJSONObject(j)
+                        if (jsonObjectFavorites.getString("id") == userId) {
+                            userName = jsonObjectFavorites.getString("Имя")
+                            userVerify = if (jsonObjectFavorites.has("Верификация") && jsonObjectFavorites.get("Верификация") is Boolean) {
+                                jsonObjectFavorites.getBoolean("Верификация")
+                            } else {
+                                // Если значение "Верификации" равно null или не является булевым значением, устанавливаем userVerify в false
+                                false
+                            }
+                        }
+                    }
+
                     val countFollowers = getFollowers(userId)
-                    val isFollow = getFollowStatus(userId, currentUserId)
+
+                    var isFollow = true
+                    for (j in 0 until jsonArrayUserFollowing.length()) {
+                        val jsonObjectFavorites = jsonArrayUserFollowing.getJSONObject(j)
+                        if (jsonObjectFavorites.getString("id_пользователя") == userId) {
+                            isFollow = false
+                        }
+                    }
                     val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Количество_подписчиков = countFollowers, Статус_подписки = isFollow)
 
                     followers.add(follower)
@@ -96,29 +127,11 @@ class FollowersPageFragment : Fragment() {
         }
     }
 
-    suspend fun getUserData(userId: String): UserDataClass = withContext(Dispatchers.IO) {
-        sb.from("Пользователи").select{
-            filter {
-                eq("id", userId)
-            }
-        }.decodeSingle()
-    }
-
     suspend fun getFollowers(userId: String): Int  = withContext(Dispatchers.IO) {
         sb.from("Подписчики_пользователей").select{
             filter {
                 eq("id_пользователя", userId)
             }
         }.decodeList<FollowersDataClass>().count()
-    }
-
-    suspend fun getFollowStatus(userId: String, followerId: String): Boolean  = withContext(
-        Dispatchers.IO) {
-        sb.from("Подписчики_пользователей").select{
-            filter {
-                eq("id_пользователя", userId)
-                eq("id_подписчика", followerId)
-            }
-        }.decodeList<FollowersDataClass>().isEmpty()
     }
 }

@@ -67,6 +67,7 @@ class MainFragment : Fragment() {
                         eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
                     }
                 }.data
+
                 val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
 
                 for (i in 0 until jsonArrayParties.length()) {

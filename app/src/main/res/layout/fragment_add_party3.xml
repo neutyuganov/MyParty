@@ -41,6 +41,7 @@
             app:endIconDrawable="@drawable/calendar"
             app:endIconTint="@color/hint_color"
             app:endIconCheckable="true"
+            app:helperTextTextColor="@color/main_color"
             app:helperTextTextAppearance="@style/helper_text_medium_12_style">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -67,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             app:endIconMode="custom"
+            app:helperTextTextColor="@color/main_color"
             app:endIconDrawable="@drawable/watch"
             app:endIconTint="@color/hint_color"
             app:endIconCheckable="true"

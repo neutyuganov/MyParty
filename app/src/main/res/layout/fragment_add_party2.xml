@@ -78,7 +78,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="outline"
-                    app:counterEnabled="true"
                     app:counterMaxLength="1000"
                     android:layout_marginBottom="20dp"
                     app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
@@ -93,8 +92,7 @@
                         android:background="@drawable/edit_text_selector"
                         android:gravity="top"
                         android:inputType="textMultiLine"
-                        android:minLines="3"
-                        android:text="sdfjsfsafskafjskfsakljksfksfksfksfjsdfjsfsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfkskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjsfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklssdfjskfjkssdfjskfjksfkskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjsfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakljksfksfksfksfjssdfjskfjkssdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklsdfjskfjksfksfksfksfjskfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsaklkfjksfklsdfjlskfjklsafjklsjfklsafjklsafksajdklfjsakfjsafsafskafjskfsakl" />
+                        android:minLines="3"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 

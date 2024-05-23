@@ -1,14 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".AddParty.AddParty4Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Четвертый фрагмент" />
+        android:id="@+id/textView2"
+        style="@style/text_bold_30_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Где собираемся?"
+        android:textColor="@color/main_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <TextView
+            style="@style/text_medium_16_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Город"
+            android:textColor="@color/main_text_color" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:boxBackgroundMode="outline"
+            app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+            app:counterTextAppearance="@style/helper_text_medium_12_style"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_city"
+                style="@style/edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_text_selector"
+                android:inputType="textMultiLine" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            style="@style/text_medium_16_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Адрес или место"
+            android:textColor="@color/main_text_color" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:boxBackgroundMode="outline"
+            app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+            app:counterTextAppearance="@style/helper_text_medium_12_style"
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_place"
+                style="@style/edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_text_selector"
+                android:inputType="textMultiLine" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnGoNext"
+        style="@style/button_main_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_main_color_selector"
+        android:text="Продолжить"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

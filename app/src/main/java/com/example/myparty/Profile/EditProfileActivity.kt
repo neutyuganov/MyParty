@@ -173,7 +173,7 @@ class EditProfileActivity : AppCompatActivity() {
         val type = when (editText) {
             binding.textDescription -> "описание"
             binding.textName -> "имя или название организации"
-            else -> "короткое имя"
+            else -> "ник"
         }
 
         container.helperText = validText(container, editText.text.toString(), type)
@@ -182,9 +182,13 @@ class EditProfileActivity : AppCompatActivity() {
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
         if(text.length > maxLength){
-            return "Слишком длинное $type"
+            return if(type == "ник"){
+                "Слишком длинный $type"
+            } else{
+                "Слишком длинное $type"
+            }
         }
-        if(type == "имя или название организации" || type == "короткое имя"){
+        if(type == "имя или название организации" || type == "ник"){
             if(text.isEmpty()){
                 return "Это обязательное поле"
             }

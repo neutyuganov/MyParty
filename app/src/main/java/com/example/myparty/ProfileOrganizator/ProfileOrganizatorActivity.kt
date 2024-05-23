@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
@@ -35,11 +36,13 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
     private var userId: String? = null
 
+    val args = Bundle()
+
     var userData: UserDataClass? = null
     var followersCount = 0
     var followingCount = 0
     var partyCount = 0
-    var subsribe = false
+    var subscribe = false
 
     var fragmentActual = ProfileOrganizatorActualPartyFragment()
     var fragmentBefore = ProfileOrganizatorBeforePartyFragment()
@@ -49,9 +52,13 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
         binding = ActivityProfileOrganizatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val currentUserId = sb.auth.currentUserOrNull()?.id!!
+
         userId = intent.getStringExtra("USER_ID")
 
         binding.content.visibility = View.INVISIBLE
+
+        args.putString("userId", userId!!) // Записываем аргумент в Bundle
 
         lifecycleScope.launch {
             try{
@@ -59,7 +66,7 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
                 followersCount = getFollowers()
                 followingCount = getFollowing()
                 partyCount = getParty()
-                subsribe = getSub()
+                subscribe = getSub()
                 loadUserData()
 
                 setupViewPager(binding.viewPager)
@@ -77,41 +84,49 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.btnSubscribe.setOnClickListener {
-            try {
-                if (subsribe) {
-                    subsribe = false
-                    binding.btnSubscribe.text = "Отписаться"
-                    binding.btnSubscribe.background = resources.getDrawable(R.drawable.button_secondary_color_selector)
-                    binding.btnSubscribe.setTextColor(resources.getColor(R.color.secondary_text_color))
-                    lifecycleScope.launch {
-                        sb.from("Подписчики_пользователей").insert(
-                            UsersSubsDataClass(
-                                id_пользователя = userId!!,
-                                id_подписчика = sb.auth.currentUserOrNull()?.id!!
-                            )
-                        )
-                        followersCount = getFollowers()
-                        binding.countFollower.text = followersCount.toString()
-                    }
-                } else {
-                    subsribe = true
-                    binding.btnSubscribe.text = "Подписаться"
-                    binding.btnSubscribe.background = resources.getDrawable(R.drawable.button_main_color_selector)
-                    binding.btnSubscribe.setTextColor(resources.getColor(R.color.white))
-                    lifecycleScope.launch {
-                        sb.from("Подписчики_пользователей").delete {
-                            filter {
-                                eq("id_пользователя", userId!!)
-                                eq("id_подписчика", sb.auth.currentUserOrNull()!!.id)
+        binding.apply {
+            btnSubscribe.setOnClickListener {
+                lifecycleScope.launch {
+                    try {
+                        btnSubscribe.isEnabled = false
+                        btnSubscribe.text = "Загрузка..."
+                        // Получение статуса подписки пользователя
+                        val isSubscribed = getSub()
+
+                        // Проверка наличия подписки
+                        if (subscribe) {
+                            // Проверка достоверности статуса подписки пользователя
+                            if (subscribe == isSubscribed) {
+                                sb.from("Подписчики_пользователей").insert(
+                                    UsersSubsDataClass(
+                                        id_пользователя = userId,
+                                        id_подписчика = currentUserId
+                                    )
+                                )
+                            } else {
+                                Toast.makeText(this@ProfileOrganizatorActivity, "Вы уже подписаны", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            if (subscribe == isSubscribed) {
+                                sb.from("Подписчики_пользователей").delete {
+                                    filter {
+                                        eq("id_пользователя", userId!!)
+                                        eq("id_подписчика", currentUserId)
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(this@ProfileOrganizatorActivity, "Вы уже отписались", Toast.LENGTH_SHORT).show()
                             }
                         }
-                        followersCount = getFollowers()
-                        binding.countFollower.text = followersCount.toString()
+                        subscribe = !subscribe
+
+                        // Изменение индикации кнопки
+                        countFollower.text = getFollowers().toString()
+                        checkFollowStatus(subscribe)
+                    } catch (e: Exception) {
+                        Log.e("Ошибка добавления в избранное", e.message.toString())
                     }
                 }
-            }catch (e: Exception){
-                Log.e("Ошибка добавления в избранное", e.message.toString())
             }
         }
     }
@@ -119,10 +134,6 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
     private fun setupViewPager(viewPager: ViewPager) {
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
-
-        val args = Bundle()
-
-        args.putString("userId", userId!!) // Записываем аргумент в Bundle
 
         fragmentActual.arguments = args
         fragmentBefore.arguments = args
@@ -190,7 +201,7 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()
         binding.countParty.text = partyCount.toString()
-        if (subsribe == false) {
+        if (subscribe == false) {
             binding.btnSubscribe.text = "Отписаться"
             binding.btnSubscribe.background = resources.getDrawable(R.drawable.button_secondary_color_selector)
             binding.btnSubscribe.setTextColor(resources.getColor(R.color.secondary_text_color))
@@ -199,6 +210,22 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
             binding.btnSubscribe.text = "Подписаться"
             binding.btnSubscribe.background = resources.getDrawable(R.drawable.button_main_color_selector)
             binding.btnSubscribe.setTextColor(resources.getColor(R.color.white))
+        }
+    }
+
+    fun checkFollowStatus(status: Boolean) {
+        binding.apply {
+            btnSubscribe.isEnabled = true
+
+            if (!status) {
+                btnSubscribe.text = "Отписаться"
+                btnSubscribe.setBackgroundResource(R.drawable.button_secondary_color_selector)
+                binding.btnSubscribe.setTextColor(resources.getColor(R.color.secondary_text_color))
+            } else {
+                binding.btnSubscribe.text = "Подписаться"
+                btnSubscribe.setBackgroundResource(R.drawable.button_main_color_selector)
+                binding.btnSubscribe.setTextColor(resources.getColor(R.color.white))
+            }
         }
     }
 }

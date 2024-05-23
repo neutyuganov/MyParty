@@ -16,7 +16,9 @@ import com.example.myparty.databinding.ActivityPartyBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.time.LocalDate
 import java.time.LocalTime
@@ -31,68 +33,18 @@ class PartyActivity : AppCompatActivity() {
 
     lateinit var party: PartyDataClass
 
+    var favorite: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPartyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Получение данных об авторизованном пользователе
+        val currentUserId = sb.auth.currentUserOrNull()?.id!!
+
+        // Получение переданной id вечеринки
         partyId = intent.getIntExtra("PARTY_ID", 0)
-
-        binding.content.visibility = View.GONE
-
-        binding.btnGoBack.setOnClickListener {
-            finish()
-        }
-
-        binding.userName.setOnClickListener {
-            if(party.id_пользователя != sb.auth.currentUserOrNull()?.id!!) {
-                val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
-                intent.putExtra("USER_ID", party.id_пользователя)
-                it.context.startActivity(intent)
-            }
-        }
-
-        binding.btnRe.setOnClickListener {
-            val intent = Intent(this@PartyActivity, EditPartyActivity::class.java)
-            intent.putExtra("PARTY_ID", party.id)
-            startActivity(intent)
-        }
-
-        binding.favorite.setOnClickListener {
-            if (party.Избранное!!) {
-                party.Избранное = false
-                binding.favorite.setImageResource(R.drawable.empty_star_big)
-                lifecycleScope.launch {
-                    try{
-                        sb.from("Избранные_вечеринки").delete {
-                            filter {
-                                eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
-                                eq("id_вечеринки", party.id!!)
-                            }
-                        }
-                    } catch (e: Throwable) {
-                        Log.e("Exception", e.toString())
-                    }
-                }
-            }
-            else {
-                party.Избранное = true
-                binding.favorite.setImageResource(R.drawable.star_big)
-
-                lifecycleScope.launch {
-                    try {
-                        sb.from("Избранные_вечеринки").insert(
-                            PartyFavoriteDataClass(
-                                id_пользователя = sb.auth.currentUserOrNull()?.id!!,
-                                id_вечеринки = party.id!!
-                            )
-                        )
-                    } catch (e: Throwable) {
-                        Log.e("Exception", e.toString())
-                    }
-                }
-            }
-        }
 
         lifecycleScope.launch {
             try{
@@ -112,7 +64,7 @@ class PartyActivity : AppCompatActivity() {
                     if(party.id_пользователя == sb.auth.currentUserOrNull()?.id!!) {
                         binding.btnRe.visibility = View.VISIBLE
                         binding.btnBuy.visibility = View.GONE
-                        binding.favorite.visibility = View.GONE
+                        binding.star.visibility = View.GONE
                         if(localDate < LocalDate.now()) {
                             binding.btnRe.visibility = View.GONE
                         }
@@ -151,10 +103,8 @@ class PartyActivity : AppCompatActivity() {
 
                     if (!party.Верификация!!) verify.visibility = View.GONE
 
-                    if(party.Избранное == true) {
-                        favorite.setImageResource(R.drawable.star_big)
-                    }
-                    else favorite.setImageResource(R.drawable.empty_star_big)
+                    favorite = party.Избранное!!
+                    updateFavorite(favorite)
 
                     content.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
@@ -164,6 +114,76 @@ class PartyActivity : AppCompatActivity() {
                 Log.e("Error", e.toString())
             }
         }
+
+        binding.apply {
+
+            binding.content.visibility = View.GONE
+
+            binding.btnGoBack.setOnClickListener {
+                finish()
+            }
+
+            binding.userName.setOnClickListener {
+                if(party.id_пользователя != sb.auth.currentUserOrNull()?.id!!) {
+                    val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
+                    intent.putExtra("USER_ID", party.id_пользователя)
+                    it.context.startActivity(intent)
+                }
+            }
+
+            binding.btnRe.setOnClickListener {
+                val intent = Intent(this@PartyActivity, EditPartyActivity::class.java)
+                intent.putExtra("PARTY_ID", partyId)
+                startActivity(intent)
+            }
+
+            binding.star.setOnClickListener {
+                lifecycleScope.launch {
+                    try {
+                        // После нажатия на кнопку добавления в избранное делаем ее неактивной, на время проведения операции
+                        star.isEnabled = false
+
+                        // Получение данных о статусе наличия в избранном у пользователя
+                        val isFavorite = getFavoriteStatus(currentUserId, partyId)
+                        // Проверка наличия в избранном
+                        if (!favorite) {
+                            // Проверка достоверности статуса наличия в избранном у пользователя
+                            if(favorite == isFavorite){
+                                sb.from("Избранные_вечеринки").insert(
+                                    PartyFavoriteDataClass(
+                                        id_пользователя = sb.auth.currentUserOrNull()?.id!!,
+                                        id_вечеринки = party.id
+                                    )
+                                )
+                            }
+                            else{
+                                Toast.makeText(this@PartyActivity, "Вечеринка уже в избранном", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            // Проверка достоверности статуса наличия в избранном у пользователя
+                            if(favorite == isFavorite){
+                                sb.from("Избранные_вечеринки").delete {
+                                    filter {
+                                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id!!)
+                                        eq("id_вечеринки", partyId)
+                                    }
+                                }
+                            }
+                            else{
+                                Toast.makeText(this@PartyActivity, "Вечеринка уже не в избранном", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        favorite = !favorite
+                        updateFavorite(favorite)
+
+                    }catch (e: Exception){
+                        Log.e("Ошибка добавления в избранное", e.message.toString())
+                    }
+                }
+            }
+        }
+
+
     }
 
     suspend fun loadParty(): PartyDataClass {
@@ -222,5 +242,27 @@ class PartyActivity : AppCompatActivity() {
         )
 
         return event
+    }
+
+    fun updateFavorite(favorite: Boolean){
+        binding.apply {
+            if(favorite){
+                star.setImageResource(R.drawable.star_big)
+            }
+            else{
+                star.setImageResource(R.drawable.empty_star_big)
+            }
+            star.isEnabled = true
+        }
+    }
+
+    suspend fun getFavoriteStatus(userId: String, partyId: Int): Boolean  = withContext(
+        Dispatchers.IO) {
+        sb.from("Избранные_вечеринки").select{
+            filter {
+                eq("id_пользователя", userId)
+                eq("id_вечеринки", partyId)
+            }
+        }.decodeList<PartyDataClass>().isNotEmpty()
     }
 }

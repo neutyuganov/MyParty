@@ -15,12 +15,14 @@ import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.MainActivity
 import com.example.myparty.Profile.EditPartyActivity
+import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityFilterBinding
 import com.google.android.material.textfield.TextInputEditText
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.result.PostgrestResult
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.time.LocalDate
@@ -31,10 +33,6 @@ class FilterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterBinding
 
-    val parties = mutableListOf<PartyDataClass>()
-
-    var partiesResult: String? = null
-
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,14 +40,34 @@ class FilterActivity : AppCompatActivity() {
         binding = ActivityFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferences = this.getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
+        // Создание переменной для SharedPreference
+        sharedPreferences = this.getSharedPreferences("SHARED_PREFS_FILTER", Context.MODE_PRIVATE)
 
-        val dateText = LocalDate.now().dayOfMonth.toString().padStart(2, '0') + "." + LocalDate.now().monthValue.toString().padStart(2, '0') + "." + LocalDate.now().year.toString().padStart(2, '0')
-        binding.textDate.setText(dateText)
+        val city = sharedPreferences.getString("FILTER_CITY", null)
+        val time = sharedPreferences.getString("FILTER_TIME", null)
+        val date = sharedPreferences.getString("FILTER_DATE", null)
+        val priceStart = sharedPreferences.getString("FILTER_PRICE_START", null)
+        val priceEnd = sharedPreferences.getString("FILTER_PRICE_END", null)
 
-        val timeText = LocalTime.now().hour.toString().padStart(2, '0') + ":" + LocalTime.now().minute.toString().padStart(2, '0')
-        binding.textTime.setText(timeText)
+        if(city!= null) binding.textCity.setText(city)
+        if(time!= null) binding.textTime.setText(time)
+        if(date!= null){
+            val dateArray = date.split("-")
+            val year = dateArray[0].toInt()
+            val month = dateArray[1].toInt()
+            val day = dateArray[2].toInt()
+            binding.textDate.setText(day.toString().padStart(2, '0') + "." + month.toString().padStart(2, '0') + "." + year.toString().padStart(2, '0'))
+        }
+        if(priceStart!= null) binding.textPriceOt.setText(priceStart)
+        if(priceEnd!= null) binding.textPriceDo.setText(priceEnd)
 
+        if(sharedPreferences.all.isEmpty()) {
+            // Вывод текущей даты
+            val dateText = LocalDate.now().dayOfMonth.toString().padStart(2, '0') + "." + LocalDate.now().monthValue.toString().padStart(2, '0') + "." + LocalDate.now().year.toString().padStart(2, '0')
+            binding.textDate.setText(dateText)
+        }
+
+        // Загрузка результатов фильтрации
         loadParties()
 
         focusedListener(binding.textCity)
@@ -59,15 +77,41 @@ class FilterActivity : AppCompatActivity() {
         focusedListener(binding.textTime)
 
         binding.btnShowParties.setOnClickListener {
-            sharedPreferences.edit().putString("FILTER_PARTIES", partiesResult).apply()
+            loadParties()
+
+            // Сохранение города в SharedPreferences
+            if(binding.textCity.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString()).apply()
+
+            // Сохранение времени в SharedPreferences
+            if(binding.textTime.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString()).apply()
+
+            // Сохранение даты в SharedPreferences
+            if(binding.textDate.text.toString().isNotEmpty()){
+                val date = binding.textDate.text.toString().split('.')
+                val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
+                sharedPreferences.edit().putString("FILTER_DATE", currentDate.toString()).apply()
+            }
+
+            // Сохранение начальной цены в SharedPreferences
+            if(binding.textPriceOt.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString()).apply()
+
+            // Сохранение конечной цены в SharedPreferences
+            if(binding.textPriceDo.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString()).apply()
+
             val intent = Intent(this, MainActivity::class.java)
+            val fragment = MainFragment()
+            intent.putExtra("FRAGMENT", fragment.javaClass.name)
             startActivity(intent)
+            finish()
+
         }
 
         binding.btnCancel.setOnClickListener {
-            sharedPreferences.edit().putString("FILTER_PARTIES", null).apply()
+            // Удаление фильтров из SharedPreference
+            sharedPreferences.edit().clear().apply()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.btnGoBack.setOnClickListener {
@@ -89,9 +133,7 @@ class FilterActivity : AppCompatActivity() {
         }
 
         binding.containerTime.setEndIconOnClickListener {
-
             val time = setTime()
-
             val timePickerDialog = TimePickerDialog(
                 this,
                 { _, hour, minute ->
@@ -162,23 +204,22 @@ class FilterActivity : AppCompatActivity() {
         binding.btnShowParties.isEnabled = false
         lifecycleScope.launch {
             try{
-                val countParties = filter().size
+                val countParties = filter().count()
                 if (countParties > 0) {
                     binding.btnShowParties.text =
-                        "Показать " + countParties.toString() + " вечеринок"
+                        "Показать " + countParties + " вечеринок"
                     binding.btnShowParties.isEnabled = true
                 }
-                else binding.btnShowParties.text =
-                    "Вечеринки не найдены"
+                else binding.btnShowParties.text = "Вечеринки не найдены"
             }
             catch(e:Throwable){
-                Log.e("воалвоаовыаовл", e.message.toString())
+                Log.e("Ошибка загрузки вечеринок", e.message.toString())
             }
         }
     }
 
-    suspend fun filter(): MutableList<PartyDataClass> {
-        partiesResult = sb.from("Вечеринки")
+    suspend fun filter(): List<PartyDataClass> {
+        val partiesResult = sb.from("Вечеринки")
             .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
             filter {
                 neq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString()) // Фитрация пользователя
@@ -206,57 +247,8 @@ class FilterActivity : AppCompatActivity() {
                 // Фитрация цены вечеринок при заполнении поля до
                 if(binding.textPriceDo.text.toString().isNotEmpty()) lte("Цена", binding.textPriceDo.text.toString().toDouble())
             }
-        }.data
+        }.decodeList<PartyDataClass>()
 
-        Log.d("вечеринка", partiesResult.toString())
-
-        val jsonArrayParties = JSONArray(partiesResult)
-
-        val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
-            filter {
-                eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
-            }
-        }.data
-        val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
-
-        parties.clear()
-
-        for (i in 0 until jsonArrayParties.length()) {
-            val jsonObject = jsonArrayParties.getJSONObject(i)
-            val id = jsonObject.getInt("id")
-            val name = jsonObject.getString("Название")
-            val date = jsonObject.getString("Дата")
-            val time = jsonObject.getString("Время")
-            val place = jsonObject.getString("Место")
-            val price = jsonObject.getDouble("Цена")
-            val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
-            val age = ageObject.getInt("Возраст")
-            val usersObject = jsonObject.getJSONObject("Пользователи")
-            val userName = usersObject.getString("Имя")
-            val userVerify = usersObject.getBoolean("Верификация")
-            var favorite = false
-            for (j in 0 until jsonArrayFavorites.length()) {
-                val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
-                if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
-                    favorite = true
-                }
-            }
-            val event = PartyDataClass(
-                id = id,
-                Название = name,
-                Имя = userName,
-                Дата = date,
-                Время = time,
-                Место = place,
-                Цена = price,
-                Возраст = age,
-                Верификация = userVerify,
-                Избранное = favorite
-            )
-            parties.add(event)
-
-        }
-        Log.d("вечеринка", parties.toString())
-        return parties
+        return partiesResult
     }
 }

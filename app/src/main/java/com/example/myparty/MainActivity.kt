@@ -3,7 +3,9 @@ package com.example.myparty
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.example.myparty.AddParty.AddPartyActivity
 import com.example.myparty.Followers.FollowersFragment
 import com.example.myparty.Main.MainFragment
@@ -24,7 +26,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if(savedInstanceState == null){
+        val fragment = intent.getStringExtra("FRAGMENT")
+
+        if(fragment!= null){
+            val fragmentClass = Class.forName(fragment).newInstance() as Fragment
+            loadFragment(fragmentClass)
+        }
+        else if(savedInstanceState == null)
+        {
             loadFragment(mainFragment)
         }
 

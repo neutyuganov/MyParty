@@ -25,18 +25,16 @@ class SplashScreenActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    private var user : String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedPreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        user = sharedPreferences.getString("TOKEN_USER", null)
+        val user = sharedPreferences.getString("TOKEN_USER", null)
 
         Handler(Looper.getMainLooper()).postDelayed({
             // Проверяем, авторизован ли пользователь
-            if (isUserAuthenticated()) {
+            if (user!= null) {
                 lifecycleScope.launch {
                     withTimeout(5000L) {
                         try {
@@ -44,7 +42,7 @@ class SplashScreenActivity : AppCompatActivity() {
                             val users = SupabaseConnection.Singleton.sb.from("Пользователи").select(
                                 Columns.raw("*, Роли(Название), Статусы_проверки(Название)")){
                                 filter {
-                                    eq("id",user!!)
+                                    eq("id",user)
                                 }
                             }.data
 
@@ -117,10 +115,5 @@ class SplashScreenActivity : AppCompatActivity() {
                 finish()
             }
         }, 2000) // Запускаем таймер
-    }
-
-    // Метод проверяем, авторизован ли пользователь
-    private fun isUserAuthenticated(): Boolean {
-        return user!= null
     }
 }

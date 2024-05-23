@@ -77,12 +77,15 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
 
                 // Преобразование цены
                 val priceFormat = party.Цена
-                if(priceFormat?.rem(1) == 0.0){
+                if(priceFormat == 0.0){
+                    price.text = "Бесплатно"
+                }
+                else if(priceFormat?.rem(1) == 0.0){
                     val priceInt = priceFormat.toInt()
-                    price.text = "от $priceInt ₽"
+                    price.text = "$priceInt ₽"
                 }
                 else{
-                    price.text = "от $priceFormat ₽"
+                    price.text = "$priceFormat ₽"
                 }
 
                 // Обработка нажатия на кнопку изменения вечеринки

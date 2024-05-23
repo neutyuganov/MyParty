@@ -77,10 +77,10 @@ class PartyActivity : AppCompatActivity() {
                             val priceFormat = party.Цена
                             if(priceFormat?.rem(1) == 0.0){
                                 val priceInt = priceFormat.toInt()
-                                btnBuy.text = "Купить проход от $priceInt ₽"
+                                btnBuy.text = "Купить проход за $priceInt ₽"
                             }
                             else{
-                                btnBuy.text = "Купить проход от $priceFormat ₽"
+                                btnBuy.text = "Купить проход за $priceFormat ₽"
                             }
                         }
                     }

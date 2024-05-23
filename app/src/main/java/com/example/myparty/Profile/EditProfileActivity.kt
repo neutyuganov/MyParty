@@ -1,5 +1,6 @@
 package com.example.myparty.Profile
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -9,6 +10,8 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.Main.MainFragment
+import com.example.myparty.MainActivity
 import com.example.myparty.databinding.ActivityEditProfileBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -142,6 +145,10 @@ class EditProfileActivity : AppCompatActivity() {
                                     eq("id", user.id.toString())
                                 }
                             }
+                            val intent = Intent(this@EditProfileActivity, MainActivity::class.java)
+                            val fragment = ProfileFragment()
+                            intent.putExtra("FRAGMENT", fragment.javaClass.name)
+                            startActivity(intent)
                             finish()
                         }
                     }
@@ -149,7 +156,6 @@ class EditProfileActivity : AppCompatActivity() {
                 catch(e: Exception){
                     Log.e("Error create profile", e.toString())
                 }
-
             }
         }
     }

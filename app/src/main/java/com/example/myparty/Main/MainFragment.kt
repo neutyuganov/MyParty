@@ -54,6 +54,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        parties.clear()
+
         skeleton = binding.recycler.applySkeleton(R.layout.item_party_skeleton, 6)
 
         SkeletonClass().skeletonShow(skeleton, resources)

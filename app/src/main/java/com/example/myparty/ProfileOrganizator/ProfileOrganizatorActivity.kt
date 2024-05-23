@@ -191,12 +191,14 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
         if(userData?.Описание.isNullOrEmpty()) binding.descriptionUser.visibility = View.GONE else binding.descriptionUser.text = userData?.Описание
         binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
 
-        val bucket = sb.storage["images"]
-        val bytes = bucket.downloadPublic(userData?.Фото.toString())
-        val is1: InputStream = ByteArrayInputStream(bytes)
-        val bmp: Bitmap = BitmapFactory.decodeStream(is1)
-        val dr = BitmapDrawable(resources, bmp)
-        binding.imageUser.setImageDrawable(dr)
+        if(userData?.Фото != null) {
+            val bucket = sb.storage["images"]
+            val bytes = bucket.downloadPublic(userData?.Фото.toString())
+            val is1: InputStream = ByteArrayInputStream(bytes)
+            val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+            val dr = BitmapDrawable(resources, bmp)
+            binding.imageUser.setImageDrawable(dr)
+        }
 
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()

@@ -62,12 +62,28 @@ class PartyActivity : AppCompatActivity() {
                     date.text = "$formattedDate  $formattedTime"
 
                     if(party.id_пользователя == sb.auth.currentUserOrNull()?.id!!) {
-                        binding.btnRe.visibility = View.VISIBLE
-                        binding.btnBuy.visibility = View.GONE
-                        binding.star.visibility = View.GONE
+                        btnRe.visibility = View.VISIBLE
+                        btnBuy.visibility = View.GONE
+                        star.visibility = View.GONE
                         if(localDate < LocalDate.now()) {
-                            binding.btnRe.visibility = View.GONE
+                            btnRe.visibility = View.GONE
                         }
+                        if(party.Статус_проверки == "На проверке") {
+                            btnRe.visibility = View.VISIBLE
+                            status.visibility = View.VISIBLE
+                            status.text = "На проверке"
+                            status.setTextColor(this@PartyActivity.getColor(R.color.yellow))
+                        }
+                        else if(party.Статус_проверки == "Заблокировано") {
+                            btnRe.visibility = View.VISIBLE
+                            status.visibility = View.VISIBLE
+                            comment.visibility = View.VISIBLE
+                            status.text = "Заблокировано"
+                            status.setTextColor(this@PartyActivity.getColor(R.color.red))
+                            comment.text = party.Комментарий
+                            comment.setTextColor(this@PartyActivity.getColor(R.color.red))
+                        }
+
                     }
                     else {
                         if(localDate < LocalDate.now()) {
@@ -182,12 +198,10 @@ class PartyActivity : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
     suspend fun loadParty(): PartyDataClass {
-        val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")){
+        val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация), Статусы_проверки(Название)")){
             filter{
                eq("id", partyId)
             }
@@ -211,11 +225,14 @@ class PartyActivity : AppCompatActivity() {
         val description = jsonObjectParty.getString("Описание")
         val price = jsonObjectParty.getDouble("Цена")
         val userId = jsonObjectParty.getString("id_пользователя")
+        val comment = jsonObjectParty.getString("Комментарий")
         val ageObject = jsonObjectParty.getJSONObject("Возрастное_ограничение")
         val age = ageObject.getInt("Возраст")
         val usersObject = jsonObjectParty.getJSONObject("Пользователи")
         val userName = usersObject.getString("Имя")
         val userVerify = usersObject.getBoolean("Верификация")
+        val statusObject = jsonObjectParty.getJSONObject("Статусы_проверки")
+        val status = statusObject.getString("Название")
         var favorite = false
         for (j in 0 until jsonArrayFavorites.length()) {
             val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
@@ -238,7 +255,9 @@ class PartyActivity : AppCompatActivity() {
             Цена = price,
             Возраст = age,
             Верификация = userVerify,
-            Избранное = favorite
+            Избранное = favorite,
+            Статус_проверки = status,
+            Комментарий = comment
         )
 
         return event

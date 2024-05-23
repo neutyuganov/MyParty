@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.Profile.EditPartyActivity
 import com.example.myparty.PartyActivity
+import com.example.myparty.R
 import com.example.myparty.databinding.ItemCurrentUserPartyBinding
 import java.time.LocalDate
 import java.time.LocalTime
@@ -50,21 +51,26 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
                 val formattedTime = partyTime.format(outputFormatterTime)
                 date.text = "$formattedDate  $formattedTime"
 
-                // Проверка статуса проверки вечеринки
-                if(party.Статус_проверки == "Заблокировано" ){
-                    // Если вечеринка заблокирована, то затемняем item
-                    content.alpha = 0.62f
-                }
-                else if(party.Статус_проверки == "На проверке"){
-                    // Если вечеринка на проверке, то выводим статус На проверке
-                    status.visibility = View.VISIBLE
-                }
-
                 // Проверка времени на вечеринку
                 if(partyDate.isBefore(LocalDate.now())){
                     // Если дата вечеринки меньше текущей даты, то затемняем item и скрываем кнопку изменения вечеринки
                     content.alpha = 0.62f
                     buttonRe.visibility = View.GONE
+                }
+
+                // Проверка статуса проверки вечеринки
+                if(party.Статус_проверки == "Заблокировано" ){
+                    // Если вечеринка заблокирована, то затемняем item
+                    content.alpha = 0.62f
+                    status.visibility = View.VISIBLE
+                    status.text = "Заблокировано"
+                    status.setTextColor(itemBinding.root.context.getColor(R.color.red))
+                    buttonRe.visibility = View.VISIBLE
+                }
+                else if(party.Статус_проверки == "На проверке"){
+                    // Если вечеринка на проверке, то выводим статус На проверке
+                    status.visibility = View.VISIBLE
+                    buttonRe.visibility = View.VISIBLE
                 }
 
                 // Вывод информации о вечеринке

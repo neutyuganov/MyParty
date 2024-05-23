@@ -138,6 +138,30 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="20dp">
 
+                <TextView
+                    android:id="@+id/status"
+                    style="@style/text_tab_layout_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Заблокировано"
+                    android:visibility="gone"
+                    android:textColor="@color/red" />
+
+                <TextView
+                    android:id="@+id/comment"
+                    style="@style/text_medium_16_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    android:text="Потому что"
+
+                    android:textColor="@color/red" />
+
                 <Button
                     android:id="@+id/btnBuy"
                     style="@style/button_main_style_small"

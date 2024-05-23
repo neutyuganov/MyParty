@@ -3,6 +3,9 @@ package com.example.myparty.Profile
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,9 +23,12 @@ import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.databinding.FragmentProfileBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 
 class ProfileFragment : Fragment() {
@@ -147,7 +153,7 @@ class ProfileFragment : Fragment() {
         }.decodeList<PartyDataClass>().count()
     }
 
-    fun loadUserData() {
+    suspend fun loadUserData() {
         binding.nameUser.text = userData?.Имя
         binding.nickUser.text = "@" + userData?.Ник
         if(userData?.Описание.isNullOrEmpty()) binding.descriptionUser.visibility = View.GONE else binding.descriptionUser.text = userData?.Описание
@@ -155,6 +161,15 @@ class ProfileFragment : Fragment() {
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()
         binding.countParty.text = partyCount.toString()
+
+        if(userData?.Фото != null) {
+            val bucket = sb.storage["images"]
+            val bytes = bucket.downloadPublic(userData?.Фото.toString())
+            val is1: InputStream = ByteArrayInputStream(bytes)
+            val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+            val dr = BitmapDrawable(resources, bmp)
+            binding.imageUser.setImageDrawable(dr)
+        }
     }
 
 }

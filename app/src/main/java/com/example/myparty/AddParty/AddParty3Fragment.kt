@@ -29,7 +29,8 @@ class AddParty3Fragment() : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, day ->
-                    val dateText = day.toString().padStart(2, '0') + "." + month.toString().padStart(2, '0') + "." + year.toString()
+                    val actualMonth = month + 1
+                    val dateText = day.toString().padStart(2, '0') + "." + actualMonth.toString().padStart(2, '0') + "." + year.toString()
                     binding.textDate.setText(dateText)
                 }, date[0], date[1], date[2]
             )
@@ -65,7 +66,7 @@ class AddParty3Fragment() : Fragment() {
         }
         else {
             currentDay = currentDate.split('.')[0].toInt()
-            currentMonth = currentDate.split('.')[1].toInt()
+            currentMonth = currentDate.split('.')[1].toInt() - 1
             currentYear = currentDate.split('.')[2].toInt()
         }
         return intArrayOf(currentYear, currentMonth, currentDay)

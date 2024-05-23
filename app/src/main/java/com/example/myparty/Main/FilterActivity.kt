@@ -54,7 +54,8 @@ class FilterActivity : AppCompatActivity() {
             val datePickerDialog = DatePickerDialog(
                 this,
                 { _, year, month, day ->
-                    val dateText = day.toString().padStart(2, '0') + "." + month.toString().padStart(2, '0') + "." + year.toString()
+                    val actualMonth = month + 1
+                    val dateText = day.toString().padStart(2, '0') + "." + actualMonth.toString().padStart(2, '0') + "." + year.toString()
                     binding.textDate.setText(dateText)
                     loadParties()
                 }, date[0], date[1], date[2]
@@ -92,7 +93,7 @@ class FilterActivity : AppCompatActivity() {
         }
         else {
             currentDay = currentDate.split('.')[0].toInt()
-            currentMonth = currentDate.split('.')[1].toInt()
+            currentMonth = currentDate.split('.')[1].toInt() - 1
             currentYear = currentDate.split('.')[2].toInt()
         }
         return intArrayOf(currentYear, currentMonth, currentDay)
@@ -196,12 +197,9 @@ class FilterActivity : AppCompatActivity() {
             val jsonObject = jsonArrayParties.getJSONObject(i)
             val id = jsonObject.getInt("id")
             val name = jsonObject.getString("Название")
-//                    val slogan = jsonObject.getString("Слоган")
             val date = jsonObject.getString("Дата")
             val time = jsonObject.getString("Время")
-//                    val city = jsonObject.getString("Город")
             val place = jsonObject.getString("Место")
-//                    val description = jsonObject.getString("Описание")
             val price = jsonObject.getDouble("Цена")
             val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
             val age = ageObject.getInt("Возраст")

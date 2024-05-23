@@ -51,6 +51,7 @@ class ProfileFragment : Fragment() {
         user = sharedPreferences.getString("TOKEN_USER", null)
 
         binding.content.visibility = View.INVISIBLE
+        binding.btnLogOut.visibility = View.INVISIBLE
 
         lifecycleScope.launch {
             try{
@@ -66,6 +67,8 @@ class ProfileFragment : Fragment() {
 
                 setupViewPager(binding.viewPager)
                 binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+                binding.btnLogOut.visibility = View.VISIBLE
             }
             catch(e:Throwable){
                 Log.e("ProfileFragment вывод данных", e.message.toString())
@@ -78,6 +81,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnLogOut.setOnClickListener {
+            binding.btnLogOut.isEnabled = false
             sharedPreferences.edit().putString("TOKEN_USER", null).apply()
             lifecycleScope.launch {
                 sb.auth.signOut()

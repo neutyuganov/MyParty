@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
@@ -96,6 +97,10 @@ class CreateProfileActivity : AppCompatActivity() {
             takeHelperText(binding.containerDescription, binding.textDescription)
 
             if(binding.containerNick.helperText == null && binding.containerName.helperText == null){
+
+                binding.btnCreateProfile.isEnabled = false
+                binding.content.alpha = 0.62f
+                binding.progressBar.visibility = View.VISIBLE
 
                 lifecycleScope.launch {
                     try{

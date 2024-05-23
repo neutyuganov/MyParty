@@ -34,6 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textHeader">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="0dp">
 
@@ -65,7 +66,8 @@
                 android:layout_height="wrap_content"
                 app:boxBackgroundMode="outline"
                 app:counterMaxLength="15"
-                app:prefixText="/@"
+                app:prefixText="@"
+                app:prefixTextAppearance="@color/secondary_text_color"
                 app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
                 app:counterTextAppearance="@style/helper_text_medium_12_style"
                 app:helperTextTextAppearance="@style/helper_text_medium_12_style_over"
@@ -159,6 +161,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scrollView2" />
 
     <Button
         android:id="@+id/btnCreateProfile"

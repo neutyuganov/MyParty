@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
@@ -28,20 +29,34 @@ class EditProfileActivity : AppCompatActivity() {
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.progressBar.visibility = View.VISIBLE
+        binding.content.visibility = View.GONE
+        binding.btnSave.visibility = View.INVISIBLE
+
         binding.btnGoBack.setOnClickListener {
             finish()
         }
 
         lifecycleScope.launch {
-            user = sb.from("Пользователи").select{
-                filter {
-                    eq("id", sb.auth.currentUserOrNull()?.id.toString())
-                }
-            }.decodeSingle()
+            try{
+                user = sb.from("Пользователи").select{
+                    filter {
+                        eq("id", sb.auth.currentUserOrNull()?.id.toString())
+                    }
+                }.decodeSingle()
 
-            binding.textNick.setText(user.Ник)
-            binding.textName.setText(user.Имя)
-            binding.textDescription.setText(user.Описание)
+                binding.textNick.setText(user.Ник)
+                binding.textName.setText(user.Имя)
+                binding.textDescription.setText(user.Описание)
+            }
+            catch (e: Throwable){
+                Log.e("Error", e.toString())
+            }
+            finally {
+                binding.progressBar.visibility = View.GONE
+                binding.content.visibility = View.VISIBLE
+                binding.btnSave.visibility = View.VISIBLE
+            }
         }
 
         binding.textNick.addTextChangedListener(object : TextWatcher {
@@ -107,12 +122,10 @@ class EditProfileActivity : AppCompatActivity() {
             takeHelperText(binding.containerDescription, binding.textDescription)
 
             if(binding.containerNick.helperText == null && binding.containerName.helperText == null && binding.containerDescription.helperText == null){
-                /* val intent = intent
-                 intent.putExtra("nick", binding.textNick.text.toString())
-                 intent.putExtra("name", binding.textName.text.toString())
-                 intent.putExtra("description", binding.textDescription.text.toString())
-                 setResult(RESULT_OK, intent)
-                 finish()*/
+
+                binding.content.alpha = 0.62f
+                binding.progressBar.visibility = View.VISIBLE
+
                 try{
                     lifecycleScope.launch {
                         if (sb.postgrest["Пользователи"].select {

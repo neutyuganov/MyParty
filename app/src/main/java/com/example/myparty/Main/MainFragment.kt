@@ -1,12 +1,15 @@
 package com.example.myparty.Main
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Adapters.PartyAdapter
 import com.example.myparty.DataClasses.PartyDataClass
@@ -33,6 +36,8 @@ class MainFragment : Fragment() {
 
     private lateinit var skeleton: Skeleton
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,74 +54,148 @@ class MainFragment : Fragment() {
 
         SkeletonClass().skeletonShow(skeleton, resources)
 
+        sharedPreferences = requireActivity().getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
+
+        val partyFilterResult = sharedPreferences.getString("FILTER_PARTIES", null)
+
         val parties = mutableListOf<PartyDataClass>()
 
-        lifecycleScope.launch {
-            try {
-                val partiesResult = sb.from("Вечеринки")
-                    .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
+        if (partyFilterResult != null) {
+            binding.buttonFilter.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(requireContext(), R.drawable.filter_enabled), null, null, null);
+
+            lifecycleScope.launch {
+                try {
+                    val partiesResult = partyFilterResult
+                    val jsonArrayParties = JSONArray(partiesResult)
+
+                    val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
                         filter {
-                            gte("Дата", LocalDate.now())
-                            eq("id_статуса_проверки", 3)
+                            eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
                         }
                     }.data
-                val jsonArrayParties = JSONArray(partiesResult)
 
-                val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
-                    filter {
-                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
-                    }
-                }.data
+                    val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
 
-                val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
-
-                for (i in 0 until jsonArrayParties.length()) {
-                    val jsonObject = jsonArrayParties.getJSONObject(i)
-                    val id = jsonObject.getInt("id")
-                    val name = jsonObject.getString("Название")
-                    val date = jsonObject.getString("Дата")
-                    val time = jsonObject.getString("Время")
-                    val place = jsonObject.getString("Место")
-                    val price = jsonObject.getDouble("Цена")
-                    val userId = jsonObject.getString("id_пользователя")
-                    val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
-                    val age = ageObject.getInt("Возраст")
-                    val usersObject = jsonObject.getJSONObject("Пользователи")
-                    val userName = usersObject.getString("Имя")
-                    val userVerify = usersObject.getBoolean("Верификация")
-                    var favorite = false
-                    for (j in 0 until jsonArrayFavorites.length()) {
-                        val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
-                        if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
-                            favorite = true
+                    for (i in 0 until jsonArrayParties.length()) {
+                        val jsonObject = jsonArrayParties.getJSONObject(i)
+                        val id = jsonObject.getInt("id")
+                        val name = jsonObject.getString("Название")
+                        val date = jsonObject.getString("Дата")
+                        val time = jsonObject.getString("Время")
+                        val place = jsonObject.getString("Место")
+                        val price = jsonObject.getDouble("Цена")
+                        val userId = jsonObject.getString("id_пользователя")
+                        val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
+                        val age = ageObject.getInt("Возраст")
+                        val usersObject = jsonObject.getJSONObject("Пользователи")
+                        val userName = usersObject.getString("Имя")
+                        val userVerify = usersObject.getBoolean("Верификация")
+                        var favorite = false
+                        for (j in 0 until jsonArrayFavorites.length()) {
+                            val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
+                            if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
+                                favorite = true
+                            }
                         }
+
+                        val event = PartyDataClass(
+                            id = id,
+                            Название = name,
+                            id_пользователя = userId,
+                            Имя = userName,
+                            Дата = date,
+                            Время = time,
+                            Место = place,
+                            Цена = price,
+                            Возраст = age,
+                            Верификация = userVerify,
+                            Избранное = favorite
+                        )
+                        parties.add(event)
                     }
 
-                    val event = PartyDataClass(
-                        id = id,
-                        Название = name,
-                        id_пользователя = userId,
-                        Имя = userName,
-                        Дата = date,
-                        Время = time,
-                        Место = place,
-                        Цена = price,
-                        Возраст = age,
-                        Верификация = userVerify,
-                        Избранное = favorite
-                    )
-                    parties.add(event)
+                    val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+                    val partyAdapter = PartyAdapter(parties, coroutineScope)
+                    binding.recycler.adapter = partyAdapter
+                } catch (e: Throwable) {
+                    Log.e("Ошибка получения данных вечеринки", e.message.toString())
+                } finally {
+                    if(parties.isEmpty()){
+                        binding.textView.visibility = View.VISIBLE
+                        binding.recycler.visibility = View.GONE
+                    }
                 }
+            }
+        }
+        else {
+            lifecycleScope.launch {
+                try {
+                    val partiesResult = sb.from("Вечеринки")
+                        .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
+                            filter {
+                                neq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                                gte("Дата", LocalDate.now())
+                                eq("id_статуса_проверки", 3)
+                            }
+                        }.data
+                    val jsonArrayParties = JSONArray(partiesResult)
 
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = PartyAdapter(parties, coroutineScope)
-                binding.recycler.adapter = partyAdapter
-            } catch (e: Throwable) {
-                Log.e("Ошибка получения данных вечеринки", e.message.toString())
-            } finally {
-                if(parties.isEmpty()){
-                    binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
+                    val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
+                        filter {
+                            eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                        }
+                    }.data
+
+                    val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
+
+                    for (i in 0 until jsonArrayParties.length()) {
+                        val jsonObject = jsonArrayParties.getJSONObject(i)
+                        val id = jsonObject.getInt("id")
+                        val name = jsonObject.getString("Название")
+                        val date = jsonObject.getString("Дата")
+                        val time = jsonObject.getString("Время")
+                        val place = jsonObject.getString("Место")
+                        val price = jsonObject.getDouble("Цена")
+                        val userId = jsonObject.getString("id_пользователя")
+                        val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
+                        val age = ageObject.getInt("Возраст")
+                        val usersObject = jsonObject.getJSONObject("Пользователи")
+                        val userName = usersObject.getString("Имя")
+                        val userVerify = usersObject.getBoolean("Верификация")
+                        var favorite = false
+                        for (j in 0 until jsonArrayFavorites.length()) {
+                            val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
+                            if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
+                                favorite = true
+                            }
+                        }
+
+                        val event = PartyDataClass(
+                            id = id,
+                            Название = name,
+                            id_пользователя = userId,
+                            Имя = userName,
+                            Дата = date,
+                            Время = time,
+                            Место = place,
+                            Цена = price,
+                            Возраст = age,
+                            Верификация = userVerify,
+                            Избранное = favorite
+                        )
+                        parties.add(event)
+                    }
+
+                    val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+                    val partyAdapter = PartyAdapter(parties, coroutineScope)
+                    binding.recycler.adapter = partyAdapter
+                } catch (e: Throwable) {
+                    Log.e("Ошибка получения данных вечеринки", e.message.toString())
+                } finally {
+                    if(parties.isEmpty()){
+                        binding.textView.visibility = View.VISIBLE
+                        binding.recycler.visibility = View.GONE
+                    }
                 }
             }
         }

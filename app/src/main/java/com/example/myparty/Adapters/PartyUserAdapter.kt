@@ -53,7 +53,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
                 // Проверка статуса проверки вечеринки
                 if(party.Статус_проверки == "Заблокировано" ){
                     // Если вечеринка заблокирована, то затемняем item
-                    content.alpha = 0.82f
+                    content.alpha = 0.62f
                 }
                 else if(party.Статус_проверки == "На проверке"){
                     // Если вечеринка на проверке, то выводим статус На проверке
@@ -63,7 +63,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
                 // Проверка времени на вечеринку
                 if(partyDate.isBefore(LocalDate.now())){
                     // Если дата вечеринки меньше текущей даты, то затемняем item и скрываем кнопку изменения вечеринки
-                    content.alpha = 0.82f
+                    content.alpha = 0.62f
                     buttonRe.visibility = View.GONE
                 }
 

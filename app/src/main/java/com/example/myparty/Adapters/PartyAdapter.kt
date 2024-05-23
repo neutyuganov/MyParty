@@ -82,7 +82,7 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             // Проверка времени на вечеринку
             if(partyDate.isBefore(LocalDate.now())){
                 // Если дата вечеринки меньше текущей даты, то затемняем item
-                content.alpha = 0.8f
+                content.alpha = 0.62f
             }
 
             // Вывод информации о вечеринке

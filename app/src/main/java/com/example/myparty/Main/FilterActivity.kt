@@ -2,12 +2,19 @@ package com.example.myparty.Main
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.EditText
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
+import com.example.myparty.MainActivity
+import com.example.myparty.Profile.EditPartyActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityFilterBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -26,10 +33,16 @@ class FilterActivity : AppCompatActivity() {
 
     val parties = mutableListOf<PartyDataClass>()
 
+    var partiesResult: String? = null
+
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedPreferences = this.getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
         val dateText = LocalDate.now().dayOfMonth.toString().padStart(2, '0') + "." + LocalDate.now().monthValue.toString().padStart(2, '0') + "." + LocalDate.now().year.toString().padStart(2, '0')
         binding.textDate.setText(dateText)
@@ -46,6 +59,18 @@ class FilterActivity : AppCompatActivity() {
         focusedListener(binding.textTime)
 
         binding.btnShowParties.setOnClickListener {
+            sharedPreferences.edit().putString("FILTER_PARTIES", partiesResult).apply()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnCancel.setOnClickListener {
+            sharedPreferences.edit().putString("FILTER_PARTIES", null).apply()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnGoBack.setOnClickListener {
             finish()
         }
 
@@ -153,9 +178,10 @@ class FilterActivity : AppCompatActivity() {
     }
 
     suspend fun filter(): MutableList<PartyDataClass> {
-        val partiesResult = sb.from("Вечеринки")
+        partiesResult = sb.from("Вечеринки")
             .select(Columns.raw("*, Возрастное_ограничение(Возраст), Пользователи(Имя, Верификация)")) {
             filter {
+                neq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString()) // Фитрация пользователя
                 // Фитрация разрешенных вечеринок
                 eq("id_статуса_проверки", "3")
                 // Фитрация города вечеринок
@@ -181,6 +207,8 @@ class FilterActivity : AppCompatActivity() {
                 if(binding.textPriceDo.text.toString().isNotEmpty()) lte("Цена", binding.textPriceDo.text.toString().toDouble())
             }
         }.data
+
+        Log.d("вечеринка", partiesResult.toString())
 
         val jsonArrayParties = JSONArray(partiesResult)
 
@@ -228,7 +256,7 @@ class FilterActivity : AppCompatActivity() {
             parties.add(event)
 
         }
-        Log.d("вечеринка", partiesResult.toString())
+        Log.d("вечеринка", parties.toString())
         return parties
     }
 }

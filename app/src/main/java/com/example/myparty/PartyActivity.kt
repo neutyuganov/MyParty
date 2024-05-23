@@ -91,6 +91,9 @@ class PartyActivity : AppCompatActivity() {
                         }
                         else {
                             val priceFormat = party.Цена
+                            if(priceFormat == 0.0){
+                                btnBuy.text = "Бесплатно"
+                            }
                             if(priceFormat?.rem(1) == 0.0){
                                 val priceInt = priceFormat.toInt()
                                 btnBuy.text = "Купить проход за $priceInt ₽"
@@ -102,7 +105,7 @@ class PartyActivity : AppCompatActivity() {
                     }
 
                     btnBuy.setOnClickListener {
-                        Toast.makeText(this@PartyActivity, "Вы купили проход", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PartyActivity, "Вы получили проход", Toast.LENGTH_SHORT).show()
                     }
 
                     name.text = party.Название

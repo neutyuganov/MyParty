@@ -137,6 +137,8 @@ class EditProfileActivity : AppCompatActivity() {
                                 }
                             }.decodeList<UserDataClass>().isNotEmpty() && binding.textNick.text.toString() != user.Ник){
                             binding.containerNick.helperText = "Такой пользователь уже существует"
+                            binding.content.alpha = 1f
+                            binding.progressBar.visibility = View.GONE
                         }
                         else{
                             val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString())

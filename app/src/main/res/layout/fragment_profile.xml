@@ -59,17 +59,27 @@
             app:layout_constraintStart_toStartOf="@+id/linearLayout4"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageUser"
             android:layout_width="110dp"
+            app:shapeAppearanceOverlay="@style/circular_image"
             android:layout_height="110dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
-            android:background="@drawable/round_button"
-            android:padding="30dp"
+            android:background="@color/stroke_color"
+            android:scaleType="center"
             android:src="@drawable/camera"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+            app:layout_constraintEnd_toEndOf="@+id/imageUser"
+            app:layout_constraintStart_toStartOf="@+id/imageUser"
+            app:layout_constraintTop_toTopOf="@+id/imageUser" />
 
         <LinearLayout
             android:id="@+id/linearLayout4"

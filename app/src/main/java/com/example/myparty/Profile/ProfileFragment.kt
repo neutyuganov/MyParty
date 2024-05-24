@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
@@ -70,6 +71,20 @@ class ProfileFragment : Fragment() {
 
                 binding.content.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
+
+                if(userData?.Фото != null) {
+                    binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
+                    binding.imageUser.setImageDrawable(null)
+
+                    val bucket = sb.storage["images"]
+                    val bytes = bucket.downloadPublic(userData?.Фото.toString())
+                    val is1: InputStream = ByteArrayInputStream(bytes)
+                    val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                    val dr = BitmapDrawable(resources, bmp)
+                    binding.imageUser.setImageDrawable(dr)
+                }
+
+                binding.progressBarImage.visibility = View.GONE
 
                 setupViewPager(binding.viewPager)
                 binding.tabLayout.setupWithViewPager(binding.viewPager)
@@ -161,15 +176,6 @@ class ProfileFragment : Fragment() {
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()
         binding.countParty.text = partyCount.toString()
-
-        if(userData?.Фото != null) {
-            val bucket = sb.storage["images"]
-            val bytes = bucket.downloadPublic(userData?.Фото.toString())
-            val is1: InputStream = ByteArrayInputStream(bytes)
-            val bmp: Bitmap = BitmapFactory.decodeStream(is1)
-            val dr = BitmapDrawable(resources, bmp)
-            binding.imageUser.setImageDrawable(dr)
-        }
     }
 
 }

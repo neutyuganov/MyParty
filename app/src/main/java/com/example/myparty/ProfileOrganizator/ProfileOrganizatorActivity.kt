@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -74,6 +75,19 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
                 binding.content.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
+
+                if(userData?.Фото != null) {
+                    binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
+                    binding.imageUser.setImageDrawable(null)
+
+                    val bucket = sb.storage["images"]
+                    val bytes = bucket.downloadPublic(userData?.Фото.toString())
+                    val is1: InputStream = ByteArrayInputStream(bytes)
+                    val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                    val dr = BitmapDrawable(resources, bmp)
+                    binding.imageUser.setImageDrawable(dr)
+                }
+                binding.progressBarImage.visibility = View.GONE
             }
             catch(e:Throwable){
                 Log.e("ProfileFragment", e.message.toString())
@@ -185,20 +199,11 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
         }.decodeList<PartyDataClass>().isEmpty()
     }
 
-    suspend fun loadUserData() {
+    fun loadUserData() {
         binding.nameUser.text = userData?.Имя
         binding.nickUser.text = "@" + userData?.Ник
         if(userData?.Описание.isNullOrEmpty()) binding.descriptionUser.visibility = View.GONE else binding.descriptionUser.text = userData?.Описание
         binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
-
-        if(userData?.Фото != null) {
-            val bucket = sb.storage["images"]
-            val bytes = bucket.downloadPublic(userData?.Фото.toString())
-            val is1: InputStream = ByteArrayInputStream(bytes)
-            val bmp: Bitmap = BitmapFactory.decodeStream(is1)
-            val dr = BitmapDrawable(resources, bmp)
-            binding.imageUser.setImageDrawable(dr)
-        }
 
         binding.countFollower.text = followersCount.toString()
         binding.countFollowing.text = followingCount.toString()

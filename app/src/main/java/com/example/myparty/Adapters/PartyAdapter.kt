@@ -1,10 +1,14 @@
 package com.example.myparty.Adapters
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -17,10 +21,13 @@ import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ItemPartyBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -113,6 +120,23 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             // Проверка наличия избранного
             var favorite = party.Избранное!!
             updateFavorite(favorite)
+
+            Log.d("party", party.Фото.toString())
+
+            coroutineScope.launch {
+                if(party.Фото != "null") {
+                    image.scaleType = ImageView.ScaleType.CENTER_CROP
+                    image.setImageDrawable(null)
+
+                    val bucket = sb.storage["images"]
+                    val bytes = bucket.downloadPublic(party.Фото.toString())
+                    val is1: InputStream = ByteArrayInputStream(bytes)
+                    val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                    val dr = BitmapDrawable(itemBinding.root.context.resources, bmp)
+                    image.setImageDrawable(dr)
+                }
+                progressBarImage.visibility = View.GONE
+            }
 
             star.setOnClickListener {
                 coroutineScope.launch {

@@ -72,6 +72,7 @@ class FavoriteFragment : Fragment() {
                     val place = jsonObject.getString("Место")
                     val price = jsonObject.getDouble("Цена")
                     val userId = jsonObject.getString("id_пользователя")
+                    val image = jsonObject.getString("Фото")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
                     val age = ageObject.getInt("Возраст")
                     val usersObject = jsonObject.getJSONObject("Пользователи")
@@ -92,7 +93,8 @@ class FavoriteFragment : Fragment() {
                                 Цена = price,
                                 Возраст = age,
                                 Верификация = userVerify,
-                                Избранное = favorite
+                                Избранное = favorite,
+                                Фото = image
                             )
                             parties.add(event)
                         }

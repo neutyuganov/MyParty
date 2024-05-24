@@ -71,13 +71,15 @@ class ActualPartyFragment : Fragment() {
                     val price = jsonObject.getDouble("Цена")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
                     val age = ageObject.getInt("Возраст")
+                    val image = jsonObject.getString("Фото")
                     val statusObject = jsonObject.getJSONObject("Статусы_проверки")
                     val status = statusObject.getString("Название")
-                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status)
+                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image)
                     parties.add(event)
                 }
 
-                val partyAdapter = PartyUserAdapter(parties)
+                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+                val partyAdapter = PartyUserAdapter(parties, coroutineScope)
                 binding.recycler.adapter = partyAdapter
             }
             catch (e: Throwable){

@@ -18,6 +18,20 @@
         <item name="android:navigationBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+    
+    <style name="circular_image">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="rounded_top_image">
+        <item name="cornerSizeTopLeft">10dp</item>
+        <item name="cornerSizeTopRight">10dp</item>
+    </style>
+
+    <style name="rounded_left_image">
+        <item name="cornerSizeTopLeft">10dp</item>
+        <item name="cornerSizeBottomLeft">10dp</item>
+    </style>
 
     <style name="bottom_navigation">
         <item name="backgroundTint">@null</item>

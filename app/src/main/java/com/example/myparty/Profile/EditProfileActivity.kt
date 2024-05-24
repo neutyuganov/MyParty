@@ -1,12 +1,16 @@
 package com.example.myparty.Profile
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
@@ -18,7 +22,10 @@ import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -51,6 +58,19 @@ class EditProfileActivity : AppCompatActivity() {
                 binding.textNick.setText(user.Ник)
                 binding.textName.setText(user.Имя)
                 binding.textDescription.setText(user.Описание)
+
+                if(user.Фото != null) {
+                    binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
+                    binding.imageUser.setImageDrawable(null)
+
+                    val bucket = sb.storage["images"]
+                    val bytes = bucket.downloadPublic(user.Фото.toString())
+                    val is1: InputStream = ByteArrayInputStream(bytes)
+                    val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                    val dr = BitmapDrawable(resources, bmp)
+                    binding.imageUser.setImageDrawable(dr)
+                }
+                binding.progressBarImage.visibility = View.GONE
             }
             catch (e: Throwable){
                 Log.e("Error", e.toString())

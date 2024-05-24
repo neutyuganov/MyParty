@@ -56,16 +56,28 @@
             android:layout_width="match_parent"
             android:layout_height="0dp">
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageUser"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/round_button"
+                app:shapeAppearanceOverlay="@style/circular_image"
+                android:scaleType="center"
+                android:background="@color/stroke_color"
                 android:src="@drawable/camera"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBarImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+                app:layout_constraintEnd_toEndOf="@+id/imageUser"
+                app:layout_constraintStart_toStartOf="@+id/imageUser"
+                app:layout_constraintTop_toTopOf="@+id/imageUser" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -76,7 +88,7 @@
                 android:text="Ник*"
                 android:textColor="@color/main_text_color"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+                app:layout_constraintTop_toBottomOf="@+id/imageUser" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/container_nick"

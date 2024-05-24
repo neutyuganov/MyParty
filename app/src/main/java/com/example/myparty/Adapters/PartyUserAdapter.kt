@@ -1,24 +1,34 @@
 package com.example.myparty.Adapters
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.Profile.EditPartyActivity
 import com.example.myparty.PartyActivity
 import com.example.myparty.R
+import com.example.myparty.SupabaseConnection
 import com.example.myparty.databinding.ItemCurrentUserPartyBinding
+import io.github.jan.supabase.storage.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerView.Adapter<PartyUserAdapter.ViewHolder>(){
+class PartyUserAdapter (private val partyList: List<PartyDataClass>, private val coroutineScope: CoroutineScope) : RecyclerView.Adapter<PartyUserAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding = ItemCurrentUserPartyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(itemBinding)
+        return ViewHolder(itemBinding, coroutineScope)
     }
 
     override fun getItemCount(): Int = partyList.size
@@ -35,7 +45,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
         }
     }
 
-    class ViewHolder(private val itemBinding: ItemCurrentUserPartyBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(private val itemBinding: ItemCurrentUserPartyBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding)
             {
                 // Форматирование даты
@@ -92,6 +102,21 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>) : RecyclerV
                 }
                 else{
                     price.text = "$priceFormat ₽"
+                }
+
+                coroutineScope.launch {
+                    if(party.Фото != "null") {
+                        image.scaleType = ImageView.ScaleType.CENTER_CROP
+                        image.setImageDrawable(null)
+
+                        val bucket = SupabaseConnection.Singleton.sb.storage["images"]
+                        val bytes = bucket.downloadPublic(party.Фото.toString())
+                        val is1: InputStream = ByteArrayInputStream(bytes)
+                        val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                        val dr = BitmapDrawable(itemBinding.root.context.resources, bmp)
+                        image.setImageDrawable(dr)
+                    }
+                    progressBarImage.visibility = View.GONE
                 }
 
                 // Обработка нажатия на кнопку изменения вечеринки

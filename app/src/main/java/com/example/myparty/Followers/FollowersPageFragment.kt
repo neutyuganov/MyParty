@@ -80,10 +80,12 @@ class FollowersPageFragment : Fragment() {
 
                     var userName = ""
                     var userVerify = false
+                    var image = ""
                     for (j in 0 until jsonArrayUserData.length()) {
                         val jsonObjectFavorites = jsonArrayUserData.getJSONObject(j)
                         if (jsonObjectFavorites.getString("id") == userId) {
                             userName = jsonObjectFavorites.getString("Имя")
+                            image = jsonObjectFavorites.getString("Фото")
                             userVerify = if (jsonObjectFavorites.has("Верификация") && jsonObjectFavorites.get("Верификация") is Boolean) {
                                 jsonObjectFavorites.getBoolean("Верификация")
                             } else {
@@ -102,7 +104,7 @@ class FollowersPageFragment : Fragment() {
                             isFollow = false
                         }
                     }
-                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Количество_подписчиков = countFollowers, Статус_подписки = isFollow)
+                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Количество_подписчиков = countFollowers, Статус_подписки = isFollow, Фото = image)
 
                     followers.add(follower)
                 }

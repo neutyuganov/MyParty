@@ -2,10 +2,14 @@ package com.example.myparty.Adapters
 
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.FollowersDataClass
@@ -17,10 +21,13 @@ import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ItemFollowersBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 
 class FollowersAdapter (private val userList: List<UserDataClass>, private val coroutineScope: CoroutineScope) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>(){
@@ -61,6 +68,21 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
 
                 var subscribe = user.Статус_подписки!!
                 checkFollowStatus(subscribe)
+
+                coroutineScope.launch {
+                    if(user.Фото != "null") {
+                        image.scaleType = ImageView.ScaleType.CENTER_CROP
+                        image.setImageDrawable(null)
+
+                        val bucket = sb.storage["images"]
+                        val bytes = bucket.downloadPublic(user.Фото.toString())
+                        val is1: InputStream = ByteArrayInputStream(bytes)
+                        val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                        val dr = BitmapDrawable(itemBinding.root.context.resources, bmp)
+                        image.setImageDrawable(dr)
+                    }
+                    progressBarImage.visibility = View.GONE
+                }
 
                 // Обработка нажатия на кнопку подписаться/отписаться
                 btnSubscribe.setOnClickListener {

@@ -65,6 +65,14 @@ class ProfileOrganizatorBeforePartyFragment : Fragment() {
 
                 val jsonArray = JSONArray(partiesResult)
 
+                val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
+                    filter {
+                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                    }
+                }.data
+
+                val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
+
                 for (i in 0 until jsonArray.length()) {
                     val jsonObject = jsonArray.getJSONObject(i)
                     val id = jsonObject.getInt("id")
@@ -75,10 +83,18 @@ class ProfileOrganizatorBeforePartyFragment : Fragment() {
                     val place = jsonObject.getString("Место")
                     val price = jsonObject.getDouble("Цена")
                     val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
+                    val image = jsonObject.getString("Фото")
                     val age = ageObject.getInt("Возраст")
                     val statusObject = jsonObject.getJSONObject("Статусы_проверки")
                     val status = statusObject.getString("Название")
-                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status)
+                    var favorite = false
+                    for (j in 0 until jsonArrayFavorites.length()) {
+                        val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
+                        if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
+                            favorite = true
+                        }
+                    }
+                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image, Избранное = favorite)
                     parties.add(event)
                 }
 

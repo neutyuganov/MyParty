@@ -1,10 +1,14 @@
 package com.example.myparty
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
@@ -16,10 +20,13 @@ import com.example.myparty.databinding.ActivityPartyBinding
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -127,6 +134,22 @@ class PartyActivity : AppCompatActivity() {
 
                     content.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
+
+
+                    if(party.Фото != null) {
+                        image.scaleType = ImageView.ScaleType.CENTER_CROP
+                        image.setImageDrawable(null)
+
+                        val bucket = sb.storage["images"]
+                        val bytes = bucket.downloadPublic(party.Фото.toString())
+                        val is1: InputStream = ByteArrayInputStream(bytes)
+                        val bmp: Bitmap = BitmapFactory.decodeStream(is1)
+                        val dr = BitmapDrawable(resources, bmp)
+                        image.setImageDrawable(dr)
+                    }
+                    progressBarImage.visibility = View.GONE
+
+
                 }
             }
             catch (e: Throwable){
@@ -229,6 +252,7 @@ class PartyActivity : AppCompatActivity() {
         val price = jsonObjectParty.getDouble("Цена")
         val userId = jsonObjectParty.getString("id_пользователя")
         val comment = jsonObjectParty.getString("Комментарий")
+        val image = jsonObjectParty.getString("Фото")
         val ageObject = jsonObjectParty.getJSONObject("Возрастное_ограничение")
         val age = ageObject.getInt("Возраст")
         val usersObject = jsonObjectParty.getJSONObject("Пользователи")
@@ -260,7 +284,8 @@ class PartyActivity : AppCompatActivity() {
             Верификация = userVerify,
             Избранное = favorite,
             Статус_проверки = status,
-            Комментарий = comment
+            Комментарий = comment,
+            Фото = image
         )
 
         return event

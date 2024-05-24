@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -53,7 +54,35 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            style="@style/text_medium_16_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Изображение"
+            android:textColor="@color/main_text_color" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/btnAddImage"
+            android:scaleType="center"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:src="@drawable/plus"
+            app:shapeAppearanceOverlay="@style/rounded_all_image"
+            android:background="@drawable/button_secondary_color_selector" />
+
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        android:visibility="gone"
+        android:background="@drawable/background_round_button"
+        android:src="@drawable/trash"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout5" />
 
     <Button
         android:id="@+id/btnGoNext"

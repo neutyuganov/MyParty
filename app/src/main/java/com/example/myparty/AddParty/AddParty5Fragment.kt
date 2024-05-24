@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,8 +24,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.UUID
 
 class AddParty5Fragment() : Fragment() {
     private lateinit var binding: FragmentAddParty5Binding
@@ -53,6 +56,10 @@ class AddParty5Fragment() : Fragment() {
                 binding.content.alpha = 0.62f
 
                 val name = sharedPreferences.getString("ADD_PARTY_NAME", null)
+                val image = sharedPreferences.getString("ADD_PARTY_IMAGE", null)
+                val b: ByteArray = Base64.decode(image, Base64.DEFAULT)
+
+                val uuid = UUID.randomUUID().toString()
 
                 val description = sharedPreferences.getString("ADD_PARTY_DESCRIPTION", null)
                 val slogan = sharedPreferences.getString("ADD_PARTY_SLOGAN", null)
@@ -70,6 +77,9 @@ class AddParty5Fragment() : Fragment() {
 
                 lifecycleScope.launch {
                     try{
+                        val bucket = sb.storage.from("images")
+                        bucket.upload(uuid, b, upsert = false)
+
                         // Добавление данных Вечеринки в таблицу Вечеринки
                         val partyAdd = PartyDataClass(
                             Название = name,
@@ -80,7 +90,8 @@ class AddParty5Fragment() : Fragment() {
                             Цена = price,
                             id_статуса_проверки = 1,
                             id_пользователя =  userId,
-                            id_возрастного_ограничения = 4
+                            id_возрастного_ограничения = 4,
+                            Фото = uuid
                         )
 
                         sb.postgrest["Вечеринки"].insert(partyAdd)

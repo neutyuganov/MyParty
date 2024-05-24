@@ -79,7 +79,6 @@
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="outline"
                     app:counterMaxLength="1000"
-                    android:layout_marginBottom="20dp"
                     app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
                     app:counterTextAppearance="@style/helper_text_medium_12_style"
                     app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">

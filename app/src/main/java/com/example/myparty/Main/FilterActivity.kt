@@ -149,19 +149,26 @@ class FilterActivity : AppCompatActivity() {
     private fun setDate(): IntArray{
         val currentDate = binding.textDate.text.toString()
 
-        val currentYear: Int
-        val currentMonth: Int
-        val currentDay: Int
+        var currentYear: Int
+        var currentMonth: Int
+        var currentDay: Int
 
-        if (currentDate.isEmpty()) {
+        try{
+            if (currentDate.isEmpty()) {
+                currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+                currentYear = Calendar.getInstance().get(Calendar.YEAR)
+            }
+            else {
+                currentDay = currentDate.split('.')[0].toInt()
+                currentMonth = currentDate.split('.')[1].toInt() - 1
+                currentYear = currentDate.split('.')[2].toInt()
+            }
+        }
+        catch (e: Exception){
             currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
             currentMonth = Calendar.getInstance().get(Calendar.MONTH)
             currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        }
-        else {
-            currentDay = currentDate.split('.')[0].toInt()
-            currentMonth = currentDate.split('.')[1].toInt() - 1
-            currentYear = currentDate.split('.')[2].toInt()
         }
         return intArrayOf(currentYear, currentMonth, currentDay)
     }
@@ -169,17 +176,24 @@ class FilterActivity : AppCompatActivity() {
     private fun setTime(): IntArray{
         val currentTime = binding.textTime.text.toString()
 
-        val currentHour: Int
-        val currentMinute: Int
+        var currentHour: Int
+        var currentMinute: Int
 
-        if (currentTime.isEmpty()) {
+        try{
+            if (currentTime.isEmpty()) {
+                currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                currentMinute = Calendar.getInstance().get(Calendar.MINUTE)
+            }
+            else {
+                currentHour = currentTime.substringBefore(':').toInt()
+                currentMinute = currentTime.substringAfter(':').toInt()
+            }
+        }
+        catch (e: Exception){
             currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
             currentMinute = Calendar.getInstance().get(Calendar.MINUTE)
         }
-        else {
-            currentHour = currentTime.substringBefore(':').toInt()
-            currentMinute = currentTime.substringAfter(':').toInt()
-        }
+
         return intArrayOf(currentHour, currentMinute)
     }
 

@@ -115,7 +115,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
                 app:prefixText="@"
-                app:prefixTextAppearance="@style/text_medium_16_style">
+                app:prefixTextAppearance="@style/text_medium_16_style"
+                app:prefixTextColor="@color/secondary_text_color">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/text_nick"

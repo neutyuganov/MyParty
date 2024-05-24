@@ -170,7 +170,7 @@ class EditProfileActivity : AppCompatActivity() {
 
                 binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
-                binding.btnGoBack.visibility = View.GONE
+                binding.btnGoBack.visibility = View.INVISIBLE
 
                 try{
                     lifecycleScope.launch {

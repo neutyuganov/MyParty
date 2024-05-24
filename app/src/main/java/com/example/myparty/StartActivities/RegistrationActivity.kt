@@ -3,13 +3,19 @@ package com.example.myparty.StartActivities
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityRegistrationBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -18,7 +24,7 @@ import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
-import java.lang.Exception
+
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -33,6 +39,24 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
+        val spanText = SpannableString("С правилами ознакомлен(а)")
+
+        val clickableSpan: ClickableSpan = object : ClickableSpan() {
+            override fun onClick(view: View) {
+                // При клике на слово "правилами" запустите вторую активность
+                val intent = Intent(this@RegistrationActivity, RulesActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        spanText.setSpan(clickableSpan, 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // Установите текст и кликабельность на определенном слове
+
+        // Установите текст и кликабельность на определенном слове
+        binding.checkBoxRules.setText(spanText)
+        binding.checkBoxRules.setMovementMethod(LinkMovementMethod.getInstance())
+        binding.checkBoxRules.setHighlightColor(Color.TRANSPARENT)
+
         // Проверка введенных данных
         focusedListener(binding.containerPasswordRepeat, binding.textPasswordRepeat)
         focusedListener(binding.containerEmail, binding.textEmail)
@@ -46,48 +70,55 @@ class RegistrationActivity : AppCompatActivity() {
 
             // Проверка введенных данных
             if(validText(binding.textPasswordRepeat, 0) == null && validText(binding.textEmail, 2) == null && validText(binding.textPassword, 3) == null){
-                // Создание корутина для взаимодействия с базой даных
-                lifecycleScope.launch {
-                    try{
-                        // Проверка на существование пользователя с введенным email
-                    val users = sb.from("Пользователи").select{
-                        filter {
-                            eq("Почта", binding.textEmail.text.toString())
+
+                if(!binding.checkBoxRules.isChecked){
+                    binding.textError.visibility = View.VISIBLE
+                }
+                else{
+                    binding.textError.visibility = View.GONE
+                    // Создание корутина для взаимодействия с базой даных
+                    lifecycleScope.launch {
+                        try{
+                            // Проверка на существование пользователя с введенным email
+                            val users = sb.from("Пользователи").select{
+                                filter {
+                                    eq("Почта", binding.textEmail.text.toString())
+                                }
+                            }.decodeList<UserDataClass>().count()
+
+                            // Если пользователя с таким email не существует, то создается новый пользователь
+                            if(users == 0){
+                                sb.auth.signUpWith(Email) {
+                                    email = binding.textEmail.text.toString()
+                                    password = binding.textPassword.text.toString()
+                                }
+
+                                // Сохранение id пользователя в SharedPreference
+                                sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
+
+                                val user = sb.auth.currentUserOrNull()
+
+                                // Добавление данных пользователя в таблицу Пользователи
+                                val userAdd = UserDataClass(id = user?.id.toString(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString())
+                                sb.postgrest["Пользователи"].insert(userAdd)
+
+                                Log.e("create profile", userAdd.toString())
+
+                                // Переход на экран создания профиля пользователя
+                                val myIntent = Intent(this@RegistrationActivity, CreateProfileActivity::class.java)
+                                startActivity(myIntent)
+                                finish()
+                            }
+                            // Если пользователь с таким email уже существует, то выводит подсказку
+                            else {
+                                binding.containerEmail.helperText = "Пользователь с таким email уже есть"
+                                binding.textEmail.requestFocus()
+                            }
+
                         }
-                    }.decodeList<UserDataClass>().count()
-
-                        // Если пользователя с таким email не существует, то создается новый пользователь
-                    if(users == 0){
-                        sb.auth.signUpWith(Email) {
-                            email = binding.textEmail.text.toString()
-                            password = binding.textPassword.text.toString()
+                        catch (e: Exception){
+                            Log.e("ERROR", e.message.toString())
                         }
-
-                        // Сохранение id пользователя в SharedPreference
-                        sharedpreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
-
-                        val user = sb.auth.currentUserOrNull()
-
-                        // Добавление данных пользователя в таблицу Пользователи
-                        val userAdd = UserDataClass(id = user?.id.toString(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString())
-                        sb.postgrest["Пользователи"].insert(userAdd)
-
-                        Log.e("create profile", userAdd.toString())
-
-                        // Переход на экран создания профиля пользователя
-                        val myIntent = Intent(this@RegistrationActivity, CreateProfileActivity::class.java)
-                        startActivity(myIntent)
-                        finish()
-                    }
-                    // Если пользователь с таким email уже существует, то выводит подсказку
-                    else {
-                        binding.containerEmail.helperText = "Пользователь с таким email уже есть"
-                        binding.textEmail.requestFocus()
-                    }
-
-                    }
-                    catch (e: Exception){
-                        Log.e("ERROR", e.message.toString())
                     }
                 }
             }

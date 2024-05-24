@@ -3,21 +3,28 @@ package com.example.myparty.StartActivities
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.R
 import com.example.myparty.databinding.ActivityCreateProfileBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.util.UUID
 
 
 class CreateProfileActivity : AppCompatActivity() {
@@ -25,6 +32,8 @@ class CreateProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateProfileBinding
 
     private lateinit var sharedPreferences: SharedPreferences
+
+    var image: ByteArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +97,20 @@ class CreateProfileActivity : AppCompatActivity() {
 
         })
 
+        binding.imageUser.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 100)
+        }
+
+        binding.btnDelete.setOnClickListener {
+            binding.imageUser.scaleType = ImageView.ScaleType.CENTER
+            binding.imageUser.setImageResource(R.drawable.plus)
+            image = null
+
+            binding.btnDelete.visibility = View.GONE
+        }
+
         focusedListener(binding.containerNick, binding.textNick)
         focusedListener(binding.containerName, binding.textName)
 
@@ -110,12 +133,30 @@ class CreateProfileActivity : AppCompatActivity() {
                                 }
                             }.decodeList<UserDataClass>().isNotEmpty()){
                             binding.containerNick.helperText = "Такой пользователь уже существует"
+
+                            binding.btnCreateProfile.isEnabled = true
+                            binding.content.alpha = 1f
+                            binding.progressBar.visibility = View.GONE
                         }
                         else{
+                            var uuid: String? = null
+
+                            if(image!= null){
+                                uuid = UUID.randomUUID().toString()
+                                val bucket = sb.storage.from("images")
+                                bucket.upload(uuid, image!!, upsert = false)
+                            }
+                            else{
+                                uuid = null
+                            }
+
                             val userAdd = UserDataClass(
                                 Ник = binding.textNick.text.toString(),
                                 Имя = binding.textName.text.toString(),
-                                Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString()
+                                Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString(),
+                                id_статуса_проверки = 1,
+                                Верификация = false,
+                                Фото = uuid
                             )
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
@@ -165,5 +206,31 @@ class CreateProfileActivity : AppCompatActivity() {
             }
         }
         return null
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+
+            try{
+                val selectedImage = data?.data
+
+                // Получаем bitmap из URI
+                val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImage)
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                image = baos.toByteArray()
+
+                binding.imageUser.setImageBitmap(bitmap)
+
+                binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
+                binding.btnDelete.visibility = View.VISIBLE
+            }
+            catch (e: Exception){
+                Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
+            }
+
+        }
     }
 }

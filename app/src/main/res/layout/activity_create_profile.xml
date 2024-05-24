@@ -39,12 +39,26 @@
             android:layout_height="0dp">
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:visibility="gone"
+                android:padding="5dp"
+                android:src="@drawable/trash"
+                app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+                app:layout_constraintStart_toEndOf="@+id/imageUser" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageUser"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/round_button"
-                android:src="@drawable/camera"
+                app:shapeAppearanceOverlay="@style/circular_image"
+                android:scaleType="center"
+                android:background="@color/stroke_color"
+                android:src="@drawable/plus"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +72,7 @@
                 android:textColor="@color/main_text_color"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+                app:layout_constraintTop_toBottomOf="@+id/imageUser" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/container_nick"
@@ -67,7 +81,8 @@
                 app:boxBackgroundMode="outline"
                 app:counterMaxLength="15"
                 app:prefixText="@"
-                app:prefixTextAppearance="@color/secondary_text_color"
+                app:prefixTextColor="@color/secondary_text_color"
+                app:prefixTextAppearance="@style/text_medium_16_style"
                 app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
                 app:counterTextAppearance="@style/helper_text_medium_12_style"
                 app:helperTextTextAppearance="@style/helper_text_medium_12_style_over"
@@ -167,6 +182,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

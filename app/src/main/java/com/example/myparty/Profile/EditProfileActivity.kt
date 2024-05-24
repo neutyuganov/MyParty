@@ -170,9 +170,9 @@ class EditProfileActivity : AppCompatActivity() {
 
                 binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
+                binding.btnGoBack.visibility = View.GONE
 
                 try{
-
                     lifecycleScope.launch {
                         if (sb.postgrest["Пользователи"].select {
                                 filter {

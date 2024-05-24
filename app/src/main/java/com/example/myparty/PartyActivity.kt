@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.PartyFavoriteDataClass
 import com.example.myparty.Profile.EditPartyActivity
+import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityPartyBinding
@@ -70,19 +71,23 @@ class PartyActivity : AppCompatActivity() {
 
                     if(party.id_пользователя == sb.auth.currentUserOrNull()?.id!!) {
                         btnRe.visibility = View.VISIBLE
+                        btnDelete.visibility = View.VISIBLE
                         btnBuy.visibility = View.GONE
                         star.visibility = View.GONE
                         if(localDate < LocalDate.now()) {
                             btnRe.visibility = View.GONE
+                            btnDelete.visibility = View.VISIBLE
                         }
                         if(party.Статус_проверки == "На проверке") {
                             btnRe.visibility = View.VISIBLE
+                            btnDelete.visibility = View.VISIBLE
                             status.visibility = View.VISIBLE
                             status.text = "На проверке"
                             status.setTextColor(this@PartyActivity.getColor(R.color.yellow))
                         }
                         else if(party.Статус_проверки == "Заблокировано") {
                             btnRe.visibility = View.VISIBLE
+                            btnDelete.visibility = View.VISIBLE
                             status.visibility = View.VISIBLE
                             comment.visibility = View.VISIBLE
                             status.text = "Заблокировано"
@@ -135,8 +140,8 @@ class PartyActivity : AppCompatActivity() {
                     content.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
 
-
-                    if(party.Фото != null) {
+                    if(party.Фото != "null") {
+                        progressBarImage.visibility = View.VISIBLE
                         image.scaleType = ImageView.ScaleType.CENTER_CROP
                         image.setImageDrawable(null)
 
@@ -148,8 +153,6 @@ class PartyActivity : AppCompatActivity() {
                         image.setImageDrawable(dr)
                     }
                     progressBarImage.visibility = View.GONE
-
-
                 }
             }
             catch (e: Throwable){
@@ -177,6 +180,34 @@ class PartyActivity : AppCompatActivity() {
                 val intent = Intent(this@PartyActivity, EditPartyActivity::class.java)
                 intent.putExtra("PARTY_ID", partyId)
                 startActivity(intent)
+            }
+
+            binding.btnDelete.setOnClickListener {
+
+                content.alpha = 0.62f
+                progressBar.visibility = View.VISIBLE
+                btnGoBack.visibility = View.GONE
+
+                lifecycleScope.launch {
+                    sb.from("Избранные_вечеринки").delete {
+                        filter {
+                            eq("id_вечеринки", partyId)
+                        }
+                    }
+
+                    sb.from("Вечеринки").delete {
+                        filter {
+                            eq("id", partyId)
+                        }
+                    }
+
+                    val intent = Intent(this@PartyActivity, MainActivity::class.java)
+                    val fragment = ProfileFragment()
+                    intent.putExtra("FRAGMENT", fragment.javaClass.name)
+                    startActivity(intent)
+                    finish()
+                }
+
             }
 
             binding.star.setOnClickListener {

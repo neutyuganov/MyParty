@@ -27,6 +27,7 @@
             android:id="@+id/progressBarImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/image"
             app:layout_constraintEnd_toEndOf="@+id/image"
             app:layout_constraintStart_toStartOf="@+id/image"
@@ -36,12 +37,22 @@
             android:id="@+id/btnRe"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:visibility="gone"
             android:background="@drawable/background_round_button"
             android:src="@drawable/pencil"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_round_button"
+            android:src="@drawable/trash"
+            app:layout_constraintEnd_toStartOf="@+id/btnRe"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout

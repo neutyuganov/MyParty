@@ -141,7 +141,7 @@ class EditProfileActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
                         }
                         else{
-                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString())
+                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString(), id_статуса_проверки = 1)
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
                                     eq("id", user.id.toString())

@@ -110,7 +110,7 @@ class AddParty5Fragment() : Fragment() {
         if(text.isEmpty()){
             return "Это обязательное поле"
         }
-        else{
+        if(text.contains(".")){
             if(text.split(".")[1].length > 2){
                 return "Неверный формат цены"
             }

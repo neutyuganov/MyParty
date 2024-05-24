@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -16,6 +17,7 @@ import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.Main.MainFragment
 import com.example.myparty.MainActivity
+import com.example.myparty.R
 import com.example.myparty.databinding.ActivityEditProfileBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -25,7 +27,9 @@ import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.util.UUID
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -33,6 +37,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditProfileBinding
 
     private lateinit var user: UserDataClass
+
+    var image: ByteArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,11 +70,13 @@ class EditProfileActivity : AppCompatActivity() {
                     binding.imageUser.setImageDrawable(null)
 
                     val bucket = sb.storage["images"]
-                    val bytes = bucket.downloadPublic(user.Фото.toString())
-                    val is1: InputStream = ByteArrayInputStream(bytes)
+                    image = bucket.downloadPublic(user.Фото.toString())
+                    val is1: InputStream = ByteArrayInputStream(image)
                     val bmp: Bitmap = BitmapFactory.decodeStream(is1)
                     val dr = BitmapDrawable(resources, bmp)
                     binding.imageUser.setImageDrawable(dr)
+
+                    binding.btnDelete.visibility = View.VISIBLE
                 }
                 binding.progressBarImage.visibility = View.GONE
             }
@@ -139,6 +147,20 @@ class EditProfileActivity : AppCompatActivity() {
         focusedListener(binding.containerName, binding.textName)
         focusedListener(binding.containerDescription, binding.textDescription)
 
+        binding.imageUser.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 100)
+        }
+
+        binding.btnDelete.setOnClickListener {
+            binding.imageUser.scaleType = ImageView.ScaleType.CENTER
+            binding.imageUser.setImageResource(R.drawable.plus)
+            image = null
+
+            binding.btnDelete.visibility = View.GONE
+        }
+
         binding.btnSave.setOnClickListener {
             takeHelperText(binding.containerNick, binding.textNick)
             takeHelperText(binding.containerName, binding.textName)
@@ -150,6 +172,7 @@ class EditProfileActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.VISIBLE
 
                 try{
+
                     lifecycleScope.launch {
                         if (sb.postgrest["Пользователи"].select {
                                 filter {
@@ -161,7 +184,66 @@ class EditProfileActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
                         }
                         else{
-                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString(), id_статуса_проверки = 1)
+                            var uuid: String? = null
+                            try{
+                                val imageDB = sb.postgrest["Пользователи"].select {
+                                    filter {
+                                        eq("id", sb.auth.currentUserOrNull()?.id.toString())
+                                    }
+                                }.decodeSingle<UserDataClass>().Фото
+
+                                Log.e("imageDB", imageDB.toString())
+                                Log.e("image", image.toString())
+
+                                if(imageDB != null){
+                                    if(image == null){
+                                        uuid = null
+                                        val bucket = sb.storage["images"]
+                                        bucket.delete(imageDB)
+                                    }
+                                    else{
+                                        uuid = imageDB
+                                        val bucket = sb.storage.from("images")
+                                        bucket.upload(uuid, image!!, upsert = true)
+                                    }
+                                }
+                                else{
+                                    if(image != null) {
+                                        uuid = UUID.randomUUID().toString()
+                                        val bucket = sb.storage.from("images")
+                                        bucket.upload(uuid, image!!, upsert = true)
+                                    }
+                                    else{
+                                        uuid = null
+                                    }
+                                }
+                            }
+                            catch (e: Throwable){
+                                Log.e("Error!!!", e.toString())
+                            }
+
+
+                            /*if(image!= null){
+                                if(imageDB.isEmpty()){
+                                    uuid = UUID.randomUUID().toString()
+                                    val bucket = sb.storage.from("images")
+                                    bucket.upload(uuid!!, image!!, upsert = false)
+                                }
+                                else{
+                                    uuid = imageDB
+                                    val bucket = sb.storage.from("images")
+                                    bucket.upload(uuid!!, image!!, upsert = true)
+                                }
+                            }
+                            else{
+                                uuid = null
+                                if(imageDB.isNotEmpty()){
+                                    val bucket = sb.storage.from("images")
+                                    bucket.delete(imageDB)
+                                }
+                            }*/
+
+                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty()) null else binding.textDescription.text.toString(), id_статуса_проверки = 1, Фото = uuid)
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
                                     eq("id", user.id.toString())
@@ -181,6 +263,33 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+
+            try{
+                val selectedImage = data?.data
+
+                // Получаем bitmap из URI
+                val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImage)
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                image = baos.toByteArray()
+
+                binding.imageUser.setImageBitmap(bitmap)
+
+                binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
+                binding.btnDelete.visibility = View.VISIBLE
+            }
+            catch (e: Exception){
+                Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
+            }
+
+        }
+    }
+
 
     private fun focusedListener(container: TextInputLayout, editText: TextInputEditText) {
         editText.setOnFocusChangeListener{_, focused->

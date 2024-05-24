@@ -63,6 +63,7 @@
                 android:layout_margin="5dp"
                 android:background="@null"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:src="@drawable/trash"
                 app:layout_constraintBottom_toBottomOf="@+id/imageUser"
                 app:layout_constraintStart_toEndOf="@+id/imageUser" />
@@ -75,7 +76,7 @@
                 app:shapeAppearanceOverlay="@style/circular_image"
                 android:scaleType="center"
                 android:background="@color/stroke_color"
-                android:src="@drawable/camera"
+                android:src="@drawable/plus"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

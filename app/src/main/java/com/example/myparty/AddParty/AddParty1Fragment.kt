@@ -132,7 +132,6 @@ class AddParty1Fragment : Fragment() {
                 catch (e: Exception){
                     Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
                 }
-
             }
         }
     }

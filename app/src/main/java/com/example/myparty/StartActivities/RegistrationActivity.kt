@@ -39,7 +39,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        val spanText = SpannableString("С правилами ознакомлен(а)")
+        val spanText = SpannableString("С пользовательским соглашением ознакомлен(а)")
 
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(view: View) {
@@ -48,9 +48,7 @@ class RegistrationActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-        spanText.setSpan(clickableSpan, 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        // Установите текст и кликабельность на определенном слове
+        spanText.setSpan(clickableSpan, 2, 30, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         // Установите текст и кликабельность на определенном слове
         binding.checkBoxRules.setText(spanText)

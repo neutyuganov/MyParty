@@ -4,6 +4,85 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivities.RulesActivity">
+    tools:context=".StartActivities.RulesActivity"
+    android:background="@color/background"
+    android:paddingHorizontal="20dp">
+
+    <ImageButton
+        android:id="@+id/btnGoBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+
+        android:src="@drawable/back_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/textHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textHeader" />
+
+    <TextView
+        android:id="@+id/textHeader"
+        style="@style/text_medium_20_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Пользовательское\nсоглашение"
+        android:textColor="@color/main_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:outlineSpotShadowColor="@color/white"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textHeader">
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           style="@style/text_medium_16_style"
+           android:textColor="@color/main_text_color"
+           android:paddingBottom="20dp"
+           android:text="Общие положения:
+\n1.1. Настоящее Соглашение заключается между Пользователем и Администрацией Приложения.
+
+\n1.2. Соглашение регулирует отношения между Пользователем и Администрацией Приложения по поводу использования Приложения.
+
+\n1.3. Пользователь обязуется ознакомиться с Соглашением до момента регистрации в Приложении.
+
+\n1.4. Регистрация в Приложении означает полное и безоговорочное принятие Пользователем Соглашения.
+
+\n\nРегистрация Пользователя:
+\n2.1. При регистрации Пользователь указывает адрес электронной почты и пароль. После регистрации Пользователь может использовать свой адрес электронной почты и пароль для входа в Приложение.
+
+\n\nОбязанности Пользователя
+\n3.1. Пользователь обязуется не предпринимать действий, которые могут рассматриваться как нарушающие российское законодательство или нормы международного права, в том числе в сфере интеллектуальной собственности, авторских и/или смежных правах, а также любых действий, которые приводят или могут привести к нарушению нормальной работы Приложения и его сервисов.
+
+\n3.2. Использование материалов Приложения без согласия правообладателя не допускается. Для правомерного использования материалов Приложения необходимо заключение лицензионных договоров (получение лицензий) от Правообладателей.
+
+\n3.3. Пользователь обязуется не сообщать третьим лицам логин и пароль, используемые для входа в Приложение.
+
+\n3.4. Пользователь обязуется не размещать в Приложении нецензурные слова и нецензурные фотографии.
+
+\n\nУсловия использования Приложения:
+\n4.1. Пользователь соглашается с тем, что Приложение не несёт ответственности за возможные последствия использования информации, размещённой в Приложении.
+
+\n4.2. Пользователь соглашается с тем, что Приложение не несёт ответственности за возможное возникновение убытков или иных негативных последствий, вызванных использованием или невозможностью использования Приложения.
+
+\n4.3. Приложение не несёт ответственности за соответствие действительности материалов, опубликованных Пользователями.
+
+\n4.4. Приложение не несёт ответственности за причинение вреда, ущерба, потерю информации или за причинение любых других убытков любым лицам, которые возникли при пользовании Приложением, в том числе с использованием мобильных устройств, в случае если Пользователь не принял мер по защите от вредоносной программы, установил её сознательно или по неосторожности.
+
+\n4.5. Приложение не несёт ответственности за возможные сбои и перерывы в работе Приложения и вызванные ими потерю информации.
+
+\n4.6. Приложение не несёт ответственности за возможные последствия использования информации, размещённой в Приложении."/>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

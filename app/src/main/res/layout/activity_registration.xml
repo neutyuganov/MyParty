@@ -19,126 +19,145 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/linearLayout7"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView8"
+        style="@style/text_bold_30_style"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:orientation="vertical"
+        android:text="Регистрация"
+        android:textColor="@color/main_text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/icon">
+        app:layout_constraintTop_toBottomOf="@+id/icon" />
 
-        <TextView
-            style="@style/text_bold_30_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
-            android:text="Регистрация"
-            android:textColor="@color/main_text_color" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="14dp"
+        android:scrollbars="none"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
 
-        <TextView
-            style="@style/text_medium_16_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="E-mail"
-            android:textColor="@color/main_text_color" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/container_email"
+        <LinearLayout
+            android:id="@+id/linearLayout7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_email"
-                style="@style/edit_text_style"
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E-mail"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_email"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/edit_text_selector"
-                android:inputType="textEmailAddress"
-                android:lines="1" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_email"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textEmailAddress"
+                    android:lines="1" />
 
-        <TextView
-            style="@style/text_medium_16_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Пароль"
-            android:textColor="@color/main_text_color" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/container_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/hint_color">
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Пароль"
+                android:textColor="@color/main_text_color" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_password"
-                style="@style/edit_text_style"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_password"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/edit_text_selector"
-                android:inputType="textPassword"
-                android:lines="1" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/hint_color">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_password"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textPassword"
+                    android:lines="1" />
 
-        <TextView
-            style="@style/text_medium_16_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Повтор пароля"
-            android:textColor="@color/main_text_color" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/container_password_repeat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Повтор пароля"
+                android:textColor="@color/main_text_color" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_password_repeat"
-                style="@style/edit_text_style"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_password_repeat"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/edit_text_selector"
-                android:inputType="textPassword"
-                android:lines="1" />
+                android:layout_height="wrap_content"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_password_repeat"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textPassword"
+                    android:lines="1" />
 
-    </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/checkBoxRules"
-        style="@style/text_medium_16_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/check_box"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="5dp"
-        android:text="С правилами ознакомлен(а)"
-        android:textColor="@color/main_text_color"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout6"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+            <CheckBox
+                android:id="@+id/checkBoxRules"
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:button="@drawable/check_box"
+                android:paddingLeft="10dp"
+                android:text="С пользовательским соглашением ознакомлен(а)"
+                android:textColor="@color/main_text_color"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
 
-    <TextView
-        android:id="@+id/text_error"
-        style="@style/helper_text_medium_12_style_over"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        android:text="Ознакомьтесь с правилами"
-        app:layout_constraintStart_toStartOf="@+id/checkBoxRules"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxRules" />
+            <TextView
+                android:id="@+id/text_error"
+                style="@style/helper_text_medium_12_style_over"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:text="Ознакомьтесь с правилами"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout7"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
 
     <LinearLayout
 

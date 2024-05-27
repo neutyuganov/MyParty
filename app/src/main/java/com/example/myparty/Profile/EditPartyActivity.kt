@@ -87,6 +87,8 @@ class EditPartyActivity : AppCompatActivity() {
 
             if(binding.containerName.helperText == null && binding.containerDate.helperText == null && binding.containerTime.helperText == null && binding.containerDescription.helperText == null && binding.containerSlogan.helperText == null && binding.containerCity.helperText == null && binding.containerPlace.helperText == null && binding.containerPrice.helperText == null && image!= null){
 
+                binding.btnDelete.isEnabled = false
+                binding.btnAddImage.isEnabled = false
                 binding.btnSave.isEnabled = false
                 binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
@@ -106,7 +108,7 @@ class EditPartyActivity : AppCompatActivity() {
                         val date = binding.textDate.text.toString().trim().split('.')
                         val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
 
-                        val partyData = PartyDataClass(Название = binding.textName.text.toString().trim(), Дата = currentDate.toString(), Время = binding.textTime.text.toString().trim(), Описание = binding.textDescription.text.toString().trim(), Слоган = binding.textSlogan.text.toString().trim(), Город = binding.textCity.text.toString().trim(), Место = binding.textPlace.text.toString().trim(), id_статуса_проверки = 1)
+                        val partyData = PartyDataClass(Название = binding.textName.text.toString().trim(), Дата = currentDate.toString(), Время = binding.textTime.text.toString().trim(), Описание = binding.textDescription.text.toString().trim(), Слоган = binding.textSlogan.text.toString().trim(), Город = binding.textCity.text.toString().trim(), Место = binding.textPlace.text.toString().trim(), Цена = if(binding.textPrice.text.toString().trim().toDouble() == 0.0) 0.0 else binding.textPrice.text.toString().trim().toDouble(), id_статуса_проверки = 1)
                         sb.postgrest["Вечеринки"].update(partyData){
                             filter{
                                 eq("id", partyId)
@@ -116,10 +118,12 @@ class EditPartyActivity : AppCompatActivity() {
                         val fragment = ProfileFragment()
                         intent.putExtra("FRAGMENT", fragment.javaClass.name)
                         startActivity(intent)
-                        finish()
+                        finishAffinity()
                     }
                     catch (e: Throwable){
                         Log.e("TAG", e.toString())
+                        binding.btnDelete.isEnabled = true
+                        binding.btnAddImage.isEnabled = true
                         binding.btnSave.isEnabled = true
                         binding.content.alpha = 1f
                         binding.progressBar.visibility = View.GONE
@@ -194,6 +198,7 @@ class EditPartyActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, 100)
+            binding.btnAddImage.isEnabled = false
         }
 
         binding.btnDelete.setOnClickListener {
@@ -292,6 +297,7 @@ class EditPartyActivity : AppCompatActivity() {
 
                 binding.btnAddImage.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.btnDelete.visibility = View.VISIBLE
+                binding.btnAddImage.isEnabled = true
             } catch (e: Exception) {
                 Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
             }

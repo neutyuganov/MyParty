@@ -12,7 +12,7 @@
         style="@style/text_bold_30_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Когда начнем?"
+        android:text="Когда начнём?"
         android:textColor="@color/main_text_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

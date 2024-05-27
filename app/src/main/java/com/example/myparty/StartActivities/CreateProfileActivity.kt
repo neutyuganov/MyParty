@@ -30,6 +30,7 @@ import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.UUID
+import java.util.regex.Pattern
 
 
 class CreateProfileActivity : AppCompatActivity() {
@@ -119,52 +120,34 @@ class CreateProfileActivity : AppCompatActivity() {
         focusedListener(binding.containerNick, binding.textNick)
         focusedListener(binding.containerName, binding.textName)
 
-
+        val balloon = Balloon.Builder(this)
+            .setWidth(BalloonSizeSpec.WRAP)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setTextColorResource(R.color.main_text_color)
+            .setTextSize(12f)
+            .setMarginRight(10)
+            .setTextTypeface(resources.getFont(R.font.rubik_medium))
+            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+            .setArrowSize(7)
+            .setPaddingVertical(4)
+            .setPaddingHorizontal(8)
+            .setCornerRadius(10f)
+            .setBackgroundColorResource(R.color.stroke_color)
+            .setBalloonAnimation(BalloonAnimation.FADE)
 
         binding.infoDescription.setOnClickListener() {
-
-            val balloon = Balloon.Builder(this)
-                .setWidth(BalloonSizeSpec.WRAP)
-                .setHeight(BalloonSizeSpec.WRAP)
-                .setText("Информация о пользователе,\nнапример о себе или о своей организации")
-                .setTextColorResource(R.color.main_text_color)
-                .setTextSize(12f)
-                .setMarginRight(10)
-                .setTextTypeface(resources.getFont(R.font.rubik_medium))
-                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
-                .setArrowSize(7)
-                .setPaddingVertical(4)
-                .setPaddingHorizontal(8)
-                .setCornerRadius(10f)
-                .setBackgroundColorResource(R.color.stroke_color)
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build()
+            balloon.setText("Информация о пользователе,\nнапример о себе или о своей организации")
 
             lifecycleScope.launch {
-                balloon.showAlignBottom(binding.infoDescription)
+                balloon.build().showAlignBottom(binding.infoDescription)
             }
         }
 
         binding.infoNick.setOnClickListener {
-            val balloon = Balloon.Builder(this)
-                .setWidth(BalloonSizeSpec.WRAP)
-                .setHeight(BalloonSizeSpec.WRAP)
-                .setText("Узнаваемый идентификатор пользователя,\nнапример @my_party")
-                .setTextColorResource(R.color.main_text_color)
-                .setTextSize(12f)
-                .setMarginLeft(10)
-                .setTextTypeface(resources.getFont(R.font.rubik_medium))
-                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
-                .setArrowSize(7)
-                .setPaddingVertical(4)
-                .setPaddingHorizontal(8)
-                .setCornerRadius(10f)
-                .setBackgroundColorResource(R.color.stroke_color)
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build()
+            balloon.setText("Узнаваемый идентификатор пользователя,\nнапример @my_party")
 
             lifecycleScope.launch {
-                balloon.showAlignTop(binding.infoNick)
+                balloon.build().showAlignTop(binding.infoNick)
             }
         }
 
@@ -205,7 +188,7 @@ class CreateProfileActivity : AppCompatActivity() {
                             }
 
                             val userAdd = UserDataClass(
-                                Ник = binding.textNick.text.toString().trim(),
+                                Ник = binding.textNick.text.toString().trim().toLowerCase(),
                                 Имя = binding.textName.text.toString().trim(),
                                 Описание = if(binding.textDescription.text.toString().trim().isEmpty() ) null else binding.textDescription.text.toString().trim(),
                                 id_статуса_проверки = 1,
@@ -219,11 +202,14 @@ class CreateProfileActivity : AppCompatActivity() {
                             }
                             val mainIntent = Intent(this@CreateProfileActivity, MainActivity::class.java)
                             startActivity(mainIntent)
-                            finish()
+                            finishAffinity()
                         }
                     }
                     catch(e: Throwable){
                         Log.e("Error create profile", e.toString())
+                        binding.btnCreateProfile.isEnabled = true
+                        binding.content.alpha = 1f
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -251,6 +237,11 @@ class CreateProfileActivity : AppCompatActivity() {
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
+        if(type == "ник"){
+            if(Pattern.compile("^[a-zA-Z]+$").toRegex().matches(text)) {
+                return "Можно использовать только латинские буквы"
+            }
+        }
         if(text.length > maxLength){
             return if(type == "ник"){
                 "Слишком длинный $type"

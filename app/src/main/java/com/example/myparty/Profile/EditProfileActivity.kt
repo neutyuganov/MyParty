@@ -21,6 +21,10 @@ import com.example.myparty.R
 import com.example.myparty.databinding.ActivityEditProfileBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
@@ -30,6 +34,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.UUID
+import java.util.regex.Pattern
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -151,6 +156,7 @@ class EditProfileActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, 100)
+            binding.imageUser.isEnabled = false
         }
 
         binding.btnDelete.setOnClickListener {
@@ -161,6 +167,37 @@ class EditProfileActivity : AppCompatActivity() {
             binding.btnDelete.visibility = View.GONE
         }
 
+        val balloon = Balloon.Builder(this)
+            .setWidth(BalloonSizeSpec.WRAP)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setTextColorResource(R.color.main_text_color)
+            .setTextSize(12f)
+            .setMarginRight(10)
+            .setTextTypeface(resources.getFont(R.font.rubik_medium))
+            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+            .setArrowSize(7)
+            .setPaddingVertical(4)
+            .setPaddingHorizontal(8)
+            .setCornerRadius(10f)
+            .setBackgroundColorResource(R.color.stroke_color)
+            .setBalloonAnimation(BalloonAnimation.FADE)
+
+        binding.infoDescription.setOnClickListener() {
+            balloon.setText("Информация о пользователе,\nнапример о себе или о своей организации")
+
+            lifecycleScope.launch {
+                balloon.build().showAlignBottom(binding.infoDescription)
+            }
+        }
+
+        binding.infoNick.setOnClickListener {
+            balloon.setText("Узнаваемый идентификатор пользователя,\nнапример @my_party")
+
+            lifecycleScope.launch {
+                balloon.build().showAlignTop(binding.infoNick)
+            }
+        }
+
         binding.btnSave.setOnClickListener {
             takeHelperText(binding.containerNick, binding.textNick)
             takeHelperText(binding.containerName, binding.textName)
@@ -168,6 +205,8 @@ class EditProfileActivity : AppCompatActivity() {
 
             if(binding.containerNick.helperText == null && binding.containerName.helperText == null && binding.containerDescription.helperText == null){
 
+                binding.btnDelete.isEnabled = false
+                binding.imageUser.isEnabled = false
                 binding.btnSave.isEnabled = false
                 binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
@@ -223,7 +262,7 @@ class EditProfileActivity : AppCompatActivity() {
                                 Log.e("Error!!!", e.toString())
                             }
 
-                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString().trim(), Имя = binding.textName.text.toString().trim(), Описание = if(binding.textDescription.text.toString().trim().isEmpty()) null else binding.textDescription.text.toString().trim(), id_статуса_проверки = 1, Фото = uuid)
+                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString().trim().toLowerCase(), Имя = binding.textName.text.toString().trim(), Описание = if(binding.textDescription.text.toString().trim().isEmpty()) null else binding.textDescription.text.toString().trim(), id_статуса_проверки = 1, Фото = uuid)
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
                                     eq("id", user.id.toString())
@@ -233,12 +272,16 @@ class EditProfileActivity : AppCompatActivity() {
                             val fragment = ProfileFragment()
                             intent.putExtra("FRAGMENT", fragment.javaClass.name)
                             startActivity(intent)
-                            finish()
+                            finishAffinity()
                         }
                     }
                 }
                 catch(e: Exception){
                     Log.e("Error create profile", e.toString())
+                    binding.content.alpha = 1f
+                    binding.progressBar.visibility = View.GONE
+                    binding.btnDelete.isEnabled = false
+                    binding.imageUser.isEnabled = false
                 }
             }
         }
@@ -262,6 +305,7 @@ class EditProfileActivity : AppCompatActivity() {
 
                 binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.btnDelete.visibility = View.VISIBLE
+                binding.imageUser.isEnabled = true
             }
             catch (e: Exception){
                 Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
@@ -292,6 +336,11 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
+        if(type == "ник"){
+            if(Pattern.compile("^[a-zA-Z]+$").toRegex().matches(text)) {
+                return "Можно использовать только латинские буквы"
+            }
+        }
         if(text.length > maxLength){
             return if(type == "ник"){
                 "Слишком длинный $type"

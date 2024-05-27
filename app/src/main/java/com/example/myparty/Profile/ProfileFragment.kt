@@ -132,6 +132,8 @@ class ProfileFragment : Fragment() {
 
         binding.btnLogOut.setOnClickListener {
             binding.btnLogOut.isEnabled = false
+            binding.content.alpha = 0.62f
+            binding.progressBar.visibility = View.VISIBLE
             sharedPreferences.edit().putString("TOKEN_USER", null).apply()
             lifecycleScope.launch {
                 sb.auth.signOut()

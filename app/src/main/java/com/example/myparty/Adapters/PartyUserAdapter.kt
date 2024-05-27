@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.Profile.EditPartyActivity
@@ -15,6 +16,10 @@ import com.example.myparty.PartyActivity
 import com.example.myparty.R
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.databinding.ItemCurrentUserPartyBinding
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -124,6 +129,53 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>, private val
                     val intent = Intent(it.context, EditPartyActivity::class.java)
                     intent.putExtra("PARTY_ID", party.id)
                     it.context.startActivity(intent)
+                }
+
+                status.setOnClickListener {
+                    if(party.Статус_проверки == "На проверке"){
+                        val balloon = Balloon.Builder(it.context)
+                            .setWidth(BalloonSizeSpec.WRAP)
+                            .setHeight(BalloonSizeSpec.WRAP)
+                            .setText("Подождите, пока модераторы\nзавершат проверку")
+                            .setTextColorResource(R.color.main_text_color)
+                            .setTextSize(12f)
+                            .setMarginHorizontal(10)
+                            .setTextTypeface(it.context.resources.getFont(R.font.rubik_medium))
+                            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                            .setArrowSize(7)
+                            .setPaddingVertical(4)
+                            .setPaddingHorizontal(8)
+                            .setCornerRadius(10f)
+                            .setBackgroundColorResource(R.color.stroke_color)
+                            .setBalloonAnimation(BalloonAnimation.FADE)
+                            .build()
+
+                        coroutineScope.launch {
+                            balloon.showAlignTop(status)
+                        }
+                    }
+                    else{
+                        val balloon = Balloon.Builder(it.context)
+                            .setWidth(BalloonSizeSpec.WRAP)
+                            .setHeight(BalloonSizeSpec.WRAP)
+                            .setText("Причина: " + party.Комментарий.toString())
+                            .setTextColorResource(R.color.main_text_color)
+                            .setTextSize(12f)
+                            .setMarginHorizontal(10)
+                            .setTextTypeface(it.context.resources.getFont(R.font.rubik_medium))
+                            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                            .setArrowSize(7)
+                            .setPaddingVertical(4)
+                            .setPaddingHorizontal(8)
+                            .setCornerRadius(10f)
+                            .setBackgroundColorResource(R.color.stroke_color)
+                            .setBalloonAnimation(BalloonAnimation.FADE)
+                            .build()
+
+                        coroutineScope.launch {
+                            balloon.showAlignTop(status)
+                        }
+                    }
                 }
             }
         }

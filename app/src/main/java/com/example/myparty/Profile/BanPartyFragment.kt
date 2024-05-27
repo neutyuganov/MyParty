@@ -73,7 +73,8 @@ class BanPartyFragment : Fragment() {
                     val image = jsonObject.getString("Фото")
                     val statusObject = jsonObject.getJSONObject("Статусы_проверки")
                     val status = statusObject.getString("Название")
-                    val event = PartyDataClass(id = id, Название = name, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image)
+                    val comment = jsonObject.getString("Комментарий")
+                    val event = PartyDataClass(id = id, Название = name, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image, Комментарий = comment)
                     parties.add(event)
                 }
 

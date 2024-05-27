@@ -173,6 +173,7 @@ class PartyActivity : AppCompatActivity() {
                     val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
                     intent.putExtra("USER_ID", party.id_пользователя)
                     it.context.startActivity(intent)
+                    finishAffinity()
                 }
             }
 

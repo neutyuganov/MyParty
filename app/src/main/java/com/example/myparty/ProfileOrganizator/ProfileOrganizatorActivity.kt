@@ -21,6 +21,10 @@ import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityProfileOrganizatorBinding
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.createSkeleton
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.storage.storage
@@ -96,6 +100,30 @@ class ProfileOrganizatorActivity : AppCompatActivity() {
 
         binding.btnGoBack.setOnClickListener {
             finish()
+        }
+
+        binding.verifyUser.setOnClickListener {
+            val balloon = Balloon.Builder(this)
+                .setWidth(BalloonSizeSpec.WRAP)
+                .setHeight(BalloonSizeSpec.WRAP)
+                .setText("Подтвержденная организация")
+                .setTextColorResource(R.color.main_text_color)
+                .setTextSize(12f)
+                .setMarginHorizontal(10)
+                .setMarginBottom(5)
+                .setTextTypeface(resources.getFont(R.font.rubik_medium))
+                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                .setArrowSize(7)
+                .setPaddingVertical(4)
+                .setPaddingHorizontal(8)
+                .setCornerRadius(10f)
+                .setBackgroundColorResource(R.color.stroke_color)
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build()
+
+            lifecycleScope.launch {
+                balloon.showAlignTop(binding.verifyUser)
+            }
         }
 
         binding.apply {

@@ -126,7 +126,6 @@ class EditPartyActivity : AppCompatActivity() {
                         binding.btnGoBack.visibility = View.VISIBLE
                         Toast.makeText(this@EditPartyActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
                     }
-
                 }
             }
         }

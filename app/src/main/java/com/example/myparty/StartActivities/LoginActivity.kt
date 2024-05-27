@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -51,6 +52,10 @@ class LoginActivity : AppCompatActivity() {
             binding.textError.isVisible = false
             if(validText(binding.textEmail.text.toString().trim(), 1) == null && validText(binding.textPassword.text.toString().trim(), 0) == null){
                 lifecycleScope.launch {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.content.alpha = 0.62f
+                    binding.toReg.isEnabled = false
+                    binding.goLogIn.isEnabled = false
                     try{
                         sb.auth.signInWith(Email){
                             email = binding.textEmail.text.toString().trim()
@@ -63,28 +68,17 @@ class LoginActivity : AppCompatActivity() {
 
                         try {
                             // Проверяем, авторизован ли пользователь
-                            val users = SupabaseConnection.Singleton.sb.from("Пользователи").select(
+                            val users = sb.from("Пользователи").select(
                                 Columns.raw("*, Роли(Название), Статусы_проверки(Название)")){
                                 filter {
                                     eq("id",user!!)
                                 }
-                            }.data
+                            }.decodeSingle<UserDataClass>()
 
-                            val jsonArrayUser = JSONArray(users).getJSONObject(0)
-
-                            val jsonArrayStatus = jsonArrayUser.getJSONObject("Статусы_проверки")
-                            val status = jsonArrayStatus.getString("Название")
-                            val jsonArrayRoles = jsonArrayUser.getJSONObject("Роли")
-                            val role = jsonArrayRoles.getString("Название")
-                            val comment = jsonArrayUser.getString("Комментарий")
-
-                            val userData = UserDataClass(Статус_проверки = status, Роль = role, Комментарий = comment)
-                            Log.e("USERS", userData.Роль.toString())
-
-                            if(userData.Роль == "Пользователь") {
-                                if(userData.Статус_проверки == "Заблокировано") {
+                            if(users.id_роли == 1) {
+                                if(users.id_статуса_проверки == 2) {
                                     val dialog = AlertDialog.Builder(this@LoginActivity)
-                                        .setMessage(userData.Комментарий)
+                                        .setMessage(users.Комментарий)
                                         .setTitle("Профиль заблокирован")
                                         .setPositiveButton("ОК") { _, _ ->
                                             // Действие при нажатии на кнопку "ОК"
@@ -99,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                                     dialog.show()
 
                                 }
-                                else if (userData.Ник == null) {
+                                else if (users.Ник == null) {
                                     val mainIntent = Intent(this@LoginActivity, CreateProfileActivity::class.java)
                                     startActivity(mainIntent)
                                     finish()
@@ -110,22 +104,24 @@ class LoginActivity : AppCompatActivity() {
                                     finish()
                                 }
                             }
-                            else if(userData.Роль == "Администратор") {
+                            else if(users.id_роли == 2) {
                                 val mainIntent = Intent(this@LoginActivity, AdminActivity::class.java)
                                 startActivity(mainIntent)
                                 finish()
                             }
-
                         }
                         catch(e: Throwable) {
                             Log.e("ERROR_splash", e.toString())
                         }
-
                     }
                     catch (e: Exception){
                         Log.e("ERROR", e.message.toString())
                         if(e.message.toString().startsWith("invalid_grant (Invalid login credentials)") ){
                             binding.textError.isVisible = true
+                            binding.progressBar.visibility = View.GONE
+                            binding.content.alpha = 1f
+                            binding.toReg.isEnabled = true
+                            binding.goLogIn.isEnabled = true
                         }
                     }
                 }

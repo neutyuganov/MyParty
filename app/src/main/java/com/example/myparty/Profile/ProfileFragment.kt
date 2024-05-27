@@ -21,7 +21,12 @@ import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.StartActivities.LoginActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.R
 import com.example.myparty.databinding.FragmentProfileBinding
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.storage.storage
@@ -96,6 +101,30 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        binding.verifyUser.setOnClickListener {
+            val balloon = Balloon.Builder(requireContext())
+                .setWidth(BalloonSizeSpec.WRAP)
+                .setHeight(BalloonSizeSpec.WRAP)
+                .setText("Подтвержденная организация")
+                .setTextColorResource(R.color.main_text_color)
+                .setTextSize(12f)
+                .setMarginHorizontal(10)
+                .setMarginBottom(5)
+                .setTextTypeface(resources.getFont(R.font.rubik_medium))
+                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                .setArrowSize(7)
+                .setPaddingVertical(4)
+                .setPaddingHorizontal(8)
+                .setCornerRadius(10f)
+                .setBackgroundColorResource(R.color.stroke_color)
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build()
+
+            lifecycleScope.launch {
+                balloon.showAlignTop(binding.verifyUser)
+            }
+        }
+
         binding.btnGoEditProfile.setOnClickListener {
             val myIntent = Intent(context, EditProfileActivity::class.java)
             startActivity(myIntent)
@@ -108,6 +137,7 @@ class ProfileFragment : Fragment() {
                 sb.auth.signOut()
                 val myIntent = Intent(context, LoginActivity::class.java)
                 startActivity(myIntent)
+                requireActivity().finishAffinity()
             }
         }
     }

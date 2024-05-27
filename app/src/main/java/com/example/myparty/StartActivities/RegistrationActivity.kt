@@ -39,7 +39,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         sharedpreferences = getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
 
-        val spanText = SpannableString("С пользовательским соглашением ознакомлен(а)")
+        val spanText = SpannableString("С пользовательским соглашением\nсогласен(на)")
 
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(view: View) {
@@ -77,6 +77,11 @@ class RegistrationActivity : AppCompatActivity() {
                     // Создание корутина для взаимодействия с базой даных
                     lifecycleScope.launch {
                         try{
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.content.alpha = 0.62f
+                            binding.goReg.isEnabled = false
+                            binding.toLogIn.isEnabled = false
+
                             // Проверка на существование пользователя с введенным email
                             val users = sb.from("Пользователи").select{
                                 filter {
@@ -111,11 +116,19 @@ class RegistrationActivity : AppCompatActivity() {
                             else {
                                 binding.containerEmail.helperText = "Пользователь с таким email уже есть"
                                 binding.textEmail.requestFocus()
+                                binding.progressBar.visibility = View.GONE
+                                binding.content.alpha = 1f
+                                binding.goReg.isEnabled = true
+                                binding.toLogIn.isEnabled = true
                             }
 
                         }
                         catch (e: Exception){
                             Log.e("ERROR", e.message.toString())
+                            binding.progressBar.visibility = View.GONE
+                            binding.content.alpha = 1f
+                            binding.goReg.isEnabled = true
+                            binding.toLogIn.isEnabled = true
                         }
                     }
                 }

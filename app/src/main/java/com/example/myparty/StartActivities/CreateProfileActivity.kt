@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.widget.TooltipCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
@@ -20,6 +21,10 @@ import com.example.myparty.R
 import com.example.myparty.databinding.ActivityCreateProfileBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
@@ -114,6 +119,55 @@ class CreateProfileActivity : AppCompatActivity() {
         focusedListener(binding.containerNick, binding.textNick)
         focusedListener(binding.containerName, binding.textName)
 
+
+
+        binding.infoDescription.setOnClickListener() {
+
+            val balloon = Balloon.Builder(this)
+                .setWidth(BalloonSizeSpec.WRAP)
+                .setHeight(BalloonSizeSpec.WRAP)
+                .setText("Информация о пользователе,\nнапример о себе или о своей организации")
+                .setTextColorResource(R.color.main_text_color)
+                .setTextSize(12f)
+                .setMarginRight(10)
+                .setTextTypeface(resources.getFont(R.font.rubik_medium))
+                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                .setArrowSize(7)
+                .setPaddingVertical(4)
+                .setPaddingHorizontal(8)
+                .setCornerRadius(10f)
+                .setBackgroundColorResource(R.color.stroke_color)
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build()
+
+            lifecycleScope.launch {
+                balloon.showAlignBottom(binding.infoDescription)
+            }
+        }
+
+        binding.infoNick.setOnClickListener {
+            val balloon = Balloon.Builder(this)
+                .setWidth(BalloonSizeSpec.WRAP)
+                .setHeight(BalloonSizeSpec.WRAP)
+                .setText("Узнаваемый идентификатор пользователя,\nнапример @my_party")
+                .setTextColorResource(R.color.main_text_color)
+                .setTextSize(12f)
+                .setMarginLeft(10)
+                .setTextTypeface(resources.getFont(R.font.rubik_medium))
+                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                .setArrowSize(7)
+                .setPaddingVertical(4)
+                .setPaddingHorizontal(8)
+                .setCornerRadius(10f)
+                .setBackgroundColorResource(R.color.stroke_color)
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build()
+
+            lifecycleScope.launch {
+                balloon.showAlignTop(binding.infoNick)
+            }
+        }
+
         binding.btnCreateProfile.setOnClickListener {
             takeHelperText(binding.containerNick, binding.textNick)
             takeHelperText(binding.containerName, binding.textName)
@@ -189,7 +243,7 @@ class CreateProfileActivity : AppCompatActivity() {
         val type = when (editText) {
             binding.textDescription -> "описание"
             binding.textName -> "имя или название организации"
-            else -> "короткое имя"
+            else -> "ник"
         }
 
         container.helperText = validText(container, editText.text.toString().trim(), type)
@@ -198,9 +252,13 @@ class CreateProfileActivity : AppCompatActivity() {
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
         if(text.length > maxLength){
-            return "Слишком длинное $type"
+            return if(type == "ник"){
+                "Слишком длинный $type"
+            } else{
+                "Слишком длинное $type"
+            }
         }
-        if(type == "имя или название организации" || type == "короткое имя"){
+        if(type == "имя или название организации" || type == "ник"){
             if(text.isEmpty()){
                 return "Это обязательное поле"
             }

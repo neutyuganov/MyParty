@@ -168,6 +168,7 @@ class EditProfileActivity : AppCompatActivity() {
 
             if(binding.containerNick.helperText == null && binding.containerName.helperText == null && binding.containerDescription.helperText == null){
 
+                binding.btnSave.isEnabled = false
                 binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
                 binding.btnGoBack.visibility = View.INVISIBLE

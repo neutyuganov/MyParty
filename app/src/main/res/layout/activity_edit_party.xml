@@ -4,6 +4,340 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="20dp"
+    android:background="@color/background"
     tools:context=".Profile.EditPartyActivity">
+
+    <ImageButton
+        android:id="@+id/btnGoBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textHeader"
+        style="@style/text_medium_20_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Редактирование"
+        android:textColor="@color/main_text_color"
+        app:layout_constraintBottom_toBottomOf="@+id/btnGoBack"
+        app:layout_constraintEnd_toStartOf="@+id/btnSave"
+        app:layout_constraintStart_toEndOf="@+id/btnGoBack"
+        app:layout_constraintTop_toTopOf="@+id/btnGoBack" />
+
+    <ImageButton
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/tick_white"
+        app:layout_constraintBottom_toBottomOf="@+id/btnGoBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnGoBack" />
+
+    <ScrollView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:outlineSpotShadowColor="@color/white"
+        android:scrollbars="none"
+        android:paddingHorizontal="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textHeader">
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Название"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:boxBackgroundMode="outline"
+                app:counterMaxLength="20"
+                app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+                app:counterTextAppearance="@style/helper_text_medium_12_style"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_name"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="Изображение"
+                android:textColor="@color/main_text_color" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/btnAddImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_secondary_color_selector"
+                    android:scaleType="center"
+                    android:src="@drawable/plus"
+                    app:shapeAppearanceOverlay="@style/rounded_all_image" />
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_margin="15dp"
+                    android:visibility="gone"
+                    android:background="@drawable/background_round_button"
+                    android:src="@drawable/trash"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnAddImage"
+                    app:layout_constraintEnd_toEndOf="@+id/btnAddImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Слоган"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_slogan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:boxBackgroundMode="outline"
+                app:counterMaxLength="100"
+                app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+                app:counterTextAppearance="@style/helper_text_medium_12_style"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_slogan"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Описание"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundMode="outline"
+                app:counterMaxLength="1000"
+                android:layout_marginBottom="10dp"
+                app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+                app:counterTextAppearance="@style/helper_text_medium_12_style"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_description"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Дата"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/calendar"
+                app:endIconTint="@color/hint_color"
+                app:endIconCheckable="true"
+                app:helperTextTextColor="@color/main_color"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_date"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="date"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Время"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:endIconMode="custom"
+                app:helperTextTextColor="@color/main_color"
+                app:endIconDrawable="@drawable/watch"
+                app:endIconTint="@color/hint_color"
+                app:endIconCheckable="true"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_time"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="time"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Город"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:boxBackgroundMode="outline"
+                app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+                app:counterTextAppearance="@style/helper_text_medium_12_style"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_city"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Адрес или место"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:boxBackgroundMode="outline"
+                app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+                app:counterTextAppearance="@style/helper_text_medium_12_style"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_place"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/text_medium_16_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Цена (₽)"
+                android:textColor="@color/main_text_color" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/container_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundMode="outline"
+                app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
+                app:counterTextAppearance="@style/helper_text_medium_12_style"
+                app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_price"
+                    style="@style/edit_text_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edit_text_selector"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

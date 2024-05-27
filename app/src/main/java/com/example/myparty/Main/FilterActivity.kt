@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
@@ -19,6 +20,7 @@ import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityFilterBinding
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -27,6 +29,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class FilterActivity : AppCompatActivity() {
@@ -77,33 +80,101 @@ class FilterActivity : AppCompatActivity() {
         focusedListener(binding.textTime)
 
         binding.btnShowParties.setOnClickListener {
-            loadParties()
-
-            // Сохранение города в SharedPreferences
-            if(binding.textCity.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString()).apply()
-
-            // Сохранение времени в SharedPreferences
-            if(binding.textTime.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString()).apply()
-
-            // Сохранение даты в SharedPreferences
-            if(binding.textDate.text.toString().isNotEmpty()){
-                val date = binding.textDate.text.toString().split('.')
-                val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
-                sharedPreferences.edit().putString("FILTER_DATE", currentDate.toString()).apply()
+            if(binding.textDate.text.toString().isNotEmpty()) {
+                takeHelperText(binding.containerDate, binding.textDate)
+            }
+            if(binding.textTime.text.toString().isNotEmpty()) {
+                takeHelperText(binding.containerTime, binding.textTime)
             }
 
-            // Сохранение начальной цены в SharedPreferences
-            if(binding.textPriceOt.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString()).apply()
+            if(binding.textPriceOt.text.toString().isNotEmpty() && binding.textPriceDo.text.toString().isNotEmpty()) {
+                if(binding.textPriceOt.text.toString().toInt() > binding.textPriceDo.text.toString().toInt() || binding.textPriceDo.text.toString().toInt() < binding.textPriceOt.text.toString().toInt()){
+                    binding.errorPrice.visibility = View.VISIBLE
+                }
+                else binding.errorPrice.visibility = View.GONE
+            }
 
-            // Сохранение конечной цены в SharedPreferences
-            if(binding.textPriceDo.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString()).apply()
+            if(binding.containerDate.helperText == null && binding.containerTime.helperText == null) {
+                if(binding.textPriceOt.text.toString().isNotEmpty() && binding.textPriceDo.text.toString().isNotEmpty()) {
+                    if (binding.textPriceOt.text.toString().toInt() < binding.textPriceDo.text.toString().toInt() || binding.textPriceDo.text.toString().toInt() > binding.textPriceOt.text.toString().toInt()
+                    ) {
+                        try{
+                            loadParties()
 
-            val intent = Intent(this, MainActivity::class.java)
-            val fragment = MainFragment()
-            intent.putExtra("FRAGMENT", fragment.javaClass.name)
-            startActivity(intent)
-            finish()
+                            // Сохранение города в SharedPreferences
+                            if(binding.textCity.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString()).apply()
+                            else sharedPreferences.edit().remove("FILTER_CITY").apply()
 
+                            // Сохранение времени в SharedPreferences
+                            if(binding.textTime.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString()).apply()
+                            else sharedPreferences.edit().remove("FILTER_TIME").apply()
+
+                            // Сохранение даты в SharedPreferences
+                            if(binding.textDate.text.toString().isNotEmpty()){
+                                val date = binding.textDate.text.toString().split('.')
+                                val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
+                                sharedPreferences.edit().putString("FILTER_DATE", currentDate.toString()).apply()
+                            }
+                            else sharedPreferences.edit().remove("FILTER_DATE").apply()
+
+                            // Сохранение начальной цены в SharedPreferences
+                            if(binding.textPriceOt.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString()).apply()
+                            else sharedPreferences.edit().remove("FILTER_PRICE_START").apply()
+
+                            // Сохранение конечной цены в SharedPreferences
+                            if(binding.textPriceDo.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString()).apply()
+                            else sharedPreferences.edit().remove("FILTER_PRICE_END").apply()
+
+                            val intent = Intent(this, MainActivity::class.java)
+                            val fragment = MainFragment()
+                            intent.putExtra("FRAGMENT", fragment.javaClass.name)
+                            startActivity(intent)
+                            finish()
+                        }
+                        catch (e: Throwable){
+                            Log.d("Error", e.toString())
+                        }
+                    }
+                }
+                else{
+                    try{
+                        loadParties()
+
+                        // Сохранение города в SharedPreferences
+                        if(binding.textCity.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString()).apply()
+                        else sharedPreferences.edit().remove("FILTER_CITY").apply()
+
+                        // Сохранение времени в SharedPreferences
+                        if(binding.textTime.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString()).apply()
+                        else sharedPreferences.edit().remove("FILTER_TIME").apply()
+
+                        // Сохранение даты в SharedPreferences
+                        if(binding.textDate.text.toString().isNotEmpty()){
+                            val date = binding.textDate.text.toString().split('.')
+                            val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
+                            sharedPreferences.edit().putString("FILTER_DATE", currentDate.toString()).apply()
+                        }
+                        else sharedPreferences.edit().remove("FILTER_DATE").apply()
+
+                        // Сохранение начальной цены в SharedPreferences
+                        if(binding.textPriceOt.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString()).apply()
+                        else sharedPreferences.edit().remove("FILTER_PRICE_START").apply()
+
+                        // Сохранение конечной цены в SharedPreferences
+                        if(binding.textPriceDo.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString()).apply()
+                        else sharedPreferences.edit().remove("FILTER_PRICE_END").apply()
+
+                        val intent = Intent(this, MainActivity::class.java)
+                        val fragment = MainFragment()
+                        intent.putExtra("FRAGMENT", fragment.javaClass.name)
+                        startActivity(intent)
+                        finish()
+                    }
+                    catch (e: Throwable){
+                        Log.d("Error", e.toString())
+                    }
+                }
+            }
         }
 
         binding.btnCancel.setOnClickListener {
@@ -230,6 +301,33 @@ class FilterActivity : AppCompatActivity() {
                 Log.e("Ошибка загрузки вечеринок", e.message.toString())
             }
         }
+    }
+
+    private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
+        val type = when (editText) {
+            binding.textDate -> "даты"
+            else -> "времени"
+        }
+
+        container.helperText = validText(editText.text.toString(), type)
+    }
+
+    private fun validText(text: String, type: String): String? {
+        if(type == "даты"){
+            if(text.split('.').size!= 3 || text.split('.')[0].toInt() > 31 || text.split('.')[1].toInt() > 12 || text.split('.')[0].length!= 2 || text.split('.')[1].length!= 2 || text.split('.')[2].length!= 4){
+                return "Неверный формат $type"
+            }
+        }
+        else {
+            if(text.split(':').size!= 2 || text.split(':')[0].toInt() > 23 || text.split(':')[1].toInt() > 59 || text.split(':')[0].length!= 2 || text.split(':')[1].length!= 2){
+                return "Неверный формат $type"
+            }
+        }
+        if(text.isEmpty()){
+            return "Это обязательное поле"
+        }
+
+        return null
     }
 
     suspend fun filter(): List<PartyDataClass> {

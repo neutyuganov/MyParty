@@ -82,9 +82,9 @@
             android:textColor="@color/main_text_color" />
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/textPriceOt"
@@ -111,10 +111,22 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/errorPrice"
+            style="@style/text_medium_12_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Проверьте условия фильтрации цены"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/main_color" />
+
+        <TextView
             style="@style/text_medium_16_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Дата"
+            android:layout_marginTop="10dp"
             android:textColor="@color/main_text_color" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -129,7 +141,8 @@
             app:endIconDrawable="@drawable/calendar"
             app:endIconMode="custom"
             app:endIconTint="@color/hint_color"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style"
+            app:helperTextTextColor="@color/main_color">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_date"
@@ -160,7 +173,8 @@
             app:endIconDrawable="@drawable/watch"
             app:endIconMode="custom"
             app:endIconTint="@color/hint_color"
-            app:helperTextTextAppearance="@style/helper_text_medium_12_style">
+            app:helperTextTextAppearance="@style/helper_text_medium_12_style"
+            app:helperTextTextColor="@color/main_color">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_time"

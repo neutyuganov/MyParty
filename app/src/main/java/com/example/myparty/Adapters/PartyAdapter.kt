@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myparty.PartyActivity
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.PartyFavoriteDataClass
+import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
 import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
@@ -61,11 +62,18 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             val currentUserId = sb.auth.currentUserOrNull()?.id!!
             val partyId = party.id!!
 
+            val formattedDate: String
             // Форматирование даты
             val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val partyDate = LocalDate.parse(party.Дата, inputFormatterDate)
-            val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-            val formattedDate = partyDate.format(outputFormatterDate)
+            formattedDate =
+                if(partyDate.year == LocalDate.now().year){
+                val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+                partyDate.format(outputFormatterDate)
+            } else{
+                val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru"))
+                partyDate.format(outputFormatterDate)
+            }
 
             // Форматирование времени
             val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")

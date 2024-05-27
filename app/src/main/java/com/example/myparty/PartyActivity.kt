@@ -58,10 +58,18 @@ class PartyActivity : AppCompatActivity() {
             try{
                 party = loadParty()
                 binding.apply {
+                    val formattedDate: String
+                    // Форматирование даты
                     val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    val localDate = LocalDate.parse(party.Дата, inputFormatterDate)
-                    val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-                    val formattedDate = localDate.format(outputFormatterDate)
+                    val partyDate = LocalDate.parse(party.Дата, inputFormatterDate)
+                    formattedDate =
+                        if(partyDate.year == LocalDate.now().year){
+                            val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+                            partyDate.format(outputFormatterDate)
+                        } else{
+                            val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru"))
+                            partyDate.format(outputFormatterDate)
+                        }
 
                     val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
                     val localTime = LocalTime.parse(party.Время, inputFormatterTime)
@@ -74,7 +82,7 @@ class PartyActivity : AppCompatActivity() {
                         btnDelete.visibility = View.VISIBLE
                         btnBuy.visibility = View.GONE
                         star.visibility = View.GONE
-                        if(localDate < LocalDate.now()) {
+                        if(partyDate < LocalDate.now()) {
                             btnRe.visibility = View.GONE
                             btnDelete.visibility = View.VISIBLE
                         }
@@ -98,7 +106,7 @@ class PartyActivity : AppCompatActivity() {
 
                     }
                     else {
-                        if(localDate < LocalDate.now()) {
+                        if(partyDate < LocalDate.now()) {
                             btnBuy.visibility = View.GONE
                         }
                         else {

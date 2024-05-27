@@ -54,10 +54,18 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>, private val
         fun bind(party: PartyDataClass) { with(itemBinding)
             {
                 // Форматирование даты
+                val formattedDate: String
+                // Форматирование даты
                 val inputFormatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 val partyDate = LocalDate.parse(party.Дата, inputFormatterDate)
-                val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
-                val formattedDate = partyDate.format(outputFormatterDate)
+                formattedDate =
+                    if(partyDate.year == LocalDate.now().year){
+                        val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
+                        partyDate.format(outputFormatterDate)
+                    } else{
+                        val outputFormatterDate = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru"))
+                        partyDate.format(outputFormatterDate)
+                    }
 
                 // Форматирование времени
                 val inputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")

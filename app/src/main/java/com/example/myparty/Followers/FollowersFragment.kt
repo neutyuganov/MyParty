@@ -16,8 +16,6 @@ class FollowersFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowersBinding
 
-    private lateinit var sharedPreferences: SharedPreferences
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
         binding = FragmentFollowersBinding.inflate(inflater, container,false)
         return binding.root
@@ -26,12 +24,8 @@ class FollowersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPreferences = requireActivity().getSharedPreferences("SHARED_PREFS", Context.MODE_PRIVATE)
-
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
-
-        binding.progressBar.visibility = View.INVISIBLE
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

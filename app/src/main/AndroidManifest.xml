@@ -15,10 +15,15 @@
         android:theme="@style/Base.Theme.MyParty"
         tools:targetApi="31">
         <activity
-            android:name=".StartActivities.RulesActivity"
+            android:name=".Admin.AdminPartyActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Activity"/>
+        <activity
+            android:name=".StartActivities.RulesActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Activity" />
         <activity
             android:name=".Profile.EditPartyActivity"
             android:exported="false"

@@ -173,7 +173,6 @@ class PartyActivity : AppCompatActivity() {
                     val intent = Intent(it.context, ProfileOrganizatorActivity::class.java)
                     intent.putExtra("USER_ID", party.id_пользователя)
                     it.context.startActivity(intent)
-                    finishAffinity()
                 }
             }
 
@@ -216,7 +215,8 @@ class PartyActivity : AppCompatActivity() {
                     try {
                         // После нажатия на кнопку добавления в избранное делаем ее неактивной, на время проведения операции
                         star.isEnabled = false
-
+                        star.visibility = View.INVISIBLE
+                        progressBarFavorite.visibility = View.VISIBLE
                         // Получение данных о статусе наличия в избранном у пользователя
                         val isFavorite = getFavoriteStatus(currentUserId, partyId)
                         // Проверка наличия в избранном
@@ -249,9 +249,16 @@ class PartyActivity : AppCompatActivity() {
                         }
                         favorite = !favorite
                         updateFavorite(favorite)
+                        star.visibility = View.VISIBLE
+                        progressBarFavorite.visibility = View.GONE
 
                     }catch (e: Exception){
                         Log.e("Ошибка добавления в избранное", e.message.toString())
+                        Toast.makeText(this@PartyActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+
+                        star.isEnabled = true
+                        star.visibility = View.VISIBLE
+                        progressBarFavorite.visibility = View.GONE
                     }
                 }
             }

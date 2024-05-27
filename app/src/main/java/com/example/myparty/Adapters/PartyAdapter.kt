@@ -139,11 +139,13 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             }
 
             star.setOnClickListener {
+
                 coroutineScope.launch {
                     try {
                         // После нажатия на кнопку добавления в избранное делаем ее неактивной, на время проведения операции
                         star.isEnabled = false
-
+                        star.visibility = View.INVISIBLE
+                        progressBarFavorite.visibility = View.VISIBLE
                         // Получение данных о статусе наличия в избранном у пользователя
                         val isFavorite = getFavoriteStatus(currentUserId, partyId)
                         // Проверка наличия в избранном
@@ -177,8 +179,16 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
                         favorite = !favorite
                         updateFavorite(favorite)
 
+                        star.visibility = View.VISIBLE
+                        progressBarFavorite.visibility = View.GONE
+
                     }catch (e: Exception){
                         Log.e("Ошибка добавления в избранное", e.message.toString())
+                        Toast.makeText(it.context, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+
+                        star.isEnabled = true
+                        star.visibility = View.VISIBLE
+                        progressBarFavorite.visibility = View.GONE
                     }
                 }
             }

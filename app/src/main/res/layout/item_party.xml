@@ -40,6 +40,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image" />
 
+    <ProgressBar
+        android:id="@+id/progressBarFavorite"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/yellow"
+        app:layout_constraintBottom_toBottomOf="@+id/star"
+        app:layout_constraintEnd_toEndOf="@+id/star"
+        app:layout_constraintStart_toStartOf="@+id/star"
+        app:layout_constraintTop_toTopOf="@+id/star" />
+
     <TextView
         android:id="@+id/age"
         style="@style/text_medium_12_style"

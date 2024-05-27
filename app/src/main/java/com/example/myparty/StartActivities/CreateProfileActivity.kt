@@ -54,7 +54,7 @@ class CreateProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textNick.text.toString().length > 10){
+                if(binding.textNick.text.toString().trim().length > 10){
                     binding.containerNick.isCounterEnabled = true
                 }
             }
@@ -71,7 +71,7 @@ class CreateProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textName.text.toString().length > 10){
+                if(binding.textName.text.toString().trim().length > 10){
                     binding.containerName.isCounterEnabled = true
                 }
             }
@@ -90,7 +90,7 @@ class CreateProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textDescription.text.toString().length > 150){
+                if(binding.textDescription.text.toString().trim().length > 150){
                     binding.containerDescription.isCounterEnabled = true
                 }
             }
@@ -129,7 +129,7 @@ class CreateProfileActivity : AppCompatActivity() {
                     try{
                         if (sb.postgrest["Пользователи"].select {
                                 filter {
-                                    eq("Ник", binding.textNick.text.toString())
+                                    eq("Ник", binding.textNick.text.toString().trim())
                                 }
                             }.decodeList<UserDataClass>().isNotEmpty()){
                             binding.containerNick.helperText = "Такой пользователь уже существует"
@@ -151,9 +151,9 @@ class CreateProfileActivity : AppCompatActivity() {
                             }
 
                             val userAdd = UserDataClass(
-                                Ник = binding.textNick.text.toString(),
-                                Имя = binding.textName.text.toString(),
-                                Описание = if(binding.textDescription.text.toString().isEmpty() ) null else binding.textDescription.text.toString(),
+                                Ник = binding.textNick.text.toString().trim(),
+                                Имя = binding.textName.text.toString().trim(),
+                                Описание = if(binding.textDescription.text.toString().trim().isEmpty() ) null else binding.textDescription.text.toString().trim(),
                                 id_статуса_проверки = 1,
                                 Верификация = false,
                                 Фото = uuid
@@ -192,7 +192,7 @@ class CreateProfileActivity : AppCompatActivity() {
             else -> "короткое имя"
         }
 
-        container.helperText = validText(container, editText.text.toString(), type)
+        container.helperText = validText(container, editText.text.toString().trim(), type)
     }
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {

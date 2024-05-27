@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.example.myparty.AdminActivity
+import com.example.myparty.Admin.AdminActivity
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.DataClasses.UserDataClass
@@ -49,12 +49,12 @@ class LoginActivity : AppCompatActivity() {
             takeHelperText(binding.containerEmail, binding.textEmail)
             takeHelperText(binding.containerPassword, binding.textPassword)
             binding.textError.isVisible = false
-            if(validText(binding.textEmail.text.toString(), 1) == null && validText(binding.textPassword.text.toString(), 0) == null){
+            if(validText(binding.textEmail.text.toString().trim(), 1) == null && validText(binding.textPassword.text.toString().trim(), 0) == null){
                 lifecycleScope.launch {
                     try{
                         sb.auth.signInWith(Email){
-                            email = binding.textEmail.text.toString()
-                            password = binding.textPassword.text.toString()
+                            email = binding.textEmail.text.toString().trim()
+                            password = binding.textPassword.text.toString().trim()
                         }
 
                         sharedPreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
@@ -154,7 +154,7 @@ class LoginActivity : AppCompatActivity() {
             else -> 0
         }
 
-        container.helperText = validText(editText.text.toString(), type)
+        container.helperText = validText(editText.text.toString().trim(), type)
     }
 
     private fun validText(text: String, type: Int): String? {

@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.myparty.AdminActivity
+import com.example.myparty.Admin.AdminActivity
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection

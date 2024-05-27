@@ -67,11 +67,11 @@ class AddParty5Fragment() : Fragment() {
                 val city = sharedPreferences.getString("ADD_PARTY_CITY", null)
                 val place = sharedPreferences.getString("ADD_PARTY_PLACE", null)
 
-                val date = sharedPreferences.getString("ADD_PARTY_DATE", null).toString().split('.')
+                val date = sharedPreferences.getString("ADD_PARTY_DATE", null).toString().trim().split('.')
                 val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt()).toString()
                 val time = sharedPreferences.getString("ADD_PARTY_TIME", null)
 
-                val price = binding.textPrice.text.toString().toDouble()
+                val price = binding.textPrice.text.toString().trim().toDouble()
 
                 val userId = sb.auth.currentUserOrNull()?.id.toString()
 
@@ -114,7 +114,7 @@ class AddParty5Fragment() : Fragment() {
     }
 
     private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
-        container.helperText = validText(editText.text.toString())
+        container.helperText = validText(editText.text.toString().trim())
     }
 
     private fun validText(text: String): String? {

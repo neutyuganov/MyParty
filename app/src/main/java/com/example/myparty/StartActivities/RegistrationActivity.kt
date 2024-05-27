@@ -80,15 +80,15 @@ class RegistrationActivity : AppCompatActivity() {
                             // Проверка на существование пользователя с введенным email
                             val users = sb.from("Пользователи").select{
                                 filter {
-                                    eq("Почта", binding.textEmail.text.toString())
+                                    eq("Почта", binding.textEmail.text.toString().trim())
                                 }
                             }.decodeList<UserDataClass>().count()
 
                             // Если пользователя с таким email не существует, то создается новый пользователь
                             if(users == 0){
                                 sb.auth.signUpWith(Email) {
-                                    email = binding.textEmail.text.toString()
-                                    password = binding.textPassword.text.toString()
+                                    email = binding.textEmail.text.toString().trim()
+                                    password = binding.textPassword.text.toString().trim()
                                 }
 
                                 // Сохранение id пользователя в SharedPreference
@@ -97,7 +97,7 @@ class RegistrationActivity : AppCompatActivity() {
                                 val user = sb.auth.currentUserOrNull()
 
                                 // Добавление данных пользователя в таблицу Пользователи
-                                val userAdd = UserDataClass(id = user?.id.toString(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString())
+                                val userAdd = UserDataClass(id = user?.id.toString().trim(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString().trim())
                                 sb.postgrest["Пользователи"].insert(userAdd)
 
                                 Log.e("create profile", userAdd.toString())
@@ -153,7 +153,7 @@ class RegistrationActivity : AppCompatActivity() {
 
     // Функция для возвращения текста подсказки
     private fun validText(editText: TextInputEditText, type: Int): String? {
-        val text = editText.text.toString()
+        val text = editText.text.toString().trim()
 
         if(text.isEmpty()){
             return "Поле не должно быть пустым"

@@ -36,7 +36,7 @@
             android:theme="@style/Activity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".AdminActivity"
+            android:name=".Admin.AdminActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Activity" />

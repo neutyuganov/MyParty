@@ -100,7 +100,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textNick.text.toString().length > 10){
+                if(binding.textNick.text.toString().trim().length > 10){
                     binding.containerNick.isCounterEnabled = true
                 }
             }
@@ -117,7 +117,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textName.text.toString().length > 10){
+                if(binding.textName.text.toString().trim().length > 10){
                     binding.containerName.isCounterEnabled = true
                 }
             }
@@ -136,7 +136,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textDescription.text.toString().length > 150){
+                if(binding.textDescription.text.toString().trim().length > 150){
                     binding.containerDescription.isCounterEnabled = true
                 }
             }
@@ -177,9 +177,9 @@ class EditProfileActivity : AppCompatActivity() {
                     lifecycleScope.launch {
                         if (sb.postgrest["Пользователи"].select {
                                 filter {
-                                    eq("Ник", binding.textNick.text.toString())
+                                    eq("Ник", binding.textNick.text.toString().trim())
                                 }
-                            }.decodeList<UserDataClass>().isNotEmpty() && binding.textNick.text.toString() != user.Ник){
+                            }.decodeList<UserDataClass>().isNotEmpty() && binding.textNick.text.toString().trim() != user.Ник){
                             binding.containerNick.helperText = "Такой пользователь уже существует"
                             binding.content.alpha = 1f
                             binding.progressBar.visibility = View.GONE
@@ -223,28 +223,7 @@ class EditProfileActivity : AppCompatActivity() {
                                 Log.e("Error!!!", e.toString())
                             }
 
-
-                            /*if(image!= null){
-                                if(imageDB.isEmpty()){
-                                    uuid = UUID.randomUUID().toString()
-                                    val bucket = sb.storage.from("images")
-                                    bucket.upload(uuid!!, image!!, upsert = false)
-                                }
-                                else{
-                                    uuid = imageDB
-                                    val bucket = sb.storage.from("images")
-                                    bucket.upload(uuid!!, image!!, upsert = true)
-                                }
-                            }
-                            else{
-                                uuid = null
-                                if(imageDB.isNotEmpty()){
-                                    val bucket = sb.storage.from("images")
-                                    bucket.delete(imageDB)
-                                }
-                            }*/
-
-                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString(), Имя = binding.textName.text.toString(), Описание = if(binding.textDescription.text.toString().isEmpty()) null else binding.textDescription.text.toString(), id_статуса_проверки = 1, Фото = uuid)
+                            val userAdd = UserDataClass(Ник = binding.textNick.text.toString().trim(), Имя = binding.textName.text.toString().trim(), Описание = if(binding.textDescription.text.toString().trim().isEmpty()) null else binding.textDescription.text.toString().trim(), id_статуса_проверки = 1, Фото = uuid)
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
                                     eq("id", user.id.toString())
@@ -308,7 +287,7 @@ class EditProfileActivity : AppCompatActivity() {
             else -> "ник"
         }
 
-        container.helperText = validText(container, editText.text.toString(), type)
+        container.helperText = validText(container, editText.text.toString().trim(), type)
     }
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {

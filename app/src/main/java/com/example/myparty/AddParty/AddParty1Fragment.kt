@@ -70,7 +70,7 @@ class AddParty1Fragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textName.text.toString().length > 15){
+                if(binding.textName.text.toString().trim().length > 15){
                     binding.containerName.isCounterEnabled = true
                 }
             }
@@ -94,9 +94,9 @@ class AddParty1Fragment : Fragment() {
             takeHelperText(binding.containerName, binding.textName)
 
             if(binding.containerName.helperText == null && image != null){
-                sharedPreferences.edit().putString("ADD_PARTY_NAME", binding.textName.text.toString()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_NAME", binding.textName.text.toString().trim()).apply()
                 // Сохраняем bitmap в SharedPreferences
-                sharedPreferences.edit().putString("ADD_PARTY_IMAGE", image.toString()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_IMAGE", image.toString().trim()).apply()
 
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.frame, AddParty2Fragment())
@@ -137,7 +137,7 @@ class AddParty1Fragment : Fragment() {
     }
 
     private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
-        container.helperText = validText(container, editText.text.toString())
+        container.helperText = validText(container, editText.text.toString().trim())
     }
 
     private fun validText(container: TextInputLayout, text: String): String? {

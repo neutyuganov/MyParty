@@ -41,8 +41,8 @@ class AddParty4Fragment() : Fragment() {
             takeHelperText(binding.containerPlace, binding.textPlace)
 
             if(binding.containerCity.helperText == null && binding.containerPlace.helperText == null){
-                sharedPreferences.edit().putString("ADD_PARTY_CITY", binding.textCity.text.toString()).apply()
-                sharedPreferences.edit().putString("ADD_PARTY_PLACE", binding.textPlace.text.toString()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_CITY", binding.textCity.text.toString().trim()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_PLACE", binding.textPlace.text.toString().trim()).apply()
 
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.frame, AddParty5Fragment())
@@ -62,7 +62,7 @@ class AddParty4Fragment() : Fragment() {
     }
 
     private fun takeHelperText(container: TextInputLayout, editText: TextInputEditText){
-        container.helperText = validText(editText.text.toString())
+        container.helperText = validText(editText.text.toString().trim())
     }
 
     private fun validText(text: String): String? {

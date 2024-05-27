@@ -103,10 +103,10 @@ class EditPartyActivity : AppCompatActivity() {
                         val bucket = sb.storage.from("images")
                         bucket.upload(imageId.toString(), image!!, upsert = true)
 
-                        val date = binding.textDate.text.toString().split('.')
+                        val date = binding.textDate.text.toString().trim().split('.')
                         val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
 
-                        val partyData = PartyDataClass(Название = binding.textName.text.toString(), Дата = currentDate.toString(), Время = binding.textTime.text.toString(), Описание = binding.textDescription.text.toString(), Слоган = binding.textSlogan.text.toString(), Город = binding.textCity.text.toString(), Место = binding.textPlace.text.toString(), id_статуса_проверки = 1)
+                        val partyData = PartyDataClass(Название = binding.textName.text.toString().trim(), Дата = currentDate.toString(), Время = binding.textTime.text.toString().trim(), Описание = binding.textDescription.text.toString().trim(), Слоган = binding.textSlogan.text.toString().trim(), Город = binding.textCity.text.toString().trim(), Место = binding.textPlace.text.toString().trim(), id_статуса_проверки = 1)
                         sb.postgrest["Вечеринки"].update(partyData){
                             filter{
                                 eq("id", partyId)
@@ -211,7 +211,7 @@ class EditPartyActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if (binding.textName.text.toString().length > 15) {
+                if (binding.textName.text.toString().trim().length > 15) {
                     binding.containerName.isCounterEnabled = true
                 }
             }
@@ -223,7 +223,7 @@ class EditPartyActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if (binding.textSlogan.text.toString().length > 70) {
+                if (binding.textSlogan.text.toString().trim().length > 70) {
                     binding.containerSlogan.isCounterEnabled = true
                 }
             }
@@ -236,7 +236,7 @@ class EditPartyActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if (binding.textDescription.text.toString().length > 700) {
+                if (binding.textDescription.text.toString().trim().length > 700) {
                     binding.containerDescription.isCounterEnabled = true
                 }
             }
@@ -244,7 +244,7 @@ class EditPartyActivity : AppCompatActivity() {
         })
 
         binding.containerDate.setEndIconOnClickListener {
-            val date = setDate(binding.textDate.text.toString())
+            val date = setDate(binding.textDate.text.toString().trim())
 
             val datePickerDialog = DatePickerDialog(
                 this,
@@ -260,7 +260,7 @@ class EditPartyActivity : AppCompatActivity() {
         }
 
         binding.containerTime.setEndIconOnClickListener {
-            val time = setTime(binding.textTime.text.toString())
+            val time = setTime(binding.textTime.text.toString().trim())
 
             val timePickerDialog = TimePickerDialog(
                 this,
@@ -362,7 +362,7 @@ class EditPartyActivity : AppCompatActivity() {
             else -> "цены"
         }
 
-        container.helperText = validText(container, editText.text.toString(), type)
+        container.helperText = validText(container, editText.text.toString().trim(), type)
     }
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {

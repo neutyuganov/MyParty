@@ -80,14 +80,14 @@ class FilterActivity : AppCompatActivity() {
         focusedListener(binding.textTime)
 
         binding.btnShowParties.setOnClickListener {
-            if(binding.textDate.text.toString().isNotEmpty()) {
+            if(binding.textDate.text.toString().trim().isNotEmpty()) {
                 takeHelperText(binding.containerDate, binding.textDate)
             }
-            if(binding.textTime.text.toString().isNotEmpty()) {
+            if(binding.textTime.text.toString().trim().isNotEmpty()) {
                 takeHelperText(binding.containerTime, binding.textTime)
             }
 
-            if(binding.textPriceOt.text.toString().isNotEmpty() && binding.textPriceDo.text.toString().isNotEmpty()) {
+            if(binding.textPriceOt.text.toString().trim().isNotEmpty() && binding.textPriceDo.text.toString().trim().isNotEmpty()) {
                 if(binding.textPriceOt.text.toString().toInt() > binding.textPriceDo.text.toString().toInt() || binding.textPriceDo.text.toString().toInt() < binding.textPriceOt.text.toString().toInt()){
                     binding.errorPrice.visibility = View.VISIBLE
                 }
@@ -95,34 +95,34 @@ class FilterActivity : AppCompatActivity() {
             }
 
             if(binding.containerDate.helperText == null && binding.containerTime.helperText == null) {
-                if(binding.textPriceOt.text.toString().isNotEmpty() && binding.textPriceDo.text.toString().isNotEmpty()) {
-                    if (binding.textPriceOt.text.toString().toInt() < binding.textPriceDo.text.toString().toInt() || binding.textPriceDo.text.toString().toInt() > binding.textPriceOt.text.toString().toInt()
+                if(binding.textPriceOt.text.toString().trim().isNotEmpty() && binding.textPriceDo.text.toString().trim().isNotEmpty()) {
+                    if (binding.textPriceOt.text.toString().trim().toInt() < binding.textPriceDo.text.toString().trim().toInt() || binding.textPriceDo.text.toString().trim().toInt() > binding.textPriceOt.text.toString().trim().toInt()
                     ) {
                         try{
                             loadParties()
 
                             // Сохранение города в SharedPreferences
-                            if(binding.textCity.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString()).apply()
+                            if(binding.textCity.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString().trim()).apply()
                             else sharedPreferences.edit().remove("FILTER_CITY").apply()
 
                             // Сохранение времени в SharedPreferences
-                            if(binding.textTime.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString()).apply()
+                            if(binding.textTime.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString().trim()).apply()
                             else sharedPreferences.edit().remove("FILTER_TIME").apply()
 
                             // Сохранение даты в SharedPreferences
-                            if(binding.textDate.text.toString().isNotEmpty()){
-                                val date = binding.textDate.text.toString().split('.')
+                            if(binding.textDate.text.toString().trim().isNotEmpty()){
+                                val date = binding.textDate.text.toString().trim().split('.')
                                 val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
                                 sharedPreferences.edit().putString("FILTER_DATE", currentDate.toString()).apply()
                             }
                             else sharedPreferences.edit().remove("FILTER_DATE").apply()
 
                             // Сохранение начальной цены в SharedPreferences
-                            if(binding.textPriceOt.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString()).apply()
+                            if(binding.textPriceOt.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString().trim()).apply()
                             else sharedPreferences.edit().remove("FILTER_PRICE_START").apply()
 
                             // Сохранение конечной цены в SharedPreferences
-                            if(binding.textPriceDo.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString()).apply()
+                            if(binding.textPriceDo.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString().trim()).apply()
                             else sharedPreferences.edit().remove("FILTER_PRICE_END").apply()
 
                             val intent = Intent(this, MainActivity::class.java)
@@ -141,27 +141,27 @@ class FilterActivity : AppCompatActivity() {
                         loadParties()
 
                         // Сохранение города в SharedPreferences
-                        if(binding.textCity.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString()).apply()
+                        if(binding.textCity.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_CITY", binding.textCity.text.toString().trim()).apply()
                         else sharedPreferences.edit().remove("FILTER_CITY").apply()
 
                         // Сохранение времени в SharedPreferences
-                        if(binding.textTime.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString()).apply()
+                        if(binding.textTime.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_TIME", binding.textTime.text.toString().trim()).apply()
                         else sharedPreferences.edit().remove("FILTER_TIME").apply()
 
                         // Сохранение даты в SharedPreferences
-                        if(binding.textDate.text.toString().isNotEmpty()){
-                            val date = binding.textDate.text.toString().split('.')
+                        if(binding.textDate.text.toString().trim().isNotEmpty()){
+                            val date = binding.textDate.text.toString().trim().split('.')
                             val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
                             sharedPreferences.edit().putString("FILTER_DATE", currentDate.toString()).apply()
                         }
                         else sharedPreferences.edit().remove("FILTER_DATE").apply()
 
                         // Сохранение начальной цены в SharedPreferences
-                        if(binding.textPriceOt.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString()).apply()
+                        if(binding.textPriceOt.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_START", binding.textPriceOt.text.toString().trim()).apply()
                         else sharedPreferences.edit().remove("FILTER_PRICE_START").apply()
 
                         // Сохранение конечной цены в SharedPreferences
-                        if(binding.textPriceDo.text.toString().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString()).apply()
+                        if(binding.textPriceDo.text.toString().trim().isNotEmpty()) sharedPreferences.edit().putString("FILTER_PRICE_END", binding.textPriceDo.text.toString().trim()).apply()
                         else sharedPreferences.edit().remove("FILTER_PRICE_END").apply()
 
                         val intent = Intent(this, MainActivity::class.java)
@@ -218,7 +218,7 @@ class FilterActivity : AppCompatActivity() {
     }
 
     private fun setDate(): IntArray{
-        val currentDate = binding.textDate.text.toString()
+        val currentDate = binding.textDate.text.toString().trim()
 
         var currentYear: Int
         var currentMonth: Int
@@ -245,7 +245,7 @@ class FilterActivity : AppCompatActivity() {
     }
 
     private fun setTime(): IntArray{
-        val currentTime = binding.textTime.text.toString()
+        val currentTime = binding.textTime.text.toString().trim()
 
         var currentHour: Int
         var currentMinute: Int
@@ -309,7 +309,7 @@ class FilterActivity : AppCompatActivity() {
             else -> "времени"
         }
 
-        container.helperText = validText(editText.text.toString(), type)
+        container.helperText = validText(editText.text.toString().trim(), type)
     }
 
     private fun validText(text: String, type: String): String? {
@@ -338,26 +338,26 @@ class FilterActivity : AppCompatActivity() {
                 // Фитрация разрешенных вечеринок
                 eq("id_статуса_проверки", "3")
                 // Фитрация города вечеринок
-                if(binding.textCity.text.toString().isNotEmpty()) eq("Город", binding.textCity.text.toString())
+                if(binding.textCity.text.toString().trim().isNotEmpty()) eq("Город", binding.textCity.text.toString().trim())
                 // Фитрация даты проведения вечеринок
-                if(binding.textDate.text.toString().isNotEmpty()){
-                    val date = binding.textDate.text.toString().split('.')
+                if(binding.textDate.text.toString().trim().isNotEmpty()){
+                    val date = binding.textDate.text.toString().trim().split('.')
                     val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
                     gte("Дата", currentDate.toString())
                 }
                 // Фитрация времени проведения вечеринок
-                if(binding.textTime.text.toString().isNotEmpty()) gte("Время", binding.textTime.text.toString())
+                if(binding.textTime.text.toString().trim().isNotEmpty()) gte("Время", binding.textTime.text.toString().trim())
                 // Фитрация цены вечеринок при заполнении полей от и до
-                if(binding.textPriceOt.text.toString().isNotEmpty() && binding.textPriceDo.text.toString().isNotEmpty()) {
-                    gte("Цена", binding.textPriceOt.text.toString().toDouble())
+                if(binding.textPriceOt.text.toString().trim().isNotEmpty() && binding.textPriceDo.text.toString().trim().isNotEmpty()) {
+                    gte("Цена", binding.textPriceOt.text.toString().trim().toDouble())
                     and{
-                        lte("Цена", binding.textPriceDo.text.toString().toDouble())
+                        lte("Цена", binding.textPriceDo.text.toString().trim().toDouble())
                     }
                 }
                 // Фитрация цены вечеринок при заполнении поля от
-                if(binding.textPriceOt.text.toString().isNotEmpty()) gte("Цена", binding.textPriceOt.text.toString().toDouble())
+                if(binding.textPriceOt.text.toString().trim().isNotEmpty()) gte("Цена", binding.textPriceOt.text.toString().trim().toDouble())
                 // Фитрация цены вечеринок при заполнении поля до
-                if(binding.textPriceDo.text.toString().isNotEmpty()) lte("Цена", binding.textPriceDo.text.toString().toDouble())
+                if(binding.textPriceDo.text.toString().trim().isNotEmpty()) lte("Цена", binding.textPriceDo.text.toString().trim().toDouble())
             }
         }.decodeList<PartyDataClass>()
 

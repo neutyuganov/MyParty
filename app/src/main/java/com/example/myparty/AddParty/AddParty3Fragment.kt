@@ -48,8 +48,8 @@ class AddParty3Fragment() : Fragment() {
             takeHelperText(binding.containerTime, binding.textTime)
 
             if(binding.containerDate.helperText == null && binding.containerTime.helperText == null){
-                sharedPreferences.edit().putString("ADD_PARTY_DATE", binding.textDate.text.toString()).apply()
-                sharedPreferences.edit().putString("ADD_PARTY_TIME", binding.textTime.text.toString()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_DATE", binding.textDate.text.toString().trim()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_TIME", binding.textTime.text.toString().trim()).apply()
 
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.frame, AddParty4Fragment())
@@ -89,7 +89,7 @@ class AddParty3Fragment() : Fragment() {
     }
 
     private fun setDate(): IntArray{
-        val currentDate = binding.textDate.text.toString()
+        val currentDate = binding.textDate.text.toString().trim()
 
         var currentYear: Int
         var currentMonth: Int
@@ -117,7 +117,7 @@ class AddParty3Fragment() : Fragment() {
     }
 
     private fun setTime(): IntArray{
-        val currentTime = binding.textTime.text.toString()
+        val currentTime = binding.textTime.text.toString().trim()
 
         var currentHour: Int
         var currentMinute: Int
@@ -155,7 +155,7 @@ class AddParty3Fragment() : Fragment() {
             else -> "времени"
         }
 
-        container.helperText = validText(editText.text.toString(), type)
+        container.helperText = validText(editText.text.toString().trim(), type)
     }
 
     private fun validText(text: String, type: String): String? {

@@ -45,7 +45,7 @@ class AddParty2Fragment() : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textSlogan.text.toString().length > 70) {
+                if(binding.textSlogan.text.toString().trim().length > 70) {
                     binding.containerSlogan.isCounterEnabled = true
                 }
             }
@@ -58,7 +58,7 @@ class AddParty2Fragment() : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                if(binding.textDescription.text.toString().length > 700) {
+                if(binding.textDescription.text.toString().trim().length > 700) {
                     binding.containerDescription.isCounterEnabled = true
                 }
             }
@@ -70,8 +70,8 @@ class AddParty2Fragment() : Fragment() {
             takeHelperText(binding.containerSlogan, binding.textSlogan)
 
             if(binding.containerDescription.helperText == null && binding.containerSlogan.helperText == null){
-                sharedPreferences.edit().putString("ADD_PARTY_SLOGAN", binding.textSlogan.text.toString()).apply()
-                sharedPreferences.edit().putString("ADD_PARTY_DESCRIPTION", binding.textDescription.text.toString()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_SLOGAN", binding.textSlogan.text.toString().trim()).apply()
+                sharedPreferences.edit().putString("ADD_PARTY_DESCRIPTION", binding.textDescription.text.toString().trim()).apply()
 
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.frame, AddParty3Fragment())
@@ -96,7 +96,7 @@ class AddParty2Fragment() : Fragment() {
             else -> "слоган"
         }
 
-        container.helperText = validText(container, editText.text.toString(), type)
+        container.helperText = validText(container, editText.text.toString().trim(), type)
     }
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {

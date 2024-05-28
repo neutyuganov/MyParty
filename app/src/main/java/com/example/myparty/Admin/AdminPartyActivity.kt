@@ -1,21 +1,31 @@
 package com.example.myparty.Admin
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.marginStart
+import androidx.core.view.setPadding
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.PartyFavoriteDataClass
 import com.example.myparty.Profile.EditPartyActivity
 import com.example.myparty.Profile.ProfileFragment
 import com.example.myparty.ProfileOrganizator.ProfileOrganizatorActivity
+import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityAdminPartyBinding
 import com.example.myparty.databinding.ActivityPartyBinding
@@ -54,6 +64,60 @@ class AdminPartyActivity : AppCompatActivity() {
 
         binding.btnGoBack.setOnClickListener {
             finish()
+        }
+
+        binding.btnBan.setOnClickListener  {
+            val dialog  = Dialog(this@AdminPartyActivity)
+            dialog.setContentView(R.layout.dialog_item_edittext)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val editText  = dialog.findViewById<EditText>(R.id.textBun)
+            val btnCancel  = dialog.findViewById<Button>(R.id.btnCancel)
+            val btnBun = dialog.findViewById<Button>(R.id.btnBun)
+
+            btnCancel.setOnClickListener  {
+                dialog.dismiss()
+            }
+
+            btnBun.setOnClickListener {
+                val reason = editText.text.toString().trim()
+                if (reason.isNotEmpty()) {
+                    btnCancel.isEnabled = false
+                    btnBun.isEnabled  = false
+                    editText.isEnabled = false
+                    btnBun.text  =  "Загрузка..."
+                    lifecycleScope.launch {
+                        try {
+                            sb.from("Вечеринки").update(
+                                PartyDataClass(
+                                    id_статуса_проверки = 2,
+                                    Комментарий = reason
+                                )
+                            ) {
+                                filter {
+                                    eq("id", partyId)
+                                }
+                            }
+
+                            val intent = Intent(this@AdminPartyActivity, AdminActivity::class.java)
+                            startActivity(intent)
+                            finishAffinity()
+
+                        } catch (e: Throwable) {
+                            Log.e("Error", e.toString())
+                            Toast.makeText(this@AdminPartyActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+                            btnCancel.isEnabled = true
+                            btnBun.isEnabled  = true
+                            editText.isEnabled = true
+                            btnBun.text  =  "Заблокировать"
+                        }
+                    }
+                }
+                else  {
+                    Toast.makeText(this@AdminPartyActivity, "Введите причину", Toast.LENGTH_SHORT).show()
+                }
+            }
+            dialog.show()
         }
 
         binding.btnCorrect.setOnClickListener {

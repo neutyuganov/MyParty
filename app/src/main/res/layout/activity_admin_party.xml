@@ -187,7 +187,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/background_round_button"
-        android:src="@drawable/big_blue_tick"
+        android:src="@drawable/tick_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

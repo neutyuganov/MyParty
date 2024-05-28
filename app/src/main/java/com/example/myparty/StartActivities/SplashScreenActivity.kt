@@ -1,12 +1,18 @@
 package com.example.myparty.StartActivities
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.myparty.Admin.AdminActivity
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.MainActivity
+import com.example.myparty.R
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import io.github.jan.supabase.postgrest.from
@@ -51,21 +58,27 @@ class SplashScreenActivity : AppCompatActivity() {
 
                             if(users.id_роли == 1) {
                                 if(users.id_статуса_проверки == 2) {
-                                    val dialog = AlertDialog.Builder(this@SplashScreenActivity)
-                                        .setMessage(users.Комментарий)
-                                        .setTitle("Профиль заблокирован")
-                                        .setPositiveButton("ОК") { _, _ ->
-                                            // Действие при нажатии на кнопку "ОК"
-                                            // Переходим на экран входа
+                                    val dialog  = Dialog(this@SplashScreenActivity)
+                                    dialog.setContentView(R.layout.dialog_item)
+                                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    dialog.setCancelable(false)
 
-                                            sharedPreferences.edit().putString("TOKEN_USER", null).apply()
-                                        }
-                                        .setCancelable(true) // Позволяет закрыть диалог, нажав "Назад" или коснувшись вне диалога
-                                        .create()
+                                    val textComment  = dialog.findViewById<TextView>(R.id.comment)
+                                    val btnOk = dialog.findViewById<Button>(R.id.btnOk)
 
-                                    dialog.setCanceledOnTouchOutside(true) // Закрывает диалог, когда пользователь касается вне диалога
+                                    textComment.setText("Причина: " + users.Комментарий)
+
+                                    btnOk.setOnClickListener  {
+                                        dialog.dismiss()
+                                        sharedPreferences.edit().putString("TOKEN_USER", null).apply()
+                                        val mainIntent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
+                                        startActivity(mainIntent)
+                                        finish()
+                                    }
+
+                                    dialog.setCanceledOnTouchOutside(false)
+
                                     dialog.show()
-
                                 }
                                 else if (users.Ник == null) {
                                     val mainIntent = Intent(this@SplashScreenActivity, CreateProfileActivity::class.java)
@@ -85,6 +98,8 @@ class SplashScreenActivity : AppCompatActivity() {
                             }
                         }
                         catch(e: Throwable) {
+
+                            Log.e("ERROR", e.toString())
                             Toast.makeText(this@SplashScreenActivity, "Проверьте подключение к интернету", Toast.LENGTH_SHORT).show()
                             finish()
                         }

@@ -1,12 +1,18 @@
 package com.example.myparty.StartActivities
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,6 +21,7 @@ import com.example.myparty.Admin.AdminActivity
 import com.example.myparty.MainActivity
 import com.example.myparty.SupabaseConnection
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.R
 import com.example.myparty.databinding.ActivityLoginBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -77,21 +84,27 @@ class LoginActivity : AppCompatActivity() {
 
                             if(users.id_роли == 1) {
                                 if(users.id_статуса_проверки == 2) {
-                                    val dialog = AlertDialog.Builder(this@LoginActivity)
-                                        .setMessage(users.Комментарий)
-                                        .setTitle("Профиль заблокирован")
-                                        .setPositiveButton("ОК") { _, _ ->
-                                            // Действие при нажатии на кнопку "ОК"
-                                            // Переходим на экран входа
+                                    val dialog  = Dialog(this@LoginActivity)
+                                    dialog.setContentView(R.layout.dialog_item)
+                                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    dialog.setCancelable(false)
 
-                                            sharedPreferences.edit().putString("TOKEN_USER", null).apply()
-                                        }
-                                        .setCancelable(true) // Позволяет закрыть диалог, нажав "Назад" или коснувшись вне диалога
-                                        .create()
+                                    val textComment  = dialog.findViewById<TextView>(R.id.comment)
+                                    val btnOk = dialog.findViewById<Button>(R.id.btnOk)
 
-                                    dialog.setCanceledOnTouchOutside(true) // Закрывает диалог, когда пользователь касается вне диалога
+                                    textComment.setText("Причина: " + users.Комментарий)
+
+                                    btnOk.setOnClickListener  {
+                                        dialog.dismiss()
+                                        sharedPreferences.edit().putString("TOKEN_USER", null).apply()
+                                        binding.progressBar.visibility = View.GONE
+                                        binding.content.alpha = 1f
+                                        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                    }
+
+                                    dialog.setCanceledOnTouchOutside(false)
+
                                     dialog.show()
-
                                 }
                                 else if (users.Ник == null) {
                                     val mainIntent = Intent(this@LoginActivity, CreateProfileActivity::class.java)

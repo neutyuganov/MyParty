@@ -16,6 +16,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.UserDataClass
+import com.example.myparty.R
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityRegistrationBinding
 import com.google.android.material.textfield.TextInputEditText

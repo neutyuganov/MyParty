@@ -66,9 +66,6 @@ class ProfileFragment : Fragment() {
         binding.progressBar.visibility = View.VISIBLE
         binding.content.visibility = View.GONE
         binding.btnLogOut.visibility = View.INVISIBLE
-        requireActivity().window.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         lifecycleScope.launch {
             try{
@@ -81,7 +78,6 @@ class ProfileFragment : Fragment() {
 
                 binding.content.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
-                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 if(userData?.Фото != null) {
                     binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP

@@ -174,6 +174,7 @@ class EditProfileActivity : AppCompatActivity() {
             .setTextColorResource(R.color.main_text_color)
             .setTextSize(12f)
             .setMarginRight(10)
+            .setMarginLeft(10)
             .setTextTypeface(resources.getFont(R.font.rubik_medium))
             .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
             .setArrowSize(7)
@@ -339,7 +340,7 @@ class EditProfileActivity : AppCompatActivity() {
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
         if(type == "ник"){
-            if(Pattern.compile("^[a-zA-Z]+$").toRegex().matches(text)) {
+            if(!Pattern.compile("^[a-zA-Z1-9]+$").toRegex().matches(text)) {
                 return "Можно использовать только латинские буквы"
             }
         }

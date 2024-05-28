@@ -127,6 +127,7 @@ class CreateProfileActivity : AppCompatActivity() {
             .setTextColorResource(R.color.main_text_color)
             .setTextSize(12f)
             .setMarginRight(10)
+            .setMarginLeft(10)
             .setTextTypeface(resources.getFont(R.font.rubik_medium))
             .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
             .setArrowSize(7)
@@ -157,7 +158,7 @@ class CreateProfileActivity : AppCompatActivity() {
             takeHelperText(binding.containerName, binding.textName)
             takeHelperText(binding.containerDescription, binding.textDescription)
 
-            if(binding.containerNick.helperText == null && binding.containerName.helperText == null){
+            if(binding.containerNick.helperText == null && binding.containerName.helperText == null && binding.containerDescription.helperText  == null){
 
                 binding.progressBar.visibility = View.VISIBLE
                 binding.content.alpha = 0.62f
@@ -241,7 +242,7 @@ class CreateProfileActivity : AppCompatActivity() {
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
         if(type == "ник"){
-            if(Pattern.compile("^[a-zA-Z]+$").toRegex().matches(text)) {
+            if(!Pattern.compile("^[a-zA-Z1-9]+$").toRegex().matches(text)) {
                 return "Можно использовать только латинские буквы"
             }
         }

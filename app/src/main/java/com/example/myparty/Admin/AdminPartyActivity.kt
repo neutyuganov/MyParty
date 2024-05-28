@@ -62,9 +62,6 @@ class AdminPartyActivity : AppCompatActivity() {
         binding.btnCorrect.visibility = View.GONE
         binding.btnBan.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         binding.btnGoBack.setOnClickListener {
             finish()
@@ -133,7 +130,7 @@ class AdminPartyActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try{
-                    sb.from("Вечеринки").update(PartyDataClass(id_статуса_проверки = 2)) {
+                    sb.from("Вечеринки").update(PartyDataClass(id_статуса_проверки = 2, Комментарий  =  null))  {
                         filter {
                             eq("id", partyId)
                         }
@@ -149,7 +146,7 @@ class AdminPartyActivity : AppCompatActivity() {
 
                     binding.progressBar.visibility = View.GONE
                     binding.content.alpha = 1f
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
                 }
             }
         }
@@ -190,6 +187,7 @@ class AdminPartyActivity : AppCompatActivity() {
 
                     content.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                     if(party.Фото != "null") {
                         progressBarImage.visibility = View.VISIBLE
@@ -206,6 +204,7 @@ class AdminPartyActivity : AppCompatActivity() {
                     progressBarImage.visibility = View.GONE
                     binding.btnCorrect.visibility = View.VISIBLE
                     binding.btnBan.visibility = View.VISIBLE
+
                 }
             }
             catch (e: Throwable){

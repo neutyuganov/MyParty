@@ -105,8 +105,8 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>, private val
                 place.text = party.Место
 
                 // Преобразование цены
-                val priceFormat = party.Цена
-                if(priceFormat == 0.0){
+                val priceFormat = party.Цена!!
+                if(priceFormat == 0.0 || priceFormat <= 0.001){
                     price.text = "Бесплатно"
                 }
                 else if(priceFormat?.rem(1) == 0.0){

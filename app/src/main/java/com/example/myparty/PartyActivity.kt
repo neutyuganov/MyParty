@@ -111,8 +111,8 @@ class PartyActivity : AppCompatActivity() {
                             btnBuy.visibility = View.GONE
                         }
                         else {
-                            val priceFormat = party.Цена
-                            if(priceFormat == 0.0){
+                            val priceFormat = party.Цена!!
+                            if(priceFormat == 0.0 || priceFormat <= 0.001){
                                 btnBuy.text = "Бесплатно"
                             }
                             if(priceFormat?.rem(1) == 0.0){

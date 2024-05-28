@@ -108,7 +108,7 @@ class EditPartyActivity : AppCompatActivity() {
                         val date = binding.textDate.text.toString().trim().split('.')
                         val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
 
-                        val partyData = PartyDataClass(Название = binding.textName.text.toString().trim(), Дата = currentDate.toString(), Время = binding.textTime.text.toString().trim(), Описание = binding.textDescription.text.toString().trim(), Слоган = binding.textSlogan.text.toString().trim(), Город = binding.textCity.text.toString().trim(), Место = binding.textPlace.text.toString().trim(), Цена = if(binding.textPrice.text.toString().trim().toDouble() == 0.0) 0.0 else binding.textPrice.text.toString().trim().toDouble(), id_статуса_проверки = 1)
+                        val partyData = PartyDataClass(Название = binding.textName.text.toString().trim(), Дата = currentDate.toString(), Время = binding.textTime.text.toString().trim(), Описание = binding.textDescription.text.toString().trim(), Слоган = binding.textSlogan.text.toString().trim(), Город = binding.textCity.text.toString().trim(), Место = binding.textPlace.text.toString().trim(), Цена = if(binding.textPrice.text.toString().trim().toDouble() == 0.0) 0.001 else binding.textPrice.text.toString().trim().toDouble(), id_статуса_проверки = 1)
                         sb.postgrest["Вечеринки"].update(partyData){
                             filter{
                                 eq("id", partyId)
@@ -160,6 +160,9 @@ class EditPartyActivity : AppCompatActivity() {
                     if(priceFormat?.rem(1) == 0.0){
                         val priceInt = priceFormat.toInt()
                         textPrice.setText(priceInt.toString())
+                    }
+                    if(party.Цена == 0.001){
+                        textPrice.setText("0")
                     }
                     else{
                         textPrice.setText(priceFormat.toString())

@@ -39,16 +39,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image">
 
+        <TextView
+            android:id="@+id/nick"
+            android:textColor="@color/secondary_text_color"
+            style="@style/text_medium_12_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:text="\@utyuganov" />
+
         <LinearLayout
             android:id="@+id/userInfoContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/user_name"
-                android:textColor="@color/secondary_text_color"
+                android:id="@+id/name"
+                android:textColor="@color/main_text_color"
                 style="@style/text_medium_16_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

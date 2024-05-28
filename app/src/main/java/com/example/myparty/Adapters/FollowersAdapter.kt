@@ -64,7 +64,10 @@ class FollowersAdapter (private val userList: List<UserDataClass>, private val c
                     verify.visibility = View.INVISIBLE
                 }
 
-                itemBinding.textCountFollowers.text = user.Количество_подписчиков.toString() + " подписчиков"
+                coroutineScope.launch {
+                    itemBinding.textCountFollowers.text = getFollowers(userId).toString()+ " подписчиков"
+                }
+
 
                 var subscribe = user.Статус_подписки!!
                 checkFollowStatus(subscribe)

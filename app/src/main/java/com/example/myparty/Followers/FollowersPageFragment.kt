@@ -95,8 +95,6 @@ class FollowersPageFragment : Fragment() {
                         }
                     }
 
-                    val countFollowers = getFollowers(userId)
-
                     var isFollow = true
                     for (j in 0 until jsonArrayUserFollowing.length()) {
                         val jsonObjectFavorites = jsonArrayUserFollowing.getJSONObject(j)
@@ -104,7 +102,7 @@ class FollowersPageFragment : Fragment() {
                             isFollow = false
                         }
                     }
-                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Количество_подписчиков = countFollowers, Статус_подписки = isFollow, Фото = image)
+                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Статус_подписки = isFollow, Фото = image)
 
                     followers.add(follower)
                 }
@@ -127,13 +125,5 @@ class FollowersPageFragment : Fragment() {
                 }
             }
         }
-    }
-
-    suspend fun getFollowers(userId: String): Int  = withContext(Dispatchers.IO) {
-        sb.from("Подписчики_пользователей").select{
-            filter {
-                eq("id_пользователя", userId)
-            }
-        }.decodeList<FollowersDataClass>().count()
     }
 }

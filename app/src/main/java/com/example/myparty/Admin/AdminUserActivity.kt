@@ -120,7 +120,7 @@ class AdminUserActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try{
-                    sb.from("Пользователи").update(PartyDataClass(id_статуса_проверки = 2, Комментарий  =  null))  {
+                    sb.from("Пользователи").update(PartyDataClass(id_статуса_проверки = 3, Комментарий  =  null))  {
                         filter {
                             eq("id", userId)
                         }

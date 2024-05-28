@@ -117,7 +117,7 @@ class AdminPartyActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try{
-                    sb.from("Вечеринки").update(PartyDataClass(id_статуса_проверки = 2, Комментарий  =  null))  {
+                    sb.from("Вечеринки").update(PartyDataClass(id_статуса_проверки = 3, Комментарий  =  null))  {
                         filter {
                             eq("id", partyId)
                         }

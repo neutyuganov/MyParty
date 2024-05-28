@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         style="@style/text_medium_16_style"
         android:textColor="@color/secondary_text_color"
-        android:text="Все вечеринки проверены"
+        android:text="Все пользователи проверены"
         android:visibility="invisible"
         android:layout_gravity="center"/>
 </FrameLayout>

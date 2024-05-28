@@ -103,27 +103,38 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        val balloon = Balloon.Builder(requireContext())
+            .setWidth(BalloonSizeSpec.WRAP)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setTextColorResource(R.color.main_text_color)
+            .setTextSize(12f)
+            .setMarginHorizontal(10)
+            .setMarginBottom(5)
+            .setTextTypeface(resources.getFont(R.font.rubik_medium))
+            .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+            .setArrowSize(7)
+            .setPaddingVertical(4)
+            .setPaddingHorizontal(8)
+            .setCornerRadius(10f)
+            .setBackgroundColorResource(R.color.stroke_color)
+            .setBalloonAnimation(BalloonAnimation.FADE)
+
         binding.verifyUser.setOnClickListener {
-            val balloon = Balloon.Builder(requireContext())
-                .setWidth(BalloonSizeSpec.WRAP)
-                .setHeight(BalloonSizeSpec.WRAP)
-                .setText("Подтвержденная организация")
-                .setTextColorResource(R.color.main_text_color)
-                .setTextSize(12f)
-                .setMarginHorizontal(10)
-                .setMarginBottom(5)
-                .setTextTypeface(resources.getFont(R.font.rubik_medium))
-                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
-                .setArrowSize(7)
-                .setPaddingVertical(4)
-                .setPaddingHorizontal(8)
-                .setCornerRadius(10f)
-                .setBackgroundColorResource(R.color.stroke_color)
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build()
+
+            balloon.setText("Подтвержденная организация")
 
             lifecycleScope.launch {
-                balloon.showAlignTop(binding.verifyUser)
+                balloon.build().showAlignTop(binding.verifyUser)
+            }
+        }
+
+        binding.nickUser.setOnClickListener {
+
+            if(userData?.id_статуса_проверки == 1) balloon.setText("Профиль на проверке")
+            else balloon.setText("Профиль подтвержен")
+
+            lifecycleScope.launch {
+                balloon.build().showAlignTop(binding.nickUser)
             }
         }
 
@@ -214,6 +225,7 @@ class ProfileFragment : Fragment() {
     suspend fun loadUserData() {
         binding.nameUser.text = userData?.Имя
         binding.nickUser.text = "@" + userData?.Ник
+        if(userData?.id_статуса_проверки == 1) binding.nickUser.setTextColor(requireActivity().getColor(R.color.yellow))
         if(userData?.Описание.isNullOrEmpty()) binding.descriptionUser.visibility = View.GONE else binding.descriptionUser.text = userData?.Описание
         binding.verifyUser.visibility = if (userData?.Верификация == true) View.VISIBLE else View.GONE
         binding.countFollower.text = followersCount.toString()

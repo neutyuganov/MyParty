@@ -101,7 +101,6 @@ class AddPartyActivity : AppCompatActivity() {
             }
             else{
                 if(sharedPreferences.all.isNotEmpty()) {
-                    val dialog  = Dialog(this@AddPartyActivity)
                     dialog.setContentView(R.layout.dialog_item_add_party)
                     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     dialog.setCancelable(false)

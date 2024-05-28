@@ -14,6 +14,7 @@ import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -87,12 +88,11 @@ class EditPartyActivity : AppCompatActivity() {
 
             if(binding.containerName.helperText == null && binding.containerDate.helperText == null && binding.containerTime.helperText == null && binding.containerDescription.helperText == null && binding.containerSlogan.helperText == null && binding.containerCity.helperText == null && binding.containerPlace.helperText == null && binding.containerPrice.helperText == null && image!= null){
 
-                binding.btnDelete.isEnabled = false
-                binding.btnAddImage.isEnabled = false
-                binding.btnSave.isEnabled = false
-                binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
-                binding.btnGoBack.visibility = View.INVISIBLE
+                binding.content.alpha = 0.62f
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 lifecycleScope.launch {
                     try{
@@ -122,12 +122,9 @@ class EditPartyActivity : AppCompatActivity() {
                     }
                     catch (e: Throwable){
                         Log.e("TAG", e.toString())
-                        binding.btnDelete.isEnabled = true
-                        binding.btnAddImage.isEnabled = true
-                        binding.btnSave.isEnabled = true
-                        binding.content.alpha = 1f
                         binding.progressBar.visibility = View.GONE
-                        binding.btnGoBack.visibility = View.VISIBLE
+                        binding.content.alpha = 1f
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         Toast.makeText(this@EditPartyActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
                     }
                 }

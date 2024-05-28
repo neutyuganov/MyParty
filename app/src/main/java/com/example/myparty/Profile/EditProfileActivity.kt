@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.SupabaseConnection.Singleton.sb
@@ -205,12 +206,11 @@ class EditProfileActivity : AppCompatActivity() {
 
             if(binding.containerNick.helperText == null && binding.containerName.helperText == null && binding.containerDescription.helperText == null){
 
-                binding.btnDelete.isEnabled = false
-                binding.imageUser.isEnabled = false
-                binding.btnSave.isEnabled = false
-                binding.content.alpha = 0.62f
                 binding.progressBar.visibility = View.VISIBLE
-                binding.btnGoBack.visibility = View.INVISIBLE
+                binding.content.alpha = 0.62f
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 try{
                     lifecycleScope.launch {
@@ -220,8 +220,10 @@ class EditProfileActivity : AppCompatActivity() {
                                 }
                             }.decodeList<UserDataClass>().isNotEmpty() && binding.textNick.text.toString().trim() != user.Ник){
                             binding.containerNick.helperText = "Такой пользователь уже существует"
-                            binding.content.alpha = 1f
+
                             binding.progressBar.visibility = View.GONE
+                            binding.content.alpha = 1f
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
                         else{
                             var uuid: String? = null
@@ -278,10 +280,10 @@ class EditProfileActivity : AppCompatActivity() {
                 }
                 catch(e: Exception){
                     Log.e("Error create profile", e.toString())
-                    binding.content.alpha = 1f
+
                     binding.progressBar.visibility = View.GONE
-                    binding.btnDelete.isEnabled = false
-                    binding.imageUser.isEnabled = false
+                    binding.content.alpha = 1f
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         }

@@ -12,6 +12,7 @@ import android.text.style.ClickableSpan
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.UserDataClass
@@ -79,8 +80,9 @@ class RegistrationActivity : AppCompatActivity() {
                         try{
                             binding.progressBar.visibility = View.VISIBLE
                             binding.content.alpha = 0.62f
-                            binding.goReg.isEnabled = false
-                            binding.toLogIn.isEnabled = false
+                            window.setFlags(
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                             // Проверка на существование пользователя с введенным email
                             val users = sb.from("Пользователи").select{
@@ -118,8 +120,7 @@ class RegistrationActivity : AppCompatActivity() {
                                 binding.textEmail.requestFocus()
                                 binding.progressBar.visibility = View.GONE
                                 binding.content.alpha = 1f
-                                binding.goReg.isEnabled = true
-                                binding.toLogIn.isEnabled = true
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             }
 
                         }
@@ -127,8 +128,7 @@ class RegistrationActivity : AppCompatActivity() {
                             Log.e("ERROR", e.message.toString())
                             binding.progressBar.visibility = View.GONE
                             binding.content.alpha = 1f
-                            binding.goReg.isEnabled = true
-                            binding.toLogIn.isEnabled = true
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
                     }
                 }

@@ -1,8 +1,15 @@
 package com.example.myparty.AddParty
 
+import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -26,30 +33,37 @@ class AddPartyActivity : AppCompatActivity() {
         sharedPreferences = this.getSharedPreferences("SHARED_PREFS_ADD_PARTY", Context.MODE_PRIVATE)
 
         if(sharedPreferences.all.isNotEmpty()) {
-            val dialog = AlertDialog.Builder(this)
-                .setMessage("Вы еще не закончили создание вечеринки\nХотите продолжить?")
-                .setTitle("А мы все запомнили")
-                .setPositiveButton("Да") { _, _ ->
-                    if(sharedPreferences.contains("ADD_PARTY_CITY")){
+            val dialog  = Dialog(this@AddPartyActivity)
+            dialog.setContentView(R.layout.dialog_item_add_party)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setCancelable(false)
+
+            val btnAgree = dialog.findViewById<Button>(R.id.btnAgree)
+            val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
+
+            btnAgree.setOnClickListener  {
+                dialog.dismiss()
+                if(sharedPreferences.contains("ADD_PARTY_CITY")){
                     loadFragment(AddParty4Fragment())
-                    }
-                    else if(sharedPreferences.contains("ADD_PARTY_DATE")){
+                }
+                else if(sharedPreferences.contains("ADD_PARTY_DATE")){
                     loadFragment(AddParty3Fragment())
-                    }
-                    else if(sharedPreferences.contains("ADD_PARTY_SLOGAN")){
-                        loadFragment(AddParty2Fragment())
-                    }
-                    else if(sharedPreferences.contains("ADD_PARTY_NAME")){
-                        loadFragment(AddParty1Fragment())
-                    }
-                }.setNegativeButton("Нет") { _, _ ->
-                    sharedPreferences.edit().clear().apply()
+                }
+                else if(sharedPreferences.contains("ADD_PARTY_SLOGAN")){
+                    loadFragment(AddParty2Fragment())
+                }
+                else if(sharedPreferences.contains("ADD_PARTY_NAME")){
                     loadFragment(AddParty1Fragment())
                 }
-                .setCancelable(false) // Позволяет закрыть диалог, нажав "Назад" или коснувшись вне диалога
-                .create()
+            }
 
-            dialog.setCanceledOnTouchOutside(false) // Закрывает диалог, когда пользователь касается вне диалога
+            btnCancel.setOnClickListener  {
+                dialog.dismiss()
+                loadFragment(AddParty1Fragment())
+                sharedPreferences.edit().clear().apply()
+            }
+
+            dialog.setCanceledOnTouchOutside(false)
             dialog.show()
         }
 

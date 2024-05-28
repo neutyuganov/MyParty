@@ -61,8 +61,9 @@ class LoginActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.content.alpha = 0.62f
-                    binding.toReg.isEnabled = false
-                    binding.goLogIn.isEnabled = false
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     try{
                         sb.auth.signInWith(Email){
                             email = binding.textEmail.text.toString().trim()
@@ -92,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                                     val textComment  = dialog.findViewById<TextView>(R.id.comment)
                                     val btnOk = dialog.findViewById<Button>(R.id.btnOk)
 
-                                    textComment.setText("Причина: " + users.Комментарий)
+                                    textComment.text = "Причина: " + users.Комментарий
 
                                     btnOk.setOnClickListener  {
                                         dialog.dismiss()
@@ -133,8 +134,7 @@ class LoginActivity : AppCompatActivity() {
                             binding.textError.isVisible = true
                             binding.progressBar.visibility = View.GONE
                             binding.content.alpha = 1f
-                            binding.toReg.isEnabled = true
-                            binding.goLogIn.isEnabled = true
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
                     }
                 }

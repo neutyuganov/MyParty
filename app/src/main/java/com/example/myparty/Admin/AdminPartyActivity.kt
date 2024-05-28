@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -58,9 +59,12 @@ class AdminPartyActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.content.visibility = View.GONE
-
         binding.btnCorrect.visibility = View.GONE
         binding.btnBan.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         binding.btnGoBack.setOnClickListener {
             finish()
@@ -123,9 +127,9 @@ class AdminPartyActivity : AppCompatActivity() {
         binding.btnCorrect.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
             binding.content.alpha = 0.62f
-            binding.btnCorrect.visibility = View.GONE
-            binding.btnBan.visibility = View.GONE
-            binding.btnGoBack.visibility = View.GONE
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
             lifecycleScope.launch {
                 try{
@@ -145,9 +149,7 @@ class AdminPartyActivity : AppCompatActivity() {
 
                     binding.progressBar.visibility = View.GONE
                     binding.content.alpha = 1f
-                    binding.btnCorrect.visibility = View.VISIBLE
-                    binding.btnBan.visibility = View.VISIBLE
-                    binding.btnGoBack.visibility = View.VISIBLE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         }

@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.UserDataClass
@@ -50,10 +52,12 @@ class AddParty5Fragment() : Fragment() {
 
             if(binding.containerPrice.helperText == null){
 
-                binding.btnGoNext.isEnabled = false
                 binding.btnGoNext.text = "Загрузка..."
                 binding.progressBar.visibility = View.VISIBLE
                 binding.content.alpha = 0.62f
+                requireActivity().window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 val name = sharedPreferences.getString("ADD_PARTY_NAME", null)
                 val image = sharedPreferences.getString("ADD_PARTY_IMAGE", null)
@@ -106,6 +110,12 @@ class AddParty5Fragment() : Fragment() {
                     }
                     catch (e: Throwable){
                         Log.e("Ошибка при добавлении данных в таблицу", e.message.toString())
+
+                        Toast.makeText(requireContext(), "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+
+                        binding.progressBar.visibility = View.GONE
+                        binding.content.alpha = 1f
+                        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
                 }
             }

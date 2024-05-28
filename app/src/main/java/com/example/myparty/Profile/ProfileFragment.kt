@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -62,8 +63,12 @@ class ProfileFragment : Fragment() {
 
         user = sharedPreferences.getString("TOKEN_USER", null)
 
-        binding.content.visibility = View.INVISIBLE
+        binding.progressBar.visibility = View.VISIBLE
+        binding.content.visibility = View.GONE
         binding.btnLogOut.visibility = View.INVISIBLE
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         lifecycleScope.launch {
             try{
@@ -76,6 +81,7 @@ class ProfileFragment : Fragment() {
 
                 binding.content.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
+                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 if(userData?.Фото != null) {
                     binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -131,9 +137,12 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnLogOut.setOnClickListener {
-            binding.btnLogOut.isEnabled = false
-            binding.content.alpha = 0.62f
             binding.progressBar.visibility = View.VISIBLE
+            binding.content.alpha = 0.62f
+            requireActivity(). window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
             sharedPreferences.edit().putString("TOKEN_USER", null).apply()
             lifecycleScope.launch {
                 sb.auth.signOut()

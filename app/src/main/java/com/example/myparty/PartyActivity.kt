@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -100,7 +101,7 @@ class PartyActivity : AppCompatActivity() {
                             comment.visibility = View.VISIBLE
                             status.text = "Заблокировано"
                             status.setTextColor(this@PartyActivity.getColor(R.color.red))
-                            comment.text = party.Комментарий
+                            comment.text = "Причина: " + party.Комментарий
                             comment.setTextColor(this@PartyActivity.getColor(R.color.red))
                         }
 
@@ -192,9 +193,11 @@ class PartyActivity : AppCompatActivity() {
 
             binding.btnDelete.setOnClickListener {
 
-                content.alpha = 0.62f
-                progressBar.visibility = View.VISIBLE
-                btnGoBack.visibility = View.GONE
+                binding.progressBar.visibility = View.VISIBLE
+                binding.content.alpha = 0.62f
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 lifecycleScope.launch {
                     sb.from("Избранные_вечеринки").delete {

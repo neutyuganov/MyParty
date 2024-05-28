@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/comment"
+            android:id="@+id/warning"
             style="@style/text_medium_16_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:background="@drawable/button_main_color_selector"
             android:text="Да"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comment" />
+            app:layout_constraintTop_toBottomOf="@+id/warning" />
 
         <Button
             android:id="@+id/btnCancel"

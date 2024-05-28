@@ -68,8 +68,9 @@
                 style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:text="dadsad"
                 android:background="@drawable/edit_text_selector"
-                android:inputType="textEmailAddress"
+                android:inputType="textCapWords"
                 android:lines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>

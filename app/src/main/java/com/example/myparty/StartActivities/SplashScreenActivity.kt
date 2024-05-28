@@ -70,7 +70,14 @@ class SplashScreenActivity : AppCompatActivity() {
 
                                     btnOk.setOnClickListener  {
                                         dialog.dismiss()
-                                        sharedPreferences.edit().putString("TOKEN_USER", null).apply()
+
+                                        val sharedPreferencesFilter = this@SplashScreenActivity.getSharedPreferences("SHARED_PREFS_FILTER", Context.MODE_PRIVATE)
+                                        val sharedPreferencesAddParty = this@SplashScreenActivity.getSharedPreferences("SHARED_PREFS_ADD_PARTY", Context.MODE_PRIVATE)
+
+                                        sharedPreferences.edit().clear().apply()
+                                        sharedPreferencesFilter.edit().clear().apply()
+                                        sharedPreferencesAddParty.edit().clear().apply()
+
                                         val mainIntent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
                                         startActivity(mainIntent)
                                         finish()

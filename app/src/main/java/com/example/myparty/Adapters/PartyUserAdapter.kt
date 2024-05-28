@@ -144,7 +144,7 @@ class PartyUserAdapter (private val partyList: List<PartyDataClass>, private val
                         val balloon = Balloon.Builder(it.context)
                             .setWidth(BalloonSizeSpec.WRAP)
                             .setHeight(BalloonSizeSpec.WRAP)
-                            .setText("Подождите, пока модераторы\nзавершат проверку")
+                            .setText("Подождите, пока модерация\nзавершит проверку")
                             .setTextColorResource(R.color.main_text_color)
                             .setTextSize(12f)
                             .setMarginHorizontal(10)

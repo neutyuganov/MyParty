@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.example.myparty.Adapters.ViewPagerAdapter
@@ -34,9 +35,11 @@ class AdminActivity : AppCompatActivity() {
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         binding.btnLogOut.setOnClickListener {
-            binding.btnLogOut.isEnabled = false
-            binding.content.alpha = 0.62f
             binding.progressBar.visibility = View.VISIBLE
+            binding.content.alpha = 0.62f
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             sharedPreferences.edit().putString("TOKEN_USER", null).apply()
             lifecycleScope.launch {
                 SupabaseConnection.Singleton.sb.auth.signOut()

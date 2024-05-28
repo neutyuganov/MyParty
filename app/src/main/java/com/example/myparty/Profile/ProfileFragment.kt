@@ -143,7 +143,13 @@ class ProfileFragment : Fragment() {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-            sharedPreferences.edit().putString("TOKEN_USER", null).apply()
+            val sharedPreferencesFilter = requireActivity().getSharedPreferences("SHARED_PREFS_FILTER", Context.MODE_PRIVATE)
+            val sharedPreferencesAddParty = requireActivity().getSharedPreferences("SHARED_PREFS_ADD_PARTY", Context.MODE_PRIVATE)
+
+            sharedPreferences.edit().clear().apply()
+            sharedPreferencesFilter.edit().clear().apply()
+            sharedPreferencesAddParty.edit().clear().apply()
+
             lifecycleScope.launch {
                 sb.auth.signOut()
                 val myIntent = Intent(context, LoginActivity::class.java)

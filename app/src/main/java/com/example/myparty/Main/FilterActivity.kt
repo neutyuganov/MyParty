@@ -129,7 +129,7 @@ class FilterActivity : AppCompatActivity() {
                             val fragment = MainFragment()
                             intent.putExtra("FRAGMENT", fragment.javaClass.name)
                             startActivity(intent)
-                            finish()
+                            finishAffinity()
                         }
                         catch (e: Throwable){
                             Log.d("Error", e.toString())
@@ -168,7 +168,7 @@ class FilterActivity : AppCompatActivity() {
                         val fragment = MainFragment()
                         intent.putExtra("FRAGMENT", fragment.javaClass.name)
                         startActivity(intent)
-                        finish()
+                        finishAffinity()
                     }
                     catch (e: Throwable){
                         Log.d("Error", e.toString())

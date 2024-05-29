@@ -115,7 +115,7 @@ class PartyActivity : AppCompatActivity() {
                             if(priceFormat == 0.0 || priceFormat <= 0.001){
                                 btnBuy.text = "Бесплатно"
                             }
-                            if(priceFormat?.rem(1) == 0.0){
+                            else if(priceFormat?.rem(1) == 0.0){
                                 val priceInt = priceFormat.toInt()
                                 btnBuy.text = "Купить проход за $priceInt ₽"
                             }

@@ -75,7 +75,7 @@ class AddParty5Fragment() : Fragment() {
                 val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt()).toString()
                 val time = sharedPreferences.getString("ADD_PARTY_TIME", null)
 
-                val price = binding.textPrice.text.toString().trim().toDouble()
+                val price: Double = if(binding.textPrice.text.toString().trim().toDouble() == 0.0) 0.001 else binding.textPrice.text.toString().trim().toDouble()
 
                 val userId = sb.auth.currentUserOrNull()?.id.toString()
 

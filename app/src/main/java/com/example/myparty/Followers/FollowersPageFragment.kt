@@ -31,6 +31,8 @@ class FollowersPageFragment : Fragment() {
 
     private lateinit var skeleton: Skeleton
 
+    private lateinit var currentUserId: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,86 +45,99 @@ class FollowersPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val currentUserId = sb.auth.currentUserOrNull()?.id.toString()
+        currentUserId = sb.auth.currentUserOrNull()?.id.toString()
 
         skeleton = binding.recycler.applySkeleton(R.layout.item_followers_skeleton, 3)
 
         SkeletonClass().skeletonShow(skeleton, resources)
 
-        Log.e("USERCURRENT", currentUserId)
-
-        val followers = mutableListOf<UserDataClass>()
-
         lifecycleScope.launch {
-            try{
-                val followersResult = sb.from("Подписчики_пользователей").select{
-                    filter {
-                        eq("id_пользователя", currentUserId)
-                    }
-                }.data
+            getFollowers()
+        }
 
-                val jsonArray = JSONArray(followersResult)
+        binding.swipe.setOnRefreshListener {
+            binding.textView.visibility = View.INVISIBLE
+            binding.recycler.visibility = View.VISIBLE
 
-                val userFollowingResult = sb.from("Подписчики_пользователей").select{
-                    filter {
-                        eq("id_подписчика", currentUserId)
-                    }
-                }.data
+            SkeletonClass().skeletonShow(skeleton, resources)
 
-                val jsonArrayUserFollowing = JSONArray(userFollowingResult)
+            lifecycleScope.launch {
+                getFollowers()
+                binding.swipe.isRefreshing = false
+            }
+        }
+    }
 
-                val jsonArrayUserData = JSONArray(sb.from("Пользователи").select{}.data)
+    suspend fun getFollowers()  {
+        val followers = mutableListOf<UserDataClass>()
+        try{
+            val followersResult = sb.from("Подписчики_пользователей").select{
+                filter {
+                    eq("id_пользователя", currentUserId)
+                }
+            }.data
 
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
+            val jsonArray = JSONArray(followersResult)
 
-                    val userId = jsonObject.getString("id_подписчика")
+            val userFollowingResult = sb.from("Подписчики_пользователей").select{
+                filter {
+                    eq("id_подписчика", currentUserId)
+                }
+            }.data
 
-                    var userName = ""
-                    var userVerify = false
-                    var image = ""
-                    for (j in 0 until jsonArrayUserData.length()) {
-                        val jsonObjectFavorites = jsonArrayUserData.getJSONObject(j)
-                        if (jsonObjectFavorites.getString("id") == userId) {
-                            userName = jsonObjectFavorites.getString("Имя")
-                            image = jsonObjectFavorites.getString("Фото")
-                            userVerify = if (jsonObjectFavorites.has("Верификация") && jsonObjectFavorites.get("Верификация") is Boolean) {
-                                jsonObjectFavorites.getBoolean("Верификация")
-                            } else {
-                                // Если значение "Верификации" равно null или не является булевым значением, устанавливаем userVerify в false
-                                false
-                            }
+            val jsonArrayUserFollowing = JSONArray(userFollowingResult)
+
+            val jsonArrayUserData = JSONArray(sb.from("Пользователи").select{}.data)
+
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+
+                val userId = jsonObject.getString("id_подписчика")
+
+                var userName = ""
+                var userVerify = false
+                var image = ""
+                for (j in 0 until jsonArrayUserData.length()) {
+                    val jsonObjectFavorites = jsonArrayUserData.getJSONObject(j)
+                    if (jsonObjectFavorites.getString("id") == userId) {
+                        userName = jsonObjectFavorites.getString("Имя")
+                        image = jsonObjectFavorites.getString("Фото")
+                        userVerify = if (jsonObjectFavorites.has("Верификация") && jsonObjectFavorites.get("Верификация") is Boolean) {
+                            jsonObjectFavorites.getBoolean("Верификация")
+                        } else {
+                            // Если значение "Верификации" равно null или не является булевым значением, устанавливаем userVerify в false
+                            false
                         }
                     }
+                }
 
-                    var isFollow = true
-                    for (j in 0 until jsonArrayUserFollowing.length()) {
-                        val jsonObjectFavorites = jsonArrayUserFollowing.getJSONObject(j)
-                        if (jsonObjectFavorites.getString("id_пользователя") == userId) {
-                            isFollow = false
-                        }
+                var isFollow = true
+                for (j in 0 until jsonArrayUserFollowing.length()) {
+                    val jsonObjectFavorites = jsonArrayUserFollowing.getJSONObject(j)
+                    if (jsonObjectFavorites.getString("id_пользователя") == userId) {
+                        isFollow = false
                     }
-                    val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Статус_подписки = isFollow, Фото = image)
-
-                    followers.add(follower)
                 }
+                val follower = UserDataClass(id = userId, Имя = userName, Верификация = userVerify, Статус_подписки = isFollow, Фото = image)
 
-                Log.e("Подписчик_вывод", followers.toString())
-
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-
-                skeleton.showOriginal()
-                binding.recycler.adapter = FollowersAdapter(followers, coroutineScope)
-
+                followers.add(follower)
             }
-            catch (e: Throwable){
-                Log.e("Ошибка получения данных", e.message.toString())
-            }
-            finally{
-                if(followers.isEmpty()){
-                    binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
-                }
+
+            Log.e("Подписчик_вывод", followers.toString())
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+
+            skeleton.showOriginal()
+            binding.recycler.adapter = FollowersAdapter(followers, coroutineScope)
+
+        }
+        catch (e: Throwable){
+            Log.e("Ошибка получения данных", e.message.toString())
+        }
+        finally{
+            if(followers.isEmpty()){
+                binding.textView.visibility = View.VISIBLE
+                binding.recycler.visibility = View.GONE
             }
         }
     }

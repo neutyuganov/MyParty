@@ -51,68 +51,81 @@ class ProfileOrganizatorBeforePartyFragment : Fragment() {
 
         SkeletonClass().skeletonShow(skeleton, resources)
 
-        val parties = mutableListOf<PartyDataClass>()
-
         lifecycleScope.launch {
-            try{
-                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
-                    filter {
-                        lt("Дата", LocalDate.now())
-                        eq("id_пользователя", userId)
-                        neq("id_статуса_проверки", "2")
-                    }
-                } .data
-
-                val jsonArray = JSONArray(partiesResult)
-
-                val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
-                    filter {
-                        eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
-                    }
-                }.data
-
-                val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
-
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
-                    val id = jsonObject.getInt("id")
-                    val userId = jsonObject.getString("id_пользователя")
-                    val name = jsonObject.getString("Название")
-                    val date = jsonObject.getString("Дата")
-                    val time = jsonObject.getString("Время")
-                    val place = jsonObject.getString("Место")
-                    val price = jsonObject.getDouble("Цена")
-                    val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
-                    val image = jsonObject.getString("Фото")
-                    val age = ageObject.getInt("Возраст")
-                    val statusObject = jsonObject.getJSONObject("Статусы_проверки")
-                    val status = statusObject.getString("Название")
-                    var favorite = false
-                    for (j in 0 until jsonArrayFavorites.length()) {
-                        val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
-                        if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
-                            favorite = true
-                        }
-                    }
-                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image, Избранное = favorite)
-                    parties.add(event)
-                }
-
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = PartyAdapter(parties, coroutineScope)
-                binding.recycler.adapter = partyAdapter
-            }
-            catch (e: Throwable){
-                Log.e("Ошибка получения данных вечеринки", e.message.toString())
-            }
-            finally{
-                if(parties.isEmpty()){
-                    binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
-                }
-            }
+            getParties(userId)
         }
 
+        binding.swipe.setOnRefreshListener {
+            binding.textView.visibility = View.INVISIBLE
+            binding.recycler.visibility = View.VISIBLE
+
+            SkeletonClass().skeletonShow(skeleton, resources)
+
+            lifecycleScope.launch {
+                getParties(userId)
+                binding.swipe.isRefreshing = false
+            }
+        }
     }
 
+    suspend fun getParties(userId: String){
+        val parties = mutableListOf<PartyDataClass>()
+        try{
+            val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
+                filter {
+                    lt("Дата", LocalDate.now())
+                    eq("id_пользователя", userId)
+                    neq("id_статуса_проверки", "2")
+                }
+            } .data
+
+            val jsonArray = JSONArray(partiesResult)
+
+            val partiesFavoritesResult = sb.from("Избранные_вечеринки").select() {
+                filter {
+                    eq("id_пользователя", sb.auth.currentUserOrNull()?.id.toString())
+                }
+            }.data
+
+            val jsonArrayFavorites = JSONArray(partiesFavoritesResult)
+
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val id = jsonObject.getInt("id")
+                val userId = jsonObject.getString("id_пользователя")
+                val name = jsonObject.getString("Название")
+                val date = jsonObject.getString("Дата")
+                val time = jsonObject.getString("Время")
+                val place = jsonObject.getString("Место")
+                val price = jsonObject.getDouble("Цена")
+                val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
+                val image = jsonObject.getString("Фото")
+                val age = ageObject.getInt("Возраст")
+                val statusObject = jsonObject.getJSONObject("Статусы_проверки")
+                val status = statusObject.getString("Название")
+                var favorite = false
+                for (j in 0 until jsonArrayFavorites.length()) {
+                    val jsonObjectFavorites = jsonArrayFavorites.getJSONObject(j)
+                    if (jsonObjectFavorites.getInt("id_вечеринки") == id) {
+                        favorite = true
+                    }
+                }
+                val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image, Избранное = favorite)
+                parties.add(event)
+            }
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+            val partyAdapter = PartyAdapter(parties, coroutineScope)
+            binding.recycler.adapter = partyAdapter
+        }
+        catch (e: Throwable){
+            Log.e("Ошибка получения данных вечеринки", e.message.toString())
+        }
+        finally{
+            if(parties.isEmpty()){
+                binding.textView.visibility = View.VISIBLE
+                binding.recycler.visibility = View.GONE
+            }
+        }
+    }
 }

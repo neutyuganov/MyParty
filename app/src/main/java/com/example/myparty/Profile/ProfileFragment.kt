@@ -93,14 +93,16 @@ class ProfileFragment : Fragment() {
 
                 binding.progressBarImage.visibility = View.GONE
 
-                setupViewPager(binding.viewPager)
-                binding.tabLayout.setupWithViewPager(binding.viewPager)
-
                 binding.btnLogOut.visibility = View.VISIBLE
             }
             catch(e:Throwable){
                 Log.e("ProfileFragment вывод данных", e.message.toString())
             }
+        }
+
+        lifecycleScope.launch  {
+            setupViewPager(binding.viewPager)
+            binding.tabLayout.setupWithViewPager(binding.viewPager)
         }
 
         val balloon = Balloon.Builder(requireContext())
@@ -166,26 +168,24 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun setupViewPager(viewPager: ViewPager) {
+    suspend fun setupViewPager(viewPager: ViewPager) {
 
         val adapter = ViewPagerAdapter(childFragmentManager)
 
         adapter.addFragment(ActualPartyFragment(), "Активные")
         adapter.addFragment(BeforePartyFragment(), "Прошедшие")
 
-        lifecycleScope.launch {
-            try{
-                if(sb.from("Вечеринки").select {
-                        filter {
-                            eq("id_пользователя", user!!)
-                            eq("id_статуса_проверки", "2")
-                        }
-                    }.decodeList<PartyDataClass>().isNotEmpty()) adapter.addFragment(BanPartyFragment(), "Заблокированные")
-                viewPager.adapter = adapter
-            }
-            catch(e:Throwable){
-                Log.e("ProfileFragment заполнение ViewPager", e.message.toString())
-            }
+        try{
+            if(sb.from("Вечеринки").select {
+                    filter {
+                        eq("id_пользователя", user!!)
+                        eq("id_статуса_проверки", "2")
+                    }
+                }.decodeList<PartyDataClass>().isNotEmpty()) adapter.addFragment(BanPartyFragment(), "Заблокированные")
+            viewPager.adapter = adapter
+        }
+        catch(e:Throwable){
+            Log.e("ProfileFragment заполнение ViewPager", e.message.toString())
         }
     }
 

@@ -59,19 +59,26 @@
         app:layout_constraintTop_toTopOf="@+id/button_place" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="5dp"
         android:layout_marginTop="5dp"
-        tools:listitem="@layout/item_party"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_place"
-        app:spanCount="2" />
+        app:layout_constraintTop_toBottomOf="@+id/button_place">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            tools:listitem="@layout/item_party"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/textView"
@@ -83,9 +90,9 @@
         android:text="Вечеринок пока нет,\nвозвращайтесь позже"
         android:textColor="@color/secondary_text_color"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler"
+        app:layout_constraintBottom_toBottomOf="@+id/swipe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recycler" />
+        app:layout_constraintTop_toTopOf="@+id/swipe" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

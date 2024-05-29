@@ -33,8 +33,6 @@ class AdminPartiesFragment : Fragment() {
 
     private lateinit var binding: FragmentAdminPartiesBinding
 
-    private val parties = mutableListOf<PartyDataClass>()
-
     private lateinit var skeleton: Skeleton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
@@ -50,52 +48,69 @@ class AdminPartiesFragment : Fragment() {
         SkeletonClass().skeletonShow(skeleton, resources)
 
         lifecycleScope.launch {
-            try{
-                val partiesResult = sb.from("Вечеринки").select {
-                        filter {
-                            eq("id_статуса_проверки", 1)
-                        }
-                    }.data
+            getParties()
+        }
 
-                val jsonArrayParties = JSONArray(partiesResult)
+        binding.swipe.setOnRefreshListener {
+            binding.textView.visibility = View.INVISIBLE
+            binding.recycler.visibility = View.VISIBLE
 
-                for (i in 0 until jsonArrayParties.length()) {
-                    val jsonObject = jsonArrayParties.getJSONObject(i)
-                    val id = jsonObject.getInt("id")
-                    val name = jsonObject.getString("Название")
-                    val date = jsonObject.getString("Дата")
-                    val time = jsonObject.getString("Время")
-                    val place = jsonObject.getString("Место")
-                    val price = jsonObject.getDouble("Цена")
-                    val image = jsonObject.getString("Фото")
+            SkeletonClass().skeletonShow(skeleton, resources)
 
-                    val event = PartyDataClass(
-                        id = id,
-                        Название = name,
-                        Дата = date,
-                        Время = time,
-                        Место = place,
-                        Цена = price,
-                        Фото = image
-                    )
-
-                    Log.d("AdminPartiesFragment", event.id.toString())
-                    parties.add(event)
-                }
-
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = AdminPartyAdapter(parties, coroutineScope)
-                binding.recycler.adapter = partyAdapter
+            lifecycleScope.launch {
+                getParties()
+                binding.swipe.isRefreshing = false
             }
-            catch (e: Throwable){
-                Log.d("AdminPartiesFragment", e.toString())
-                Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG).show()
-            }
-            finally {
-                if (parties.isEmpty()) {
-                    binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
+        }
+    }
+
+    suspend fun getParties(){
+        val parties = mutableListOf<PartyDataClass>()
+        try{
+            val partiesResult = sb.from("Вечеринки").select {
+                filter {
+                    eq("id_статуса_проверки", 1)
                 }
+            }.data
+
+            val jsonArrayParties = JSONArray(partiesResult)
+
+            for (i in 0 until jsonArrayParties.length()) {
+                val jsonObject = jsonArrayParties.getJSONObject(i)
+                val id = jsonObject.getInt("id")
+                val name = jsonObject.getString("Название")
+                val date = jsonObject.getString("Дата")
+                val time = jsonObject.getString("Время")
+                val place = jsonObject.getString("Место")
+                val price = jsonObject.getDouble("Цена")
+                val image = jsonObject.getString("Фото")
+
+                val event = PartyDataClass(
+                    id = id,
+                    Название = name,
+                    Дата = date,
+                    Время = time,
+                    Место = place,
+                    Цена = price,
+                    Фото = image
+                )
+
+                Log.d("AdminPartiesFragment", event.id.toString())
+                parties.add(event)
+            }
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+            val partyAdapter = AdminPartyAdapter(parties, coroutineScope)
+            binding.recycler.adapter = partyAdapter
+        }
+        catch (e: Throwable){
+            Log.d("AdminPartiesFragment", e.toString())
+            Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG).show()
+        }
+        finally {
+            if (parties.isEmpty()) {
+                binding.textView.visibility = View.VISIBLE
+                binding.recycler.visibility = View.INVISIBLE
             }
         }
     }

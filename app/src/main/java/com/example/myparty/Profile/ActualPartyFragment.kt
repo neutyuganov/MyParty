@@ -32,7 +32,11 @@ class ActualPartyFragment : Fragment() {
 
     private lateinit var skeleton: Skeleton
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentActualPartyBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,53 +50,79 @@ class ActualPartyFragment : Fragment() {
 
         SkeletonClass().skeletonShow(skeleton, resources)
 
-        val parties = mutableListOf<PartyDataClass>()
-
         lifecycleScope.launch {
-            try{
-                val partiesResult = sb.from("Вечеринки").select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")){
+            getParties(currentUserId)
+        }
+
+        binding.swipe.setOnRefreshListener {
+            binding.textView.visibility = View.INVISIBLE
+            binding.recycler.visibility = View.VISIBLE
+
+            SkeletonClass().skeletonShow(skeleton, resources)
+
+            lifecycleScope.launch {
+                getParties(currentUserId)
+                binding.swipe.isRefreshing = false
+            }
+        }
+
+    }
+
+    suspend fun getParties(currentUserId: String) {
+        val parties = mutableListOf<PartyDataClass>()
+        try {
+            val partiesResult = sb.from("Вечеринки")
+                .select(Columns.raw("*, Возрастное_ограничение(Возраст), Статусы_проверки(Название)")) {
                     filter {
                         gte("Дата", LocalDate.now())
                         eq("id_пользователя", currentUserId)
                         neq("id_статуса_проверки", "2")
                     }
-                } .data
+                }.data
 
-                val jsonArray = JSONArray(partiesResult)
+            val jsonArray = JSONArray(partiesResult)
 
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
-                    val id = jsonObject.getInt("id")
-                    val userId = jsonObject.getString("id_пользователя")
-                    val name = jsonObject.getString("Название")
-                    val date = jsonObject.getString("Дата")
-                    val time = jsonObject.getString("Время")
-                    val place = jsonObject.getString("Место")
-                    val price = jsonObject.getDouble("Цена")
-                    val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
-                    val age = ageObject.getInt("Возраст")
-                    val image = jsonObject.getString("Фото")
-                    val statusObject = jsonObject.getJSONObject("Статусы_проверки")
-                    val status = statusObject.getString("Название")
-                    val comment = jsonObject.getString("Комментарий")
-                    val event = PartyDataClass(id = id, Название = name, id_пользователя = userId, Дата = date, Время = time, Место = place, Цена = price, Возраст = age, Статус_проверки = status, Фото = image, Комментарий = comment)
-                    parties.add(event)
-                }
-
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = PartyUserAdapter(parties, coroutineScope)
-                binding.recycler.adapter = partyAdapter
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val id = jsonObject.getInt("id")
+                val userId = jsonObject.getString("id_пользователя")
+                val name = jsonObject.getString("Название")
+                val date = jsonObject.getString("Дата")
+                val time = jsonObject.getString("Время")
+                val place = jsonObject.getString("Место")
+                val price = jsonObject.getDouble("Цена")
+                val ageObject = jsonObject.getJSONObject("Возрастное_ограничение")
+                val age = ageObject.getInt("Возраст")
+                val image = jsonObject.getString("Фото")
+                val statusObject = jsonObject.getJSONObject("Статусы_проверки")
+                val status = statusObject.getString("Название")
+                val comment = jsonObject.getString("Комментарий")
+                val event = PartyDataClass(
+                    id = id,
+                    Название = name,
+                    id_пользователя = userId,
+                    Дата = date,
+                    Время = time,
+                    Место = place,
+                    Цена = price,
+                    Возраст = age,
+                    Статус_проверки = status,
+                    Фото = image,
+                    Комментарий = comment
+                )
+                parties.add(event)
             }
-            catch (e: Throwable){
-                Log.e("Ошибка получения данных вечеринки", e.message.toString())
-            }
-            finally{
-                if(parties.isEmpty()){
-                    binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
-                }
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+            val partyAdapter = PartyUserAdapter(parties, coroutineScope)
+            binding.recycler.adapter = partyAdapter
+        } catch (e: Throwable) {
+            Log.e("Ошибка получения данных вечеринки", e.message.toString())
+        } finally {
+            if (parties.isEmpty()) {
+                binding.textView.visibility = View.VISIBLE
+                binding.recycler.visibility = View.GONE
             }
         }
-
     }
 }

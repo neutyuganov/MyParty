@@ -241,11 +241,7 @@ class CreateProfileActivity : AppCompatActivity() {
 
     private fun validText(container: TextInputLayout, text: String, type: String): String? {
         val maxLength = container.counterMaxLength
-        if(type == "ник"){
-            if(!Pattern.compile("^[a-zA-Z1-9]+$").toRegex().matches(text)) {
-                return "Можно использовать только латинские буквы"
-            }
-        }
+
         if(text.length > maxLength){
             return if(type == "ник"){
                 "Слишком длинный $type"
@@ -256,6 +252,11 @@ class CreateProfileActivity : AppCompatActivity() {
         if(type == "имя или название организации" || type == "ник"){
             if(text.isEmpty()){
                 return "Это обязательное поле"
+            }
+        }
+        if(type == "ник"){
+            if(!Pattern.compile("^[a-zA-Z1-9]+$").toRegex().matches(text)) {
+                return "Можно использовать только латинские буквы"
             }
         }
         return null

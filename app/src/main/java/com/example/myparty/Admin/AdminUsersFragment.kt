@@ -31,8 +31,6 @@ class AdminUsersFragment : Fragment() {
 
     private lateinit var binding: FragmentAdminUsersBinding
 
-    private val users = mutableListOf<UserDataClass>()
-
     private lateinit var skeleton: Skeleton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
@@ -48,49 +46,66 @@ class AdminUsersFragment : Fragment() {
         SkeletonClass().skeletonShow(skeleton, resources)
 
         lifecycleScope.launch {
-            try{
-                val usersResult = sb.from("Пользователи").select {
-                    filter {
-                        eq("id_статуса_проверки", 1)
-                    }
-                }.data
+            getParties()
+        }
 
-                val jsonArrayUsers = JSONArray(usersResult)
+        binding.swipe.setOnRefreshListener {
+            binding.textView.visibility = View.INVISIBLE
+            binding.recycler.visibility = View.VISIBLE
 
-                for (i in 0 until jsonArrayUsers.length()) {
-                    val jsonObject = jsonArrayUsers.getJSONObject(i)
-                    val id = jsonObject.getString("id")
-                    val name = jsonObject.getString("Имя")
-                    val nick = jsonObject.getString("Ник")
-                    val verify = jsonObject.getBoolean("Верификация")
-                    val description= jsonObject.getString("Описание")
-                    val image = jsonObject.getString("Фото")
+            SkeletonClass().skeletonShow(skeleton, resources)
 
-                    val user = UserDataClass(
-                        id = id,
-                        Имя = name,
-                        Верификация   = verify,
-                        Ник = nick,
-                        Описание  = description,
-                        Фото  = image
-                    )
-
-                    users.add(user)
-                }
-
-                val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = AdminUserAdapter(users, coroutineScope)
-                binding.recycler.adapter = partyAdapter
+            lifecycleScope.launch {
+                getParties()
+                binding.swipe.isRefreshing = false
             }
-            catch (e: Throwable){
-                Log.d("AdminPartiesFragment", e.toString())
-                Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG).show()
-            }
-            finally {
-                if (users.isEmpty()) {
-                    binding.textView.visibility = View.VISIBLE
-                    binding.recycler.visibility = View.GONE
+        }
+    }
+
+    suspend fun getParties(){
+        val users = mutableListOf<UserDataClass>()
+        try{
+            val usersResult = sb.from("Пользователи").select {
+                filter {
+                    eq("id_статуса_проверки", 1)
                 }
+            }.data
+
+            val jsonArrayUsers = JSONArray(usersResult)
+
+            for (i in 0 until jsonArrayUsers.length()) {
+                val jsonObject = jsonArrayUsers.getJSONObject(i)
+                val id = jsonObject.getString("id")
+                val name = jsonObject.getString("Имя")
+                val nick = jsonObject.getString("Ник")
+                val verify = jsonObject.getBoolean("Верификация")
+                val description= jsonObject.getString("Описание")
+                val image = jsonObject.getString("Фото")
+
+                val user = UserDataClass(
+                    id = id,
+                    Имя = name,
+                    Верификация   = verify,
+                    Ник = nick,
+                    Описание  = description,
+                    Фото  = image
+                )
+
+                users.add(user)
+            }
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+            val partyAdapter = AdminUserAdapter(users, coroutineScope)
+            binding.recycler.adapter = partyAdapter
+        }
+        catch (e: Throwable){
+            Log.d("AdminPartiesFragment", e.toString())
+            Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG).show()
+        }
+        finally {
+            if (users.isEmpty()) {
+                binding.textView.visibility = View.VISIBLE
+                binding.recycler.visibility = View.INVISIBLE
             }
         }
     }

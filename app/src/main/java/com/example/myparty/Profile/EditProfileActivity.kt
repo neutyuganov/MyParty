@@ -60,6 +60,7 @@ class EditProfileActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.content.visibility = View.GONE
         binding.btnSave.visibility = View.INVISIBLE
+        binding.verifyTg.visibility = View.INVISIBLE
 
         val spanText = SpannableString("Свяжитесь с нами в Telegram, для получения статуса верефицированной организации")
 
@@ -115,6 +116,7 @@ class EditProfileActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.GONE
                 binding.content.visibility = View.VISIBLE
                 binding.btnSave.visibility = View.VISIBLE
+                binding.verifyTg.visibility = View.VISIBLE
             }
         }
 

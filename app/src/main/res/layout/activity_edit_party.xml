@@ -314,6 +314,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:boxBackgroundMode="outline"
+                android:layout_marginBottom="10dp"
                 app:counterOverflowTextAppearance="@style/helper_text_medium_12_style_over"
                 app:counterTextAppearance="@style/helper_text_medium_12_style"
                 app:helperTextTextAppearance="@style/helper_text_medium_12_style_over">

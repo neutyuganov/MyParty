@@ -5,12 +5,18 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -22,6 +28,7 @@ import com.example.myparty.DataClasses.PartyDataClass
 import com.example.myparty.DataClasses.UserDataClass
 import com.example.myparty.MainActivity
 import com.example.myparty.R
+import com.example.myparty.StartActivities.RulesActivity
 import com.example.myparty.SupabaseConnection.Singleton.sb
 import com.example.myparty.databinding.ActivityEditPartyBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -68,7 +75,6 @@ class EditPartyActivity : AppCompatActivity() {
         focusedListener(binding.containerSlogan, binding.textSlogan)
         focusedListener(binding.containerCity, binding.textCity)
         focusedListener(binding.containerPlace, binding.textPlace)
-
 
         binding.btnGoBack.setOnClickListener {
             finish()

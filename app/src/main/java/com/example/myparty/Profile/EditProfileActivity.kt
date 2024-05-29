@@ -3,12 +3,18 @@ package com.example.myparty.Profile
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -54,6 +60,22 @@ class EditProfileActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.content.visibility = View.GONE
         binding.btnSave.visibility = View.INVISIBLE
+
+        val spanText = SpannableString("Свяжитесь с нами в Telegram, для получения статуса верефицированной организации")
+
+        val clickableSpan: ClickableSpan = object : ClickableSpan() {
+            override fun onClick(view: View) {
+                val telegram = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/my_party_support"))
+                telegram.setPackage("org.telegram.messenger")
+                startActivity(telegram)
+            }
+        }
+        spanText.setSpan(clickableSpan, 19, 27, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // Установите текст и кликабельность на определенном слове
+        binding.verifyTg.setText(spanText)
+        binding.verifyTg.setMovementMethod(LinkMovementMethod.getInstance())
+        binding.verifyTg.setHighlightColor(Color.TRANSPARENT)
 
         binding.btnGoBack.setOnClickListener {
             finish()

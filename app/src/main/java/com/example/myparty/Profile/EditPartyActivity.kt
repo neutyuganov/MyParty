@@ -81,6 +81,7 @@ class EditPartyActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
+            // Проверка введенных данных
             takeHelperText(binding.containerName, binding.textName)
             takeHelperText(binding.containerDate, binding.textDate)
             takeHelperText(binding.containerTime, binding.textTime)
@@ -90,10 +91,9 @@ class EditPartyActivity : AppCompatActivity() {
             takeHelperText(binding.containerPlace, binding.textPlace)
             takeHelperText(binding.containerPrice, binding.textPrice)
 
-            Log.e("TAG", image.toString())
-
             if(binding.containerName.helperText == null && binding.containerDate.helperText == null && binding.containerTime.helperText == null && binding.containerDescription.helperText == null && binding.containerSlogan.helperText == null && binding.containerCity.helperText == null && binding.containerPlace.helperText == null && binding.containerPrice.helperText == null && image!= null){
 
+                // Установка загрузки и неактивности элементов
                 binding.progressBar.visibility = View.VISIBLE
                 binding.content.alpha = 0.62f
                 window.setFlags(
@@ -102,24 +102,29 @@ class EditPartyActivity : AppCompatActivity() {
 
                 lifecycleScope.launch {
                     try{
+                        // Вывод названия изображения вечеринки
                         val imageId = sb.postgrest["Вечеринки"].select {
                             filter {
                                 eq("id", partyId)
                             }
                         }.decodeSingle<PartyDataClass>().Фото
 
+                        // Загрузка изображения
                         val bucket = sb.storage.from("images")
                         bucket.upload(imageId.toString(), image!!, upsert = true)
 
                         val date = binding.textDate.text.toString().trim().split('.')
                         val currentDate = LocalDate.of(date[2].toInt(), date[1].toInt(), date[0].toInt())
 
+                        // Обновление данных вечеринки
                         val partyData = PartyDataClass(Название = binding.textName.text.toString().trim(), Дата = currentDate.toString(), Время = binding.textTime.text.toString().trim(), Описание = binding.textDescription.text.toString().trim(), Слоган = binding.textSlogan.text.toString().trim(), Город = binding.textCity.text.toString().trim(), Место = binding.textPlace.text.toString().trim(), Цена = if(binding.textPrice.text.toString().trim().toDouble() == 0.0) 0.001 else binding.textPrice.text.toString().trim().toDouble(), id_статуса_проверки = 1)
                         sb.postgrest["Вечеринки"].update(partyData){
                             filter{
                                 eq("id", partyId)
                             }
                         }
+
+                        // Переход на экран профля
                         val intent = Intent(this@EditPartyActivity, MainActivity::class.java)
                         val fragment = ProfileFragment()
                         intent.putExtra("FRAGMENT", fragment.javaClass.name)
@@ -128,6 +133,8 @@ class EditPartyActivity : AppCompatActivity() {
                     }
                     catch (e: Throwable){
                         Log.e("TAG", e.toString())
+
+                        // Отключение загрузки и переход в активное состоянеие элементов
                         binding.progressBar.visibility = View.GONE
                         binding.content.alpha = 1f
                         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

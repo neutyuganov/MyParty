@@ -104,6 +104,7 @@ class CreateProfileActivity : AppCompatActivity() {
 
         })
 
+
         binding.imageUser.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -282,7 +283,7 @@ class CreateProfileActivity : AppCompatActivity() {
                 binding.btnDelete.visibility = View.VISIBLE
             }
             catch (e: Exception){
-                Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
+                Log.d("Ошибка добавления изображения", "onActivityResult: ${e.message}")
             }
 
         }

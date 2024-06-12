@@ -54,22 +54,28 @@ class LoginActivity : AppCompatActivity() {
         focusedListener(binding.containerPassword, binding.textPassword)
 
         binding.goLogIn.setOnClickListener{
+            // Проверяем, введенные данные
             takeHelperText(binding.containerEmail, binding.textEmail)
             takeHelperText(binding.containerPassword, binding.textPassword)
+
             binding.textError.isVisible = false
             if(validText(binding.textEmail.text.toString().trim(), 1) == null && validText(binding.textPassword.text.toString().trim(), 0) == null){
                 lifecycleScope.launch {
+
+                    // Установка загрузки и неактивности элементов
                     binding.progressBar.visibility = View.VISIBLE
                     binding.content.alpha = 0.62f
                     window.setFlags(
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     try{
+                        // Авторизация
                         sb.auth.signInWith(Email){
                             email = binding.textEmail.text.toString().trim()
                             password = binding.textPassword.text.toString().trim()
                         }
 
+                        // Сохранение данных пользователя
                         sharedPreferences.edit().putString("TOKEN_USER", sb.auth.currentUserOrNull()?.id.toString()).apply()
 
                         user = sharedPreferences.getString("TOKEN_USER", null)
@@ -83,8 +89,12 @@ class LoginActivity : AppCompatActivity() {
                                 }
                             }.decodeSingle<UserDataClass>()
 
+                            // Проверка роли пользователя
                             if(users.id_роли == 1) {
+                                // Проверка на наличии блокировки пользователя
                                 if(users.id_статуса_проверки == 2) {
+
+                                    // Вывод диалогового окна
                                     val dialog  = Dialog(this@LoginActivity)
                                     dialog.setContentView(R.layout.dialog_item)
                                     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -107,6 +117,8 @@ class LoginActivity : AppCompatActivity() {
 
                                     dialog.show()
                                 }
+
+                                // Проврека на наличие ника пользователя
                                 else if (users.Ник == null) {
                                     val mainIntent = Intent(this@LoginActivity, CreateProfileActivity::class.java)
                                     startActivity(mainIntent)
@@ -119,6 +131,7 @@ class LoginActivity : AppCompatActivity() {
                                 }
                             }
                             else if(users.id_роли == 2) {
+                                // Если пользователь администратор
                                 val mainIntent = Intent(this@LoginActivity, AdminActivity::class.java)
                                 startActivity(mainIntent)
                                 finish()
@@ -130,7 +143,9 @@ class LoginActivity : AppCompatActivity() {
                     }
                     catch (e: Exception){
                         Log.e("ERROR", e.message.toString())
+                        // Проврека ошибки
                         if(e.message.toString().startsWith("invalid_grant (Invalid login credentials)") ){
+                            // Если ошибка связана неверными введенными данными то выводим текст с ошибкой Неверный email или пароль
                             binding.textError.isVisible = true
                             binding.progressBar.visibility = View.GONE
                             binding.content.alpha = 1f

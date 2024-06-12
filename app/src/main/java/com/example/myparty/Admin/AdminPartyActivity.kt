@@ -55,6 +55,8 @@ class AdminPartyActivity : AppCompatActivity() {
         }
 
         binding.btnBan.setOnClickListener  {
+
+            // Создание диалогового окна
             val dialog  = Dialog(this@AdminPartyActivity)
             dialog.setContentView(R.layout.dialog_item_edittext)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -63,19 +65,25 @@ class AdminPartyActivity : AppCompatActivity() {
             val btnCancel  = dialog.findViewById<Button>(R.id.btnCancel)
             val btnBun = dialog.findViewById<Button>(R.id.btnBun)
 
+            // Закрытие окна при нажатии кнопки "Отмена"
             btnCancel.setOnClickListener  {
                 dialog.dismiss()
             }
 
             btnBun.setOnClickListener {
                 val reason = editText.text.toString().trim()
+                // Проврека на наличии текста причины блокировки
                 if (reason.isNotEmpty()) {
+
+                    // Блокировка интерфейса на время обработки запроса
                     btnCancel.isEnabled = false
                     btnBun.isEnabled  = false
                     editText.isEnabled = false
                     btnBun.text  =  "Загрузка..."
                     lifecycleScope.launch {
                         try {
+
+                            // Обновление данных вечеринки
                             sb.from("Вечеринки").update(
                                 PartyDataClass(
                                     id_статуса_проверки = 2,
@@ -94,6 +102,8 @@ class AdminPartyActivity : AppCompatActivity() {
                         } catch (e: Throwable) {
                             Log.e("Error", e.toString())
                             Toast.makeText(this@AdminPartyActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
+
+                            // Разблокировка интерфейса
                             btnCancel.isEnabled = true
                             btnBun.isEnabled  = true
                             editText.isEnabled = true
@@ -109,6 +119,8 @@ class AdminPartyActivity : AppCompatActivity() {
         }
 
         binding.btnCorrect.setOnClickListener {
+
+            // Установка загрузки и неактивности элементов
             binding.progressBar.visibility = View.VISIBLE
             binding.content.alpha = 0.62f
             window.setFlags(
@@ -117,6 +129,8 @@ class AdminPartyActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try{
+
+                    // Обновление данных вечеринки
                     sb.from("Вечеринки").update(PartyDataClass(id_статуса_проверки = 3, Комментарий  =  null))  {
                         filter {
                             eq("id", partyId)
@@ -131,9 +145,9 @@ class AdminPartyActivity : AppCompatActivity() {
                     Log.e("Error", e.toString())
                     Toast.makeText(this@AdminPartyActivity, "Что-то пошло не так", Toast.LENGTH_SHORT).show()
 
+                    // Отключение загрузки и переход в активное состоянеие элементов
                     binding.progressBar.visibility = View.GONE
                     binding.content.alpha = 1f
-
                 }
             }
         }

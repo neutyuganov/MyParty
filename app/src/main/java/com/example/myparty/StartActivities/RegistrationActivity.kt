@@ -79,6 +79,8 @@ class RegistrationActivity : AppCompatActivity() {
                     // Создание корутина для взаимодействия с базой даных
                     lifecycleScope.launch {
                         try{
+
+                            // Установка загрузки и неактивности элементов
                             binding.progressBar.visibility = View.VISIBLE
                             binding.content.alpha = 0.62f
                             window.setFlags(
@@ -108,8 +110,6 @@ class RegistrationActivity : AppCompatActivity() {
                                 val userAdd = UserDataClass(id = user?.id.toString().trim(), id_статуса_проверки = 1, id_роли = 1,  Почта = user?.email.toString().trim())
                                 sb.postgrest["Пользователи"].insert(userAdd)
 
-                                Log.e("create profile", userAdd.toString())
-
                                 // Переход на экран создания профиля пользователя
                                 val myIntent = Intent(this@RegistrationActivity, CreateProfileActivity::class.java)
                                 startActivity(myIntent)
@@ -127,6 +127,8 @@ class RegistrationActivity : AppCompatActivity() {
                         }
                         catch (e: Exception){
                             Log.e("ERROR", e.message.toString())
+
+                            // Отключение загрузки и переход в активное состоянеие элементов
                             binding.progressBar.visibility = View.GONE
                             binding.content.alpha = 1f
                             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

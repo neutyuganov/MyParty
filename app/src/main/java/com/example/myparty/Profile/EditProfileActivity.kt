@@ -66,7 +66,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(view: View) {
-                val telegram = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/my_party_support"))
+                val telegram = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/m_p_support"))
                 telegram.setPackage("org.telegram.messenger")
                 startActivity(telegram)
             }
@@ -177,6 +177,7 @@ class EditProfileActivity : AppCompatActivity() {
         focusedListener(binding.containerName, binding.textName)
         focusedListener(binding.containerDescription, binding.textDescription)
 
+        // Загрузка изображения из галереи при нажатии на кнопку
         binding.imageUser.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -184,6 +185,7 @@ class EditProfileActivity : AppCompatActivity() {
             binding.imageUser.isEnabled = false
         }
 
+        // Удаление изображения при нажатии на кнопку
         binding.btnDelete.setOnClickListener {
             binding.imageUser.scaleType = ImageView.ScaleType.CENTER
             binding.imageUser.setImageResource(R.drawable.plus)
@@ -239,6 +241,8 @@ class EditProfileActivity : AppCompatActivity() {
 
                 try{
                     lifecycleScope.launch {
+
+                        // Проверка на наличие дубликатов ника
                         if (sb.postgrest["Пользователи"].select {
                                 filter {
                                     eq("Ник", binding.textNick.text.toString().trim())
@@ -253,14 +257,13 @@ class EditProfileActivity : AppCompatActivity() {
                         else{
                             var uuid: String? = null
                             try{
+
+                                // Проверка наличия фото пользователя
                                 val imageDB = sb.postgrest["Пользователи"].select {
                                     filter {
                                         eq("id", sb.auth.currentUserOrNull()?.id.toString())
                                     }
                                 }.decodeSingle<UserDataClass>().Фото
-
-                                Log.e("imageDB", imageDB.toString())
-                                Log.e("image", image.toString())
 
                                 if(imageDB != null){
                                     if(image == null){
@@ -289,6 +292,7 @@ class EditProfileActivity : AppCompatActivity() {
                                 Log.e("Error!!!", e.toString())
                             }
 
+                            // Обновление данных пользователя
                             val userAdd = UserDataClass(Ник = binding.textNick.text.toString().trim().toLowerCase(), Имя = binding.textName.text.toString().trim(), Описание = if(binding.textDescription.text.toString().trim().isEmpty()) null else binding.textDescription.text.toString().trim(), id_статуса_проверки = 1, Фото = uuid)
                             sb.postgrest["Пользователи"].update(userAdd){
                                 filter{
@@ -314,11 +318,11 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    // Метод определяющий обработку полученной картинки из галереи
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 100 && resultCode == RESULT_OK) {
-
             try{
                 val selectedImage = data?.data
 
@@ -326,20 +330,24 @@ class EditProfileActivity : AppCompatActivity() {
                 val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImage)
                 val baos = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+
+                // Переформатирование картинки в массив байтов
                 image = baos.toByteArray()
 
+                // Присваивание выбранной картинки из галереии в imageUser
                 binding.imageUser.setImageBitmap(bitmap)
 
+                // Изменение интерфейса при загрузке картинки
                 binding.imageUser.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.btnDelete.visibility = View.VISIBLE
                 binding.imageUser.isEnabled = true
             }
             catch (e: Exception){
-                Log.d("AddParty1Fragment", "onActivityResult: ${e.message}")
+                Log.d("Ошибка загрузки изображения", "onActivityResult: ${e.message}")
             }
-
         }
     }
+
 
 
     private fun focusedListener(container: TextInputLayout, editText: TextInputEditText) {

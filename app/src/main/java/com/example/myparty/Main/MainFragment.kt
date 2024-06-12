@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
     private var jsonArrayParties = JSONArray()
     private var jsonArrayFavorites = JSONArray()
 
-    private lateinit var partiesWithSearch: List<PartyDataClass>
+    private var partiesWithSearch: List<PartyDataClass>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -240,6 +240,7 @@ class MainFragment : Fragment() {
                         it.Название!!.contains(name_party, true)
                     }
                 }
+                else partiesWithSearch  = parties
 
                 Log.d("SHARED_PREFS_FILTER", event.toString())
             }
@@ -247,7 +248,7 @@ class MainFragment : Fragment() {
             Log.d("SHARED_PREFS_FILTER", parties.toString())
 
             val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-            val partyAdapter = PartyAdapter(partiesWithSearch, coroutineScope, false)
+            val partyAdapter = PartyAdapter(partiesWithSearch!!, coroutineScope, false)
             binding.recycler.adapter = partyAdapter
         } catch (e: Throwable) {
             Log.e("Ошибка получения данных вечеринки", e.toString())

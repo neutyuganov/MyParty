@@ -58,6 +58,8 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
 
     class ViewHolder(private val itemBinding: ItemPartyBinding, private val coroutineScope: CoroutineScope, private val search: Boolean) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding) {
+            image.setImageDrawable(null)
+
             // Получение данных об авторизованном пользователе
             val currentUserId = sb.auth.currentUserOrNull()?.id!!
             val partyId = party.id!!
@@ -145,13 +147,13 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             coroutineScope.launch {
                 if(party.Фото != "null") {
                     image.scaleType = ImageView.ScaleType.CENTER_CROP
-                    image.setImageDrawable(null)
 
                     val bucket = sb.storage["images"]
                     val bytes = bucket.downloadPublic(party.Фото.toString())
                     val is1: InputStream = ByteArrayInputStream(bytes)
                     val bmp: Bitmap = BitmapFactory.decodeStream(is1)
                     val dr = BitmapDrawable(itemBinding.root.context.resources, bmp)
+                    image.visibility = View.VISIBLE
                     image.setImageDrawable(dr)
                 }
                 progressBarImage.visibility = View.GONE

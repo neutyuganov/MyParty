@@ -35,10 +35,10 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 
-class PartyAdapter(private val partyList: List<PartyDataClass>, private val coroutineScope: CoroutineScope) : RecyclerView.Adapter<PartyAdapter.ViewHolder>() {
+class PartyAdapter(private val partyList: List<PartyDataClass>, private val coroutineScope: CoroutineScope, val search: Boolean) : RecyclerView.Adapter<PartyAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding = ItemPartyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(itemBinding, coroutineScope)
+        return ViewHolder(itemBinding, coroutineScope, search)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -56,7 +56,7 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
 
     override fun getItemCount(): Int = partyList.size
 
-    class ViewHolder(private val itemBinding: ItemPartyBinding, private val coroutineScope: CoroutineScope) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(private val itemBinding: ItemPartyBinding, private val coroutineScope: CoroutineScope, private val search: Boolean) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(party: PartyDataClass) { with(itemBinding) {
             // Получение данных об авторизованном пользователе
             val currentUserId = sb.auth.currentUserOrNull()?.id!!
@@ -130,6 +130,17 @@ class PartyAdapter(private val partyList: List<PartyDataClass>, private val coro
             updateFavorite(favorite)
 
             Log.d("party", party.Фото.toString())
+
+            if(search){
+                coroutineScope.launch  {
+                    star.visibility = View.INVISIBLE
+                    progressBarFavorite.visibility = View.VISIBLE
+                    favorite  = getFavoriteStatus(currentUserId, partyId)
+                    updateFavorite(favorite)
+                    star.visibility = View.VISIBLE
+                    progressBarFavorite.visibility = View.GONE
+                }
+            }
 
             coroutineScope.launch {
                 if(party.Фото != "null") {

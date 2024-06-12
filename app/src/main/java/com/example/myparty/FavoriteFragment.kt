@@ -102,7 +102,7 @@ class FavoriteFragment : Fragment() {
                 }
 
                 val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
-                val partyAdapter = PartyAdapter(parties, coroutineScope)
+                val partyAdapter = PartyAdapter(parties, coroutineScope, false)
                 binding.recycler.adapter = partyAdapter
 
             } catch (e: Throwable) {
